@@ -1,0 +1,101 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #ffe6f2; /* Soft pink background */
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.container {
+    background: #fff0f5; /* Light pink container */
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(255, 105, 180, 0.2); /* Pink shadow */
+    width: 90%;
+    max-width: 800px; /* Maximum width for larger screens */
+}
+textarea, input {
+    width: calc(100% - 22px); /* Adjust for padding and border */
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #ffb6c1; /* Light pink border */
+    border-radius: 10px;
+    background-color: #fffafa; /* Off-white background */
+    font-size: 16px;
+}
+button {
+    background: #ff69b4; /* Hot pink button */
+    color: white;
+    padding: 10px;
+    border: none;
+    margin-top: 10px;
+    cursor: pointer;
+    width: 100%;
+    border-radius: 10px;
+    font-size: 16px;
+    transition: background 0.3s ease;
+}
+button:hover {
+    background: #ff1493; /* Darker pink on hover */
+}
+.post, .comment, .reply {
+    background: #fffafa; /* Off-white background */
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 15px;
+    box-shadow: 0px 2px 5px rgba(255, 105, 180, 0.1); /* Soft pink shadow */
+    width: 100%;
+    box-sizing: border-box;
+}
+.reaction-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+.reaction-buttons button {
+    width: auto;
+    padding: 5px 10px;
+    background: #ff69b4; /* Hot pink */
+    border-radius: 5px;
+}
+.reaction-buttons button:hover {
+    background: #ff1493; /* Darker pink on hover */
+}
+.comments {
+    margin-top: 10px;
+    padding-left: 20px;
+    border-left: 2px solid #ffb6c1; /* Light pink border */
+}
+.comment, .reply {
+    background: #fff0f5; /* Light pink background */
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-direction: row;
+}
+.comment img, .reply img {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: 2px solid #ff69b4; /* Pink border for images */
+}
+.reply-box {
+    margin-left: 40px;
+    padding-left: 20px;
+    border-left: 2px solid #ffb6c1; /* Light pink border */
+}
+h2 {
+    color: #ff69b4; /* Hot pink heading */
+    text-align: center;
+}
+img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin-top: 10px;
+}
