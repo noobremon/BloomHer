@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BloomHer</title>
+    <link rel="stylesheet" href="/stylepages/shop.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="app">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-brand">
+                    <h1>BloomHer</h1>
+                </div>
+                
+                <div class="nav-search desktop-only">
+                    <div class="search-container">
+                        <input type="text" placeholder="Search products...">
+                        <i data-lucide="search"></i>
+                    </div>
+                </div>
+                
+                <div class="nav-actions desktop-only">
+                    <button class="icon-button">
+                        <i data-lucide="heart"></i>
+                    </button>
+                    <div class="cart-button">
+                        <i data-lucide="shopping-cart"></i>
+                        <span class="cart-count" id="cartCount">0</span>
+                    </div>
+                </div>
+
+                <button class="menu-button mobile-only" id="menuButton">
+                    <i data-lucide="menu"></i>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Mobile Menu -->
+        <div class="mobile-menu" id="mobileMenu">
+            <div class="mobile-menu-content">
+                <div class="search-container">
+                    <input type="text" placeholder="Search products...">
+                    <i data-lucide="search"></i>
+                </div>
+                <button class="mobile-menu-item">
+                    <i data-lucide="heart"></i>
+                    <span>Wishlist</span>
+                </button>
+                <button class="mobile-menu-item">
+                    <i data-lucide="shopping-cart"></i>
+                    <span>Cart (<span id="mobileCartCount">0</span>)</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="header">
+                <h2>Featured Products</h2>
+                <p>Carefully curated products for your wellness journey</p>
+            </div>
+
+            <div class="category-filters">
+                <button class="category-button active" data-category="all">All</button>
+                <button class="category-button" data-category="Menstrual Care">Menstrual Care</button>
+                <button class="category-button" data-category="Skincare">Skincare</button>
+                <button class="category-button" data-category="Wellness">Wellness</button>
+                <button class="category-button" data-category="Clothing">Clothing</button>
+                <button class="category-button" data-category="Personal Care">Personal Care</button>
+            </div>
+
+            <div class="products-grid" id="productsGrid">
+                <!-- Products will be dynamically inserted here -->
+            </div>
+        </main>
+    </div>
+    <script src="/scriptpages/shop.js"></script>
+</body>
+</html>
