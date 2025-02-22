@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyclecare - Find Your Doctor</title>
+    <link rel="stylesheet" href="/stylepages/expert.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="min-h-screen">
+        <!-- Navigation -->
+        <nav>
+            <div class="container">
+                <div class="nav-content">
+                    <div class="logo">
+                        <i data-lucide="heart-pulse" class="icon-rose"></i>
+                        <span class="brand">BloomHer</span>
+                    </div>
+                    <div class="nav-links">
+                        <a href="main.html">Home</a>
+                        <a href="expert.html" class="active">Doctors</a>
+                        <a href="community.html">Community</a>
+                        <a href="/mainpages/log.html" class="btn-primary">Sign In</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <header class="doctors-hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h1>Expert Care for Women's Health</h1>
+                    <p>Connect with experienced gynecologists and specialists who understand your concerns.</p>
+                    <div class="search-container">
+                        <div class="search-box">
+                            <i data-lucide="search" class="icon-small"></i>
+                            <input type="text" id="doctorSearch" placeholder="Search by name, specialization, or condition...">
+                        </div>
+                        <div class="filter-box">
+                            <select id="specialtyFilter">
+                                <option value="">All Specialties</option>
+                                <option value="Gynecologist">Gynecologist</option>
+                                <option value="Endocrinologist">Endocrinologist</option>
+                                <option value="Nutritionist">Nutritionist</option>
+                                <option value="Fertility Specialist">Fertility Specialist</option>
+                            </select>
+                            <select id="availabilityFilter">
+                                <option value="">Any Availability</option>
+                                <option value="today">Available Today</option>
+                                <option value="week">This Week</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Doctors Grid -->
+        <section class="doctors-section">
+            <div class="container">
+                <div class="doctors-grid" id="doctorsGrid">
+                    <!-- Doctors will be dynamically added here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Consultation Form Modal -->
+        <div class="modal" id="consultationModal">
+            <div class="modal-content">
+                <button class="modal-close"><i data-lucide="x"></i></button>
+                <h2>Book a Consultation</h2>
+                <form id="consultationForm">
+                    <input type="hidden" id="doctorId">
+                    <div class="form-group">
+                        <label for="patientName">Your Name</label>
+                        <input type="text" id="patientName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="patientAge">Age</label>
+                        <input type="number" id="patientAge" required min="1" max="100">
+                    </div>
+                    <div class="form-group">
+                        <label for="consultationType">Consultation Type</label>
+                        <select id="consultationType" required>
+                            <option value="video">Video Call</option>
+                            <option value="chat">Private Chat</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="preferredDate">Preferred Date</label>
+                        <input type="date" id="preferredDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="preferredTime">Preferred Time</label>
+                        <select id="preferredTime" required>
+                            <option value="">Select Time</option>
+                            <!-- Time slots will be dynamically populated -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="symptoms">Describe Your Symptoms</label>
+                        <textarea id="symptoms" rows="4" placeholder="Please share your symptoms and concerns..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="medicalHistory">Relevant Medical History</label>
+                        <textarea id="medicalHistory" rows="4" placeholder="Any previous conditions, medications, or treatments..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="privacyConsent" required>
+                            I consent to share my medical information securely with the doctor
+                        </label>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" onclick="closeModal()">Cancel</button>
+                        <button type="submit" class="btn-primary">Book Consultation</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Success Modal -->
+        <div class="modal" id="successModal">
+            <div class="modal-content">
+                <div class="success-message">
+                    <i data-lucide="check-circle" class="icon-large text-success"></i>
+                    <h2>Consultation Booked!</h2>
+                    <p>Your consultation has been scheduled. You will receive a confirmation email with further details.</p>
+                    <button class="btn-primary" onclick="closeSuccessModal()">Close</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-logo">
+                        <i data-lucide="heart-pulse" class="icon-rose"></i>
+                        <span class="brand">BloomHer</span>
+                    </div>
+                    <div class="footer-links">
+                        <a href="main.html">About</a>
+                        <a href="#">Privacy Policy</a>
+                        <a href="#">Terms of Service</a>
+                        <a href="contactus.html">Contact</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="/scriptpages/expert.js"></script>
+</body>
+</html>

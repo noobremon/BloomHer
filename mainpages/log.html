@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Cyclecare</title>
+    <link rel="stylesheet" href="/stylepages/log.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="auth-container">
+        <!-- Logo and Branding -->
+        <nav>
+            <div class="logo">
+                <i data-lucide="heart" class="icon-rose"></i>
+                <span class="brand">BloomHer</span>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main>
+            <div class="auth-box">
+                <!-- Welcome Screen -->
+                <div class="auth-step" id="welcomeStep">
+                    <h1>Welcome to Cyclecare</h1>
+                    <p>Your journey to better health starts here</p>
+                    <div class="gender-selection">
+                        <button class="gender-btn" onclick="selectGender('female')">
+                            <i data-lucide="female" class="icon-large"></i>
+                            <span>I am a Woman</span>
+                        </button>
+                        <button class="gender-btn" onclick="selectGender('male')">
+                            <i data-lucide="male" class="icon-large"></i>
+                            <span>I am Man</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Male Role Selection -->
+                <div class="auth-step hidden" id="maleRoleStep">
+                    <button class="back-btn" onclick="showStep('welcomeStep')">
+                        <i data-lucide="arrow-left"></i>
+                    </button>
+                    <h2>Who are you supporting?</h2>
+                    <p>Select your relationship with the person</p>
+                    <div class="role-selection">
+                        <button class="role-btn" onclick="selectRole('partner')">
+                            <i data-lucide="heart" class="icon-medium"></i>
+                            <span>Partner</span>
+                        </button>
+                        <button class="role-btn" onclick="selectRole('family')">
+                            <i data-lucide="users" class="icon-medium"></i>
+                            <span>Family Member</span>
+                        </button>
+                        <button class="role-btn" onclick="selectRole('friend')">
+                            <i data-lucide="smile" class="icon-medium"></i>
+                            <span>Friend</span>
+                        </button>
+                        <button class="role-btn" onclick="selectRole('caregiver')">
+                            <i data-lucide="helping-hand" class="icon-medium"></i>
+                            <span>Caregiver</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Signup Form -->
+                <div class="auth-step hidden" id="signupStep">
+                    <button class="back-btn" onclick="goBack()">
+                        <i data-lucide="arrow-left"></i>
+                    </button>
+                    <h2>Create Your Account</h2>
+                    <p>Join our community of support and care</p>
+                    <form id="signupForm" onsubmit="handleSignup(event)">
+                        <input type="hidden" id="userType" name="userType">
+                        <input type="hidden" id="userRole" name="userRole">
+                        
+                        <div class="form-group">
+                            <label for="fullName">Full Name</label>
+                            <input type="text" id="fullName" name="fullName" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <div class="password-input">
+                                <input type="password" id="password" name="password" required>
+                                <button type="button" class="toggle-password" onclick="togglePassword('password')">
+                                    <i data-lucide="eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm Password</label>
+                            <div class="password-input">
+                                <input type="password" id="confirmPassword" name="confirmPassword" required>
+                                <button type="button" class="toggle-password" onclick="togglePassword('confirmPassword')">
+                                    <i data-lucide="eye"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" required>
+                                I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn-primary">Create Account</button>
+                    </form>
+                    <p class="auth-switch">
+                        Already have an account? <a href="#" onclick="showStep('loginStep')">Sign In</a>
+                    </p>
+                </div>
+
+                <!-- Login Form -->
+                <div class="auth-step hidden" id="loginStep">
+                    <button class="back-btn" onclick="showStep('welcomeStep')">
+                        <i data-lucide="arrow-left"></i>
+                    </button>
+                    <h2>Welcome Back</h2>
+                    <p>Sign in to continue your journey</p>
+                    <form id="loginForm" onsubmit="handleLogin(event)">
+                        <div class="form-group">
+                            <label for="loginEmail">Email</label>
+                            <input type="email" id="loginEmail" name="loginEmail" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="loginPassword">Password</label>
+                            <div class="password-input">
+                                <input type="password" id="loginPassword" name="loginPassword" required>
+                                <button type="button" class="toggle-password" onclick="togglePassword('loginPassword')">
+                                    <i data-lucide="eye"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <a href="#" class="forgot-password">Forgot Password?</a>
+                        </div>
+
+                        <button type="submit" class="btn-primary">Sign In</button>
+                    </form>
+                    <p class="auth-switch">
+                        Don't have an account? <a href="#" onclick="showStep('welcomeStep')">Sign Up</a>
+                    </p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="/scriptpages/log.js"></script>
+</body>
+</html>
