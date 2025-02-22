@@ -56,6 +56,12 @@ h2 {
     position: relative;
 }
 
+/* Remove the existing underline effect for benefits section heading */
+.benefits-text h2::after {
+    display: none;
+}
+
+/* Keep the underline effect for other h2 elements */
 h2::after {
     content: '';
     position: absolute;
@@ -439,6 +445,11 @@ nav.scrolled {
     flex: 0.6; /* Increase text portion accordingly */
 }
 
+.benefits-text h2 {
+    text-decoration: none;
+    margin-bottom: 2rem;
+}
+
 .benefit-items {
     display: flex;
     flex-direction: column;
@@ -516,8 +527,20 @@ nav.scrolled {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(45deg, rgba(244, 63, 94, 0.8) 0%, rgba(255, 0, 128, 0.8) 100%);
+    background: linear-gradient(45deg, rgba(226, 97, 97, 0.8) 0%, rgb(113, 2, 2) 100%);
     opacity: 0.9;
+}
+
+.community .icon-rose.icon-large {
+    color: #e11d48;  /* Darker rose color */
+    opacity: 0.9;    /* Makes it more visible */
+    font-size: 3rem; /* Makes it larger */
+    filter: drop-shadow(0 0 10px rgba(225, 29, 72, 0.3)); /* Adds a subtle glow */
+}
+
+.community .icon-rose.icon-large:hover {
+    opacity: 1;
+    filter: drop-shadow(0 0 15px rgba(225, 29, 72, 0.5));
 }
 
 /* Footer */
