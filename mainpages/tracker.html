@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BloomHer</title>
+    <title>Cyclecare - Period Tracker</title>
     <link rel="stylesheet" href="/stylepages/tracker.css">
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
@@ -15,16 +15,16 @@
                 <div class="nav-content">
                     <div class="logo">
                         <i data-lucide="heart" class="icon-rose"></i>
-                        <span class="brand">BloomHer</span>
+                        <span class="brand">Cyclecare</span>
                     </div>
                     <div class="nav-links">
-                        <a href="main.html">Home</a>
+                        <a href="/mainpages/main.html">Home</a>
                         <a href="tracker.html" class="active">Tracker</a>
                         <a href="insights.html">Insights</a>
-                        <a href="/mainpages/log.html" class="btn-primary">
+                        <button class="btn-primary" onclick="showProfileModal()">
                             <i data-lucide="user" class="icon-small"></i>
                             <span>Profile</span>
-                        </a>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -33,10 +33,25 @@
         <!-- Main Content -->
         <main>
             <div class="container">
+                <section class="first-period-section">
+                    <h2>First Period Date</h2>
+                    <form class="first-period-form" onsubmit="handleFirstPeriodSubmit(event)">
+                        <div class="form-group" style="flex: 1;">
+                            <label for="firstPeriodDate">When did you have your first period?</label>
+                            <input type="date" id="firstPeriodDate" required>
+                        </div>
+                        <button type="submit" class="btn-primary">Save</button>
+                    </form>
+                </section>
+
                 <!-- Calendar Section -->
                 <section class="calendar-section">
                     <div class="section-header">
                         <h2>Period Calendar</h2>
+                        <button class="delete-data-btn" onclick="deleteAllData()">
+                            <i data-lucide="trash-2"></i>
+                            <span>Delete All Data</span>
+                        </button>
                         <div class="calendar-controls">
                             <button class="btn-icon" onclick="previousMonth()">
                                 <i data-lucide="chevron-left"></i>
