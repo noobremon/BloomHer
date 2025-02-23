@@ -94,17 +94,17 @@
                         <div class="summary-card">
                             <i data-lucide="activity" class="icon-medium"></i>
                             <h3>Cycle Day</h3>
-                            <p id="cycleDay">Day 14 of 28</p>
+                            <p id="cycleDay">None</p>
                         </div>
                         <div class="summary-card">
                             <i data-lucide="calendar" class="icon-medium"></i>
                             <h3>Next Period</h3>
-                            <p id="nextPeriod">In 14 days</p>
+                            <p id="nextPeriod">None</p>
                         </div>
                         <div class="summary-card">
                             <i data-lucide="droplet" class="icon-medium"></i>
                             <h3>Flow</h3>
-                            <p id="currentFlow">Medium</p>
+                            <p id="currentFlow">None</p>
                         </div>
                         <div class="summary-card">
                             <i data-lucide="thermometer" class="icon-medium"></i>
@@ -146,9 +146,9 @@
                 <div class="form-group">
                     <label>Flow Intensity</label>
                     <div class="flow-buttons">
-                        <button type="button" class="flow-btn" data-flow="light">Light</button>
-                        <button type="button" class="flow-btn" data-flow="medium">Medium</button>
-                        <button type="button" class="flow-btn" data-flow="heavy">Heavy</button>
+                        <button type="button" class="flow-btn" data-flow="light" onclick="selectFlow(this)">Light</button>
+                        <button type="button" class="flow-btn" data-flow="medium" onclick="selectFlow(this)">Medium</button>
+                        <button type="button" class="flow-btn" data-flow="heavy" onclick="selectFlow(this)">Heavy</button>
                     </div>
                 </div>
                 <div class="form-group">
@@ -239,29 +239,17 @@
                 <div class="form-group">
                     <label>How are you feeling?</label>
                     <div class="mood-grid">
-                        <button type="button" class="mood-btn" data-mood="happy">
+                        <button type="button" class="mood-btn" data-mood="happy" onclick="selectMood(this)">
                             <i data-lucide="smile"></i>
                             <span>Happy</span>
                         </button>
-                        <button type="button" class="mood-btn" data-mood="sad">
+                        <button type="button" class="mood-btn" data-mood="neutral" onclick="selectMood(this)">
+                            <i data-lucide="meh"></i>
+                            <span>Neutral</span>
+                        </button>
+                        <button type="button" class="mood-btn" data-mood="sad" onclick="selectMood(this)">
                             <i data-lucide="frown"></i>
                             <span>Sad</span>
-                        </button>
-                        <button type="button" class="mood-btn" data-mood="angry">
-                            <i data-lucide="angry"></i>
-                            <span>Angry</span>
-                        </button>
-                        <button type="button" class="mood-btn" data-mood="anxious">
-                            <i data-lucide="alert-circle"></i>
-                            <span>Anxious</span>
-                        </button>
-                        <button type="button" class="mood-btn" data-mood="energetic">
-                            <i data-lucide="zap"></i>
-                            <span>Energetic</span>
-                        </button>
-                        <button type="button" class="mood-btn" data-mood="tired">
-                            <i data-lucide="battery-low"></i>
-                            <span>Tired</span>
                         </button>
                     </div>
                 </div>

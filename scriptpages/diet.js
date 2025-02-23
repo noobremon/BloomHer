@@ -66,6 +66,51 @@ function updateDietRecommendations() {
     }
 }
 
+function redirectToTracker() {
+    window.location.href = '/mainpages/tracker.html';
+}
+
+function updateCyclePhase() {
+    const cycleData = localStorage.getItem('cycleData');
+    const cyclePhaseContent = document.getElementById('cyclePhaseContent');
+
+    if (cycleData) {
+        const data = JSON.parse(cycleData);
+        cyclePhaseContent.innerHTML = `
+            <p class="phase-name">${data.phase}</p>
+            <p class="phase-tip">Day ${data.day} of your cycle</p>
+        `;
+    }
+}
+
+function handleCyclePhaseClick() {
+    window.location.href = '/mainpages/tracker.html';
+}
+
+function updateCyclePhaseDisplay() {
+  const cyclePhaseContent = document.getElementById('cyclePhaseContent');
+  const cycleData = localStorage.getItem('cycleData');
+
+  if (!cycleData) {
+    cyclePhaseContent.innerHTML = `
+      <div class="empty-state">
+        <i data-lucide="calendar-plus" class="empty-icon"></i>
+        <p class="phase-name">Track Your Cycle</p>
+        <p class="phase-tip">Click here to start tracking</p>
+      </div>
+    `;
+  } else {
+    const data = JSON.parse(cycleData);
+    cyclePhaseContent.innerHTML = `
+      <div class="phase-info">
+        <p class="phase-name">${data.phase}</p>
+        <p class="phase-tip">Day ${data.day} of your cycle</p>
+      </div>
+    `;
+  }
+  lucide.createIcons();
+}
+
 // Initialize Lucide icons
 lucide.createIcons();
 
@@ -157,5 +202,7 @@ updateUI();
 // Call this when the page loads
 document.addEventListener('DOMContentLoaded', () => {
     updateDietRecommendations();
+    updateCyclePhase();
+    updateCyclePhaseDisplay();
     // ... rest of your existing initialization code ...
 });

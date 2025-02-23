@@ -47,13 +47,12 @@
         <!-- Main Column -->
         <div class="main-column">
           <!-- Cycle Phase -->
-          <div class="card">
+          <button class="card cycle-phase-card" onclick="handleCyclePhaseClick()">
             <h3 class="card-title">Current Cycle Phase</h3>
-            <div class="cycle-phase">
-                <p class="phase-name">Loading cycle data...</p>
-                <p class="phase-tip">Personalized recommendations based on your cycle</p>
+            <div class="cycle-phase" id="cyclePhaseContent">
+              <!-- Content will be dynamically updated -->
             </div>
-          </div>
+          </button>
 
           <!-- Meal Form -->
           <div class="card">
@@ -115,14 +114,14 @@
             <div class="food-recommendations">
               <div class="food-item">
                 <i data-lucide="apple"></i>
-                <span>Leafy greens (rich in iron)</span>
+                <span>Apples (rich in iron)</span>
               </div>
               <div class="food-item">
                 <i data-lucide="salad"></i>
                 <span>Nuts and seeds</span>
               </div>
               <div class="food-item">
-                <i data-lucide="apple"></i>
+                <i data-lucide="grains"></i>
                 <span>Whole grains</span>
               </div>
             </div>

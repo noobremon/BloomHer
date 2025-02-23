@@ -16,6 +16,8 @@ let userData = {
 
 // Current date being viewed in calendar
 let currentDate = new Date();
+let selectedFlow = null;
+let selectedMood = null;
 
 // Initialize the page
 document.addEventListener('DOMContentLoaded', () => {
@@ -25,6 +27,25 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeCalendar();
     setupEventListeners();
     updateUI();
+    handleFlowSelection();
+    
+    // Flow button handlers
+    const flowButtons = document.querySelectorAll('.flow-btn');
+    flowButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            flowButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        });
+    });
+
+    // Mood button handlers
+    const moodButtons = document.querySelectorAll('.mood-btn');
+    moodButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            moodButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        });
+    });
 });
 
 // Initialize calendar
@@ -82,6 +103,17 @@ function setupEventListeners() {
     const today = new Date().toISOString().split('T')[0];
     document.querySelectorAll('input[type="date"]').forEach(input => {
         input.value = today;
+    });
+
+    // Add click handlers for flow buttons
+    const flowButtons = document.querySelectorAll('.flow-btn');
+    flowButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Remove active class from all buttons
+            flowButtons.forEach(b => b.classList.remove('active'));
+            // Add active class to clicked button
+            btn.classList.add('active');
+        });
     });
 }
 
@@ -255,6 +287,9 @@ function handleQuickAction(action) {
 
 // Modal handling
 function showModal(modalId) {
+    // Reset selections when opening modals
+    selectedFlow = null;
+    selectedMood = null;
     document.getElementById(modalId).style.display = 'flex';
 }
 
@@ -286,16 +321,21 @@ function storeCycleData(cyclePhase, cycleDay) {
 
 function handlePeriodLog(event) {
     event.preventDefault();
+    
+    if (!selectedFlow) {
+        alert('Please select a flow intensity');
+        return;
+    }
+
     const date = document.getElementById('periodDate').value;
-    const flow = document.querySelector('.flow-btn.active')?.dataset.flow || 'medium';
     const pain = document.getElementById('painLevel').value;
 
-    // Add to recent logs
-    addToRecentLogs('Period', `Date: ${date}, Flow: ${flow}, Pain Level: ${pain}`);
-    closeModal('periodModal');
+    // Update Today's Summary
+    document.getElementById('currentFlow').textContent = selectedFlow.charAt(0).toUpperCase() + selectedFlow.slice(1);
 
-    // Add this to store the cycle phase
-    storeCycleData('Menstrual', 1);
+    // Add to recent logs
+    addToRecentLogs('Period', `Flow: ${selectedFlow}, Pain Level: ${pain}`);
+    closeModal('periodModal');
 }
 
 // Log Symptoms Functions
@@ -324,12 +364,17 @@ function logMood() {
 
 function handleMoodLog(event) {
     event.preventDefault();
+    
+    if (!selectedMood) {
+        alert('Please select a mood');
+        return;
+    }
+
     const date = document.getElementById('moodDate').value;
-    const mood = document.querySelector('.mood-btn.active')?.dataset.mood || '';
     const notes = document.getElementById('moodNotes').value;
 
     // Add to recent logs
-    addToRecentLogs('Mood', `Date: ${date}, Mood: ${mood}`);
+    addToRecentLogs('Mood', `Feeling: ${selectedMood}${notes ? `, Notes: ${notes}` : ''}`);
     closeModal('moodModal');
 }
 
@@ -537,4 +582,32 @@ function updateAllFormsWithSelectedDate(date) {
             input.disabled = true; // Prevent manual date changes
         }
     });
+}
+
+// Add this function to handle flow button selection
+function handleFlowSelection() {
+    const flowButtons = document.querySelectorAll('.flow-btn');
+    flowButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            e.preventDefault(); // Prevent form submission
+            // Remove active class from all buttons
+            flowButtons.forEach(btn => btn.classList.remove('active'));
+            // Add active class to clicked button
+            button.classList.add('active');
+        });
+    });
+}
+
+function selectFlow(button) {
+    const flowButtons = document.querySelectorAll('.flow-btn');
+    flowButtons.forEach(btn => btn.classList.remove('active'));
+    button.classList.add('active');
+    selectedFlow = button.dataset.flow;
+}
+
+function selectMood(button) {
+    const moodButtons = document.querySelectorAll('.mood-btn');
+    moodButtons.forEach(btn => btn.classList.remove('active'));
+    button.classList.add('active');
+    selectedMood = button.dataset.mood;
 }
