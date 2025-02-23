@@ -257,6 +257,10 @@ main {
 
 .logs-list {
     margin-top: 1.5rem;
+    background: #fff;
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .log-item {
@@ -333,6 +337,13 @@ textarea:focus {
     outline: none;
     border-color: var(--color-rose-500);
     box-shadow: 0 0 0 3px var(--color-rose-100);
+}
+
+/* Add these styles for disabled date inputs */
+input[type="date"]:disabled {
+    background-color: #f3f4f6;
+    cursor: not-allowed;
+    opacity: 0.7;
 }
 
 /* Buttons */
@@ -528,6 +539,72 @@ textarea:focus {
     margin-bottom: 0.5rem;
     font-weight: 500;
     color: #374151;
+}
+
+/* Recent Logs Styling */
+.logs-list {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.log-entry {
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-left: 4px solid #e11d48;
+}
+
+.log-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+}
+
+.log-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.log-type {
+    font-weight: 600;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
+}
+
+/* Different colors for different log types */
+.log-type.period { background: #fee2e2; color: #dc2626; }
+.log-type.symptoms { background: #e0f2fe; color: #0284c7; }
+.log-type.mood { background: #f0fdf4; color: #16a34a; }
+.log-type.cravings { background: #fef3c7; color: #d97706; }
+
+.log-timestamp {
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+.log-details {
+    color: #334155;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+.delete-log {
+    background: none;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 0.25rem;
+    transition: color 0.2s;
+}
+
+.delete-log:hover {
+    color: #e11d48;
 }
 
 /* Responsive Design */

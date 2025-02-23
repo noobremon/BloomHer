@@ -15,7 +15,7 @@
                 <div class="nav-content">
                     <div class="logo">
                         <i data-lucide="heart" class="icon-rose"></i>
-                        <span class="brand">Cyclecare</span>
+                        <span class="brand">BloomHer</span>
                     </div>
                     <div class="nav-links">
                         <a href="/mainpages/main.html">Home</a>
@@ -116,9 +116,15 @@
 
                 <!-- Recent Logs -->
                 <section class="recent-logs">
-                    <h2>Recent Logs</h2>
+                    <div class="section-header">
+                        <h2>Recent Logs</h2>
+                        <button class="delete-data-btn" onclick="clearAllLogs()">
+                            <i data-lucide="trash-2"></i>
+                            <span>Clear All</span>
+                        </button>
+                    </div>
                     <div class="logs-list" id="recentLogs">
-                        <!-- Logs will be dynamically added here -->
+                        <!-- All types of logs will be dynamically added here -->
                     </div>
                 </section>
             </div>

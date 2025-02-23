@@ -19,6 +19,8 @@ let currentDate = new Date();
 
 // Initialize the page
 document.addEventListener('DOMContentLoaded', () => {
+    const currentDate = getSelectedDate();
+    updateAllFormsWithSelectedDate(currentDate);
     loadUserData();
     initializeCalendar();
     setupEventListeners();
@@ -208,16 +210,18 @@ function updateCalendar() {
 }
 
 // Handle day click
-function handleDayClick(dateString) {
-    const hasPeriod = userData.periods.some(p => p.date === dateString);
+function handleDayClick(date) {
+    localStorage.setItem('selectedDate', date);
+    updateAllFormsWithSelectedDate(date);
+    const hasPeriod = userData.periods.some(p => p.date === date);
     
     if (hasPeriod) {
         // Remove period
-        userData.periods = userData.periods.filter(p => p.date !== dateString);
+        userData.periods = userData.periods.filter(p => p.date !== date);
     } else {
         // Add period
         userData.periods.push({
-            date: dateString,
+            date: date,
             flow: 'medium',
             painLevel: 5
         });
@@ -232,15 +236,19 @@ function handleQuickAction(action) {
     switch (action) {
         case 'period':
             showModal('periodModal');
+            document.getElementById('periodDate').value = getSelectedDate();
             break;
         case 'symptoms':
             showModal('symptomsModal');
+            document.getElementById('symptomsDate').value = getSelectedDate();
             break;
         case 'mood':
             showModal('moodModal');
+            document.getElementById('moodDate').value = getSelectedDate();
             break;
         case 'cravings':
             showModal('cravingsModal');
+            document.getElementById('cravingsDate').value = getSelectedDate();
             break;
     }
 }
@@ -263,6 +271,17 @@ function closeAllModals() {
 // Log Period Functions
 function logPeriod() {
     showModal('periodModal');
+    document.getElementById('periodDate').value = getSelectedDate();
+}
+
+// Add this function to store cycle data
+function storeCycleData(cyclePhase, cycleDay) {
+    const cycleData = {
+        phase: cyclePhase,
+        day: cycleDay,
+        lastUpdated: new Date().toISOString()
+    };
+    localStorage.setItem('cycleData', JSON.stringify(cycleData));
 }
 
 function handlePeriodLog(event) {
@@ -274,11 +293,15 @@ function handlePeriodLog(event) {
     // Add to recent logs
     addToRecentLogs('Period', `Date: ${date}, Flow: ${flow}, Pain Level: ${pain}`);
     closeModal('periodModal');
+
+    // Add this to store the cycle phase
+    storeCycleData('Menstrual', 1);
 }
 
 // Log Symptoms Functions
 function logSymptoms() {
     showModal('symptomsModal');
+    document.getElementById('symptomsDate').value = getSelectedDate();
 }
 
 function handleSymptomsLog(event) {
@@ -296,6 +319,7 @@ function handleSymptomsLog(event) {
 // Log Mood Functions
 function logMood() {
     showModal('moodModal');
+    document.getElementById('moodDate').value = getSelectedDate();
 }
 
 function handleMoodLog(event) {
@@ -312,6 +336,7 @@ function handleMoodLog(event) {
 // Log Cravings Functions
 function logCravings() {
     showModal('cravingsModal');
+    document.getElementById('cravingsDate').value = getSelectedDate();
 }
 
 function handleCravingsLog(event) {
@@ -331,17 +356,27 @@ function addToRecentLogs(type, details) {
     const recentLogs = document.getElementById('recentLogs');
     const logEntry = document.createElement('div');
     logEntry.classList.add('log-entry');
+    
+    // Get current date and time
+    const now = new Date();
+    const dateString = now.toLocaleDateString();
+    const timeString = now.toLocaleTimeString();
+
     logEntry.innerHTML = `
         <div class="log-header">
-            <span class="log-type">${type}</span>
+            <div class="log-info">
+                <span class="log-type ${type.toLowerCase()}">${type}</span>
+                <span class="log-timestamp">${dateString} ${timeString}</span>
+            </div>
             <button class="delete-log" onclick="this.parentElement.parentElement.remove()">
                 <i data-lucide="x"></i>
             </button>
         </div>
         <p class="log-details">${details}</p>
     `;
+    
     recentLogs.insertBefore(logEntry, recentLogs.firstChild);
-    lucide.createIcons(); // Refresh icons
+    lucide.createIcons();
 }
 
 // Helper function to format date as YYYY-MM-DD
@@ -473,4 +508,33 @@ function getLogDescription(log) {
 function showNotification(message) {
     // Implementation depends on your UI design
     alert(message);
+}
+
+function clearAllLogs() {
+    const recentLogs = document.getElementById('recentLogs');
+    recentLogs.innerHTML = '';
+}
+
+// Add this function to store and get selected date
+function getSelectedDate() {
+    const selectedDate = localStorage.getItem('selectedDate');
+    return selectedDate || new Date().toISOString().split('T')[0];
+}
+
+// Add this function to update all forms with the selected date
+function updateAllFormsWithSelectedDate(date) {
+    const dateInputs = [
+        'periodDate',
+        'symptomsDate',
+        'moodDate',
+        'cravingsDate'
+    ];
+    
+    dateInputs.forEach(inputId => {
+        const input = document.getElementById(inputId);
+        if (input) {
+            input.value = date;
+            input.disabled = true; // Prevent manual date changes
+        }
+    });
 }

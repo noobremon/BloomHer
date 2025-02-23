@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BloomHer</title>
+  <link rel="stylesheet" href="/stylepages/diet.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <div class="app">
+    <!-- Navigation -->
+    <nav class="nav">
+      <div class="nav-container">
+        <div class="nav-brand">
+          <i data-lucide="heart" class="brand-icon"></i>
+          <span class="brand-name">BloomHer</span>
+        </div>
+        
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Feature Tabs -->
+      <div class="tabs">
+        <button class="tab active" data-tab="dashboard">
+          <i data-lucide="bar-chart"></i>
+          Dashboard
+        </button>
+        <button class="tab" data-tab="tracking">
+          <i data-lucide="calendar"></i>
+          Track Meals
+        </button>
+        <button class="tab" data-tab="suggestions">
+          <i data-lucide="apple"></i>
+          Food Suggestions
+        </button>
+        <button class="tab" data-tab="education">
+          <i data-lucide="book-open"></i>
+          Learn
+        </button>
+      </div>
+
+      <!-- Content Grid -->
+      <div class="content-grid">
+        <!-- Main Column -->
+        <div class="main-column">
+          <!-- Cycle Phase -->
+          <div class="card">
+            <h3 class="card-title">Current Cycle Phase</h3>
+            <div class="cycle-phase">
+                <p class="phase-name">Loading cycle data...</p>
+                <p class="phase-tip">Personalized recommendations based on your cycle</p>
+            </div>
+          </div>
+
+          <!-- Meal Form -->
+          <div class="card">
+            <h3 class="card-title">Track Your Meals</h3>
+            <form id="mealForm" class="meal-form">
+              <div class="form-grid">
+                <input 
+                  type="text" 
+                  id="foodInput" 
+                  placeholder="What did you eat?"
+                  required
+                >
+                <input 
+                  type="number" 
+                  id="caloriesInput" 
+                  placeholder="Calories"
+                  required
+                >
+                <input 
+                  type="time" 
+                  id="timeInput"
+                  required
+                >
+              </div>
+              <button type="submit" class="btn-primary btn-full">Add Meal</button>
+            </form>
+          </div>
+
+          <!-- Meal Logs -->
+          <div class="card">
+            <h3 class="card-title">Today's Meals</h3>
+            <div id="mealLogs" class="meal-logs"></div>
+          </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+          <!-- Daily Summary -->
+          <div class="card">
+            <h3 class="card-title">Daily Summary</h3>
+            <div class="summary">
+              <div class="summary-row">
+                <span>Calories Goal</span>
+                <span class="summary-value">2000</span>
+              </div>
+              <div class="summary-row">
+                <span>Consumed</span>
+                <span id="totalCalories" class="summary-value highlight">0</span>
+              </div>
+              <div class="progress-bar">
+                <div id="caloriesProgress" class="progress-fill"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recommended Foods -->
+          <div class="card">
+            <h3 class="card-title">Recommended Foods</h3>
+            <div class="food-recommendations">
+              <div class="food-item">
+                <i data-lucide="apple"></i>
+                <span>Leafy greens (rich in iron)</span>
+              </div>
+              <div class="food-item">
+                <i data-lucide="salad"></i>
+                <span>Nuts and seeds</span>
+              </div>
+              <div class="food-item">
+                <i data-lucide="apple"></i>
+                <span>Whole grains</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- PCOS Tips -->
+          <div class="card">
+            <h3 class="card-title">PCOS Diet Tips</h3>
+            <div class="tips">
+              <p>• Limit processed foods and sugars</p>
+              <p>• Include anti-inflammatory foods</p>
+              <p>• Stay hydrated throughout the day</p>
+              <p>• Eat smaller, frequent meals</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="/scriptpages/diet.js"></script>
+</body>
+</html>
