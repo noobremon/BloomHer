@@ -98,10 +98,10 @@ main {
 /* First Period Section */
 .first-period-section {
     background: white;
-    border-radius: 1rem;
-    padding: 2rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 1.5rem;
     margin-bottom: 2rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .first-period-section h2 {
@@ -111,8 +111,42 @@ main {
 
 .first-period-form {
     display: flex;
-    gap: 1rem;
-    align-items: flex-end;
+    flex-direction: column;
+}
+
+.first-period-form .form-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.first-period-form label {
+    margin-right: 1rem;
+    flex-shrink: 0;
+}
+
+.first-period-form input[type="date"] {
+    padding: 0.5rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    font-size: 1rem;
+    color: #374151;
+    flex-grow: 1;
+}
+
+.first-period-form .btn-primary {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    background-color: #e11d48;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.first-period-form .btn-primary:hover {
+    background-color: #be123c;
 }
 
 /* Calendar Section */
