@@ -8,314 +8,157 @@
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
-    <div class="app-container">
+    <div class="app">
         <!-- Navigation -->
-        <nav>
-            <div class="container">
-                <div class="nav-content">
-                    <div class="logo">
-                        <i data-lucide="heart" class="icon-rose"></i>
-                        <span class="brand">BloomHer</span>
-                    </div>
-                    <div class="nav-links">
-                        <a href="/mainpages/main.html">Home</a>
-                        <a href="tracker.html" class="active">Tracker</a>
-                        <a href="insights.html">Insights</a>
-                        <button class="btn-primary" onclick="showProfileModal()">
-                            <i data-lucide="user" class="icon-small"></i>
-                            <span>Profile</span>
-                        </button>
-                    </div>
+        <nav class="nav">
+            <div class="nav-container">
+                <div class="nav-brand">
+                    <i data-lucide="heart" class="brand-icon"></i>
+                    <span class="brand-name">BloomHer</span>
+                </div>
+                <div class="nav-actions">
+                    <a href="main.html" class="btn-secondary">
+                        <i data-lucide="home"></i>
+                        Home
+                    </a>
+                    <a href="log.html" class="btn-primary">Get Started</a>
                 </div>
             </div>
         </nav>
 
         <!-- Main Content -->
-        <main>
-            <div class="container">
-                <section class="first-period-section">
-                    <h2>First Period Date</h2>
-                    <form class="first-period-form" onsubmit="handleFirstPeriodSubmit(event)">
-                        <div class="form-group" style="display: flex; align-items: center;">
-                            <label for="firstPeriodDate" style="margin-right: 10px;">When did you have your first period?</label>
-                            <input type="date" id="firstPeriodDate" required style="margin-right: 10px;">
-                            <button type="submit" class="btn-primary">Save</button>
-                        </div>
-                    </form>
-                </section>
+        <main class="main-content">
+            <!-- First Period Section -->
+            <section id="firstPeriodSection" class="section">
+                <h2>First Period Information</h2>
+                <div class="form-group">
+                    <label>When did you have your first period?</label>
+                    <input type="date" id="firstPeriodDate">
+                    <button onclick="saveFirstPeriod()" class="btn-primary">Save</button>
+                </div>
+            </section>
 
-                <!-- Calendar Section -->
-                <section class="calendar-section">
-                    <div class="section-header">
-                        <h2>Period Calendar</h2>
-                        <button class="delete-data-btn" onclick="deleteAllData()">
-                            <i data-lucide="trash-2"></i>
-                            <span>Delete All Data</span>
+            <!-- Period Calendar -->
+            <section class="section">
+                <h2>Period Calendar</h2>
+                <div class="calendar-container">
+                    <div class="calendar-header">
+                        <button onclick="previousMonth()" class="calendar-nav-btn">
+                            <i data-lucide="chevron-left"></i>
                         </button>
-                        <div class="calendar-controls">
-                            <button class="btn-icon" onclick="previousMonth()">
-                                <i data-lucide="chevron-left"></i>
-                            </button>
-                            <h3 id="currentMonth">March 2025</h3>
-                            <button class="btn-icon" onclick="nextMonth()">
-                                <i data-lucide="chevron-right"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="calendar" id="calendar">
-                        <!-- Calendar will be dynamically generated -->
-                    </div>
-                </section>
-
-                <!-- Quick Actions -->
-                <section class="quick-actions">
-                    <button class="action-btn" onclick="logPeriod()">
-                        <i data-lucide="droplet" class="icon-medium"></i>
-                        <span>Log Period</span>
-                    </button>
-                    <button class="action-btn" onclick="logSymptoms()">
-                        <i data-lucide="clipboard-list" class="icon-medium"></i>
-                        <span>Log Symptoms</span>
-                    </button>
-                    <button class="action-btn" onclick="logMood()">
-                        <i data-lucide="smile" class="icon-medium"></i>
-                        <span>Log Mood</span>
-                    </button>
-                    <button class="action-btn" onclick="logCravings()">
-                        <i data-lucide="utensils" class="icon-medium"></i>
-                        <span>Log Cravings</span>
-                    </button>
-                </section>
-
-                <!-- Today's Summary -->
-                <section class="today-summary">
-                    <h2>Today's Summary</h2>
-                    <div class="summary-grid">
-                        <div class="summary-card">
-                            <i data-lucide="activity" class="icon-medium"></i>
-                            <h3>Cycle Day</h3>
-                            <p id="cycleDay">None</p>
-                        </div>
-                        <div class="summary-card">
-                            <i data-lucide="calendar" class="icon-medium"></i>
-                            <h3>Next Period</h3>
-                            <p id="nextPeriod">None</p>
-                        </div>
-                        <div class="summary-card">
-                            <i data-lucide="droplet" class="icon-medium"></i>
-                            <h3>Flow</h3>
-                            <p id="currentFlow">None</p>
-                        </div>
-                        <div class="summary-card">
-                            <i data-lucide="thermometer" class="icon-medium"></i>
-                            <h3>Temperature</h3>
-                            <p id="temperature">98.6°F</p>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Recent Logs -->
-                <section class="recent-logs">
-                    <div class="section-header">
-                        <h2>Recent Logs</h2>
-                        <button class="delete-data-btn" onclick="clearAllLogs()">
-                            <i data-lucide="trash-2"></i>
-                            <span>Clear All</span>
+                        <h3 id="currentMonth">September 2023</h3>
+                        <button onclick="nextMonth()" class="calendar-nav-btn">
+                            <i data-lucide="chevron-right"></i>
                         </button>
                     </div>
-                    <div class="logs-list" id="recentLogs">
-                        <!-- All types of logs will be dynamically added here -->
+                    <div class="calendar-weekdays">
+                        <div>Sun</div>
+                        <div>Mon</div>
+                        <div>Tue</div>
+                        <div>Wed</div>
+                        <div>Thu</div>
+                        <div>Fri</div>
+                        <div>Sat</div>
                     </div>
-                </section>
-            </div>
+                    <div id="calendarDays" class="calendar-days"></div>
+                </div>
+            </section>
+
+            <!-- Daily Log Section -->
+            <section id="dailyLogSection" class="section hidden">
+                <!-- Cycle Day Card -->
+                <div class="cycle-day-card">
+                    <div class="daily-log-header">
+                        <h3>Day <span id="cycleDay">1</span> of Your Cycle</h3>
+                        <h4 class="selected-date" id="selectedDate"></h4>
+                    </div>
+                </div>
+
+                <div class="logs-container">
+                    <!-- Period Log -->
+                    <div class="log-card">
+                        <h3><i data-lucide="droplets" class="category-icon"></i> Period Flow</h3>
+                        <div class="options-container hidden">
+                            <div class="flow-buttons">
+                                <button onclick="logPeriod('light')" class="flow-btn">Light</button>
+                                <button onclick="logPeriod('medium')" class="flow-btn">Medium</button>
+                                <button onclick="logPeriod('heavy')" class="flow-btn">Heavy</button>
+                            </div>
+                            <p id="periodLog" class="log-display"></p>
+                        </div>
+                    </div>
+
+                    <!-- Symptoms Log -->
+                    <div class="log-card">
+                        <h3><i data-lucide="stethoscope" class="category-icon"></i> Symptoms</h3>
+                        <div class="options-container hidden">
+                            <div class="symptom-buttons">
+                                <button onclick="logSymptom('cramps')" class="symptom-btn">Cramps</button>
+                                <button onclick="logSymptom('headache')" class="symptom-btn">Headache</button>
+                                <button onclick="logSymptom('bloating')" class="symptom-btn">Bloating</button>
+                                <button onclick="logSymptom('fatigue')" class="symptom-btn">Fatigue</button>
+                                <button onclick="logSymptom('backache')" class="symptom-btn">Backache</button>
+                            </div>
+                            <p id="symptomsLog" class="log-display"></p>
+                        </div>
+                    </div>
+
+                    <!-- Mood Log -->
+                    <div class="log-card">
+                        <h3><i data-lucide="smile" class="category-icon"></i> Mood</h3>
+                        <div class="options-container hidden">
+                            <div class="mood-buttons">
+                                <button onclick="logMood('happy')" class="mood-btn">Happy</button>
+                                <button onclick="logMood('sad')" class="mood-btn">Sad</button>
+                                <button onclick="logMood('anxious')" class="mood-btn">Anxious</button>
+                                <button onclick="logMood('irritated')" class="mood-btn">Irritated</button>
+                                <button onclick="logMood('energetic')" class="mood-btn">Energetic</button>
+                            </div>
+                            <p id="moodLog" class="log-display"></p>
+                        </div>
+                    </div>
+
+                    <!-- Cravings Log -->
+                    <div class="log-card">
+                        <h3><i data-lucide="cookie" class="category-icon"></i> Cravings</h3>
+                        <div class="options-container hidden">
+                            <div class="craving-buttons">
+                                <button onclick="logCraving('sweet')" class="craving-btn">Sweet</button>
+                                <button onclick="logCraving('salty')" class="craving-btn">Salty</button>
+                                <button onclick="logCraving('chocolate')" class="craving-btn">Chocolate</button>
+                                <button onclick="logCraving('carbs')" class="craving-btn">Carbs</button>
+                                <button onclick="logCraving('none')" class="craving-btn">None</button>
+                            </div>
+                            <p id="cravingsLog" class="log-display"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Today's Summary Card -->
+                <div class="summary-card">
+                    <h3>Today's Summary</h3>
+                    <div id="todaySummary" class="summary-content">
+                        <p>Select options above to see your daily summary.</p>
+                    </div>
+                </div>
+            </section>
         </main>
-    </div>
 
-    <!-- Log Period Modal -->
-    <div class="modal" id="periodModal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal('periodModal')">
-                <i data-lucide="x"></i>
-            </button>
-            <h2>Log Period</h2>
-            <form id="periodForm" onsubmit="handlePeriodLog(event)">
-                <div class="form-group">
-                    <label for="periodDate">Date</label>
-                    <input type="date" id="periodDate" required>
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="nav-container">
+                <div class="nav-brand">
+                    <i data-lucide="heart" class="brand-icon"></i>
+                    <span class="brand-name">BloomHer</span>
                 </div>
-                <div class="form-group">
-                    <label>Flow Intensity</label>
-                    <div class="flow-buttons">
-                        <button type="button" class="flow-btn" data-flow="light" onclick="selectFlow(this)">Light</button>
-                        <button type="button" class="flow-btn" data-flow="medium" onclick="selectFlow(this)">Medium</button>
-                        <button type="button" class="flow-btn" data-flow="heavy" onclick="selectFlow(this)">Heavy</button>
-                    </div>
+                <div class="footer-links">
+                    <a href="diet.html" class="footer-link">Diet</a>
+                    <a href="" class="footer-link">Privacy</a>
+                    <a href="contactus.html" class="footer-link">Contact Us</a>
                 </div>
-                <div class="form-group">
-                    <label for="painLevel">Pain Level</label>
-                    <div class="pain-scale">
-                        <input type="range" id="painLevel" min="0" max="10" step="1">
-                        <div class="scale-labels">
-                            <span>No Pain</span>
-                            <span>Severe</span>
-                        </div>
-                    </div>
-                </div>
-                <button type="submit" class="btn-primary">Save</button>
-            </form>
-        </div>
+            </div>
+        </footer>
     </div>
-
-    <!-- Log Symptoms Modal -->
-    <div class="modal" id="symptomsModal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal('symptomsModal')">
-                <i data-lucide="x"></i>
-            </button>
-            <h2>Log Symptoms</h2>
-            <form id="symptomsForm" onsubmit="handleSymptomsLog(event)">
-                <div class="form-group">
-                    <label for="symptomsDate">Date</label>
-                    <input type="date" id="symptomsDate" required>
-                </div>
-                <div class="form-group">
-                    <label>Common Symptoms</label>
-                    <div class="symptoms-grid">
-                        <label class="symptom-checkbox">
-                            <input type="checkbox" name="symptoms" value="cramps">
-                            <span>Cramps</span>
-                        </label>
-                        <label class="symptom-checkbox">
-                            <input type="checkbox" name="symptoms" value="headache">
-                            <span>Headache</span>
-                        </label>
-                        <label class="symptom-checkbox">
-                            <input type="checkbox" name="symptoms" value="backache">
-                            <span>Backache</span>
-                        </label>
-                        <label class="symptom-checkbox">
-                            <input type="checkbox" name="symptoms" value="bloating">
-                            <span>Bloating</span>
-                        </label>
-                        <label class="symptom-checkbox">
-                            <input type="checkbox" name="symptoms" value="fatigue">
-                            <span>Fatigue</span>
-                        </label>
-                        <label class="symptom-checkbox">
-                            <input type="checkbox" name="symptoms" value="breast_tenderness">
-                            <span>Breast Tenderness</span>
-                        </label>
-                        <label class="symptom-checkbox">
-                            <input type="checkbox" name="symptoms" value="acne">
-                            <span>Acne</span>
-                        </label>
-                        <label class="symptom-checkbox">
-                            <input type="checkbox" name="symptoms" value="mood_swings">
-                            <span>Mood Swings</span>
-                        </label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="symptomNotes">Additional Notes</label>
-                    <textarea id="symptomNotes" rows="3" placeholder="Any other symptoms or details..."></textarea>
-                </div>
-                <button type="submit" class="btn-primary">Save</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Log Mood Modal -->
-    <div class="modal" id="moodModal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal('moodModal')">
-                <i data-lucide="x"></i>
-            </button>
-            <h2>Log Mood</h2>
-            <form id="moodForm" onsubmit="handleMoodLog(event)">
-                <div class="form-group">
-                    <label for="moodDate">Date</label>
-                    <input type="date" id="moodDate" required>
-                </div>
-                <div class="form-group">
-                    <label>How are you feeling?</label>
-                    <div class="mood-grid">
-                        <button type="button" class="mood-btn" data-mood="happy" onclick="selectMood(this)">
-                            <i data-lucide="smile"></i>
-                            <span>Happy</span>
-                        </button>
-                        <button type="button" class="mood-btn" data-mood="neutral" onclick="selectMood(this)">
-                            <i data-lucide="meh"></i>
-                            <span>Neutral</span>
-                        </button>
-                        <button type="button" class="mood-btn" data-mood="sad" onclick="selectMood(this)">
-                            <i data-lucide="frown"></i>
-                            <span>Sad</span>
-                        </button>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="moodNotes">Mood Notes</label>
-                    <textarea id="moodNotes" rows="3" placeholder="How are you feeling today?"></textarea>
-                </div>
-                <button type="submit" class="btn-primary">Save</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Log Cravings Modal -->
-    <div class="modal" id="cravingsModal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal('cravingsModal')">
-                <i data-lucide="x"></i>
-            </button>
-            <h2>Log Cravings</h2>
-            <form id="cravingsForm" onsubmit="handleCravingsLog(event)">
-                <div class="form-group">
-                    <label for="cravingsDate">Date</label>
-                    <input type="date" id="cravingsDate" required>
-                </div>
-                <div class="form-group">
-                    <label>Common Cravings</label>
-                    <div class="cravings-grid">
-                        <label class="craving-checkbox">
-                            <input type="checkbox" name="cravings" value="chocolate">
-                            <span>Chocolate</span>
-                        </label>
-                        <label class="craving-checkbox">
-                            <input type="checkbox" name="cravings" value="salty">
-                            <span>Salty Foods</span>
-                        </label>
-                        <label class="craving-checkbox">
-                            <input type="checkbox" name="cravings" value="sweet">
-                            <span>Sweet Foods</span>
-                        </label>
-                        <label class="craving-checkbox">
-                            <input type="checkbox" name="cravings" value="spicy">
-                            <span>Spicy Foods</span>
-                        </label>
-                        <label class="craving-checkbox">
-                            <input type="checkbox" name="cravings" value="carbs">
-                            <span>Carbs</span>
-                        </label>
-                        <label class="craving-checkbox">
-                            <input type="checkbox" name="cravings" value="dairy">
-                            <span>Dairy</span>
-                        </label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="specificCravings">Specific Cravings</label>
-                    <input type="text" id="specificCravings" placeholder="Enter specific foods you're craving...">
-                </div>
-                <div class="form-group">
-                    <label for="cravingNotes">Additional Notes</label>
-                    <textarea id="cravingNotes" rows="3" placeholder="Any other details about your cravings..."></textarea>
-                </div>
-                <button type="submit" class="btn-primary">Save</button>
-            </form>
-        </div>
-    </div>
-
     <script src="/scriptpages/tracker.js"></script>
 </body>
 </html>
