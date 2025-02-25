@@ -71,20 +71,25 @@ function redirectToTracker() {
 }
 
 function updateCyclePhase() {
-    const cycleData = localStorage.getItem('cycleData');
     const cyclePhaseContent = document.getElementById('cyclePhaseContent');
+    const currentDay = localStorage.getItem('currentCycleDay');
+    const lastUpdated = localStorage.getItem('lastUpdated');
 
-    if (cycleData) {
-        const data = JSON.parse(cycleData);
+    if (currentDay) {
         cyclePhaseContent.innerHTML = `
-            <p class="phase-name">${data.phase}</p>
-            <p class="phase-tip">Day ${data.day} of your cycle</p>
+            <p>Day ${currentDay} of Cycle</p>
+            <p class="last-updated">Last updated: ${new Date(lastUpdated).toLocaleDateString()}</p>
+        `;
+    } else {
+        cyclePhaseContent.innerHTML = `
+            <p>No cycle data available</p>
+            <p class="hint">Click to update in tracker</p>
         `;
     }
 }
 
 function handleCyclePhaseClick() {
-    window.location.href = '/mainpages/tracker.html';
+    window.location.href = 'tracker.html';
 }
 
 function updateCyclePhaseDisplay() {
@@ -206,3 +211,71 @@ document.addEventListener('DOMContentLoaded', () => {
     updateCyclePhaseDisplay();
     // ... rest of your existing initialization code ...
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    const cycleInfo = document.getElementById('cycleInfo');
+    const cycleData = localStorage.getItem('currentCycleData');
+
+    if (cycleData) {
+        const data = JSON.parse(cycleData);
+        cycleInfo.innerHTML = `
+            <div class="cycle-summary">
+                <p><strong>Cycle Day:</strong> ${data.cycleDay}</p>
+                <p><strong>Date:</strong> ${data.selectedDate}</p>
+                <p><strong>Period Flow:</strong> ${data.periodFlow || 'Not logged'}</p>
+                <p><strong>Symptoms:</strong> ${data.symptoms || 'None reported'}</p>
+                <p><strong>Mood:</strong> ${data.mood || 'Not logged'}</p>
+                <p><strong>Cravings:</strong> ${data.cravings || 'None reported'}</p>
+            </div>
+        `;
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const cycleInfoSection = document.getElementById('cycleInfo');
+    
+    function displayCycleInfo() {
+        const cycleData = JSON.parse(localStorage.getItem('cycleData'));
+        
+        if (!cycleData) {
+            cycleInfoSection.innerHTML = `
+                <div class="no-data-message">
+                    <p>Please track your cycle first to get personalized diet recommendations.</p>
+                    <a href="tracker.html" class="btn-primary">Go to Tracker</a>
+                </div>
+            `;
+            return;
+        }
+
+        cycleInfoSection.innerHTML = `
+            <div class="cycle-info-container">
+                <h3>Current Cycle Information</h3>
+                <div class="cycle-details">
+                    <p><strong>Cycle Day:</strong> ${cycleData.cycleDay}</p>
+                    <p><strong>Last Updated:</strong> ${new Date(cycleData.lastUpdated).toLocaleDateString()}</p>
+                    <p><strong>Flow:</strong> ${cycleData.periodFlow || 'Not logged'}</p>
+                    <p><strong>Symptoms:</strong> ${cycleData.symptoms || 'None reported'}</p>
+                    <p><strong>Mood:</strong> ${cycleData.mood || 'Not logged'}</p>
+                    <p><strong>Cravings:</strong> ${cycleData.cravings || 'None reported'}</p>
+                </div>
+            </div>
+        `;
+    }
+
+    displayCycleInfo();
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const currentCycleDayElement = document.getElementById('currentCycleDay');
+    
+    // Get cycle data from localStorage
+    const cycleData = JSON.parse(localStorage.getItem('cycleData'));
+    
+    if (cycleData && cycleData.day) {
+        currentCycleDayElement.textContent = `Day ${cycleData.day} of Cycle`;
+    }
+});
+
+function handleCyclePhaseClick() {
+    window.location.href = 'tracker.html';
+}

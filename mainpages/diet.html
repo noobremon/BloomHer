@@ -20,8 +20,8 @@
       </div>
     </nav>
 
-    <!-- Main Content -->
-    <main class="main-content">
+    <!-- Add this main wrapper -->
+    <main class="main-wrapper">
       <!-- Feature Tabs -->
       <div class="tabs">
         <button class="tab active" data-tab="dashboard">
@@ -50,7 +50,8 @@
           <button class="card cycle-phase-card" onclick="handleCyclePhaseClick()">
             <h3 class="card-title">Current Cycle Phase</h3>
             <div class="cycle-phase" id="cyclePhaseContent">
-              <!-- Content will be dynamically updated -->
+              <p id="currentCycleDay">No cycle data available</p>
+              <p class="hint">Click to update in tracker</p>
             </div>
           </button>
 
@@ -121,7 +122,7 @@
                 <span>Nuts and seeds</span>
               </div>
               <div class="food-item">
-                <i data-lucide="grains"></i>
+                <i data-lucide="wheat"></i>
                 <span>Whole grains</span>
               </div>
             </div>

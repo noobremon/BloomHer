@@ -113,6 +113,10 @@
     margin-bottom: 2rem;
     overflow-x: auto;
     padding-bottom: 0.5rem;
+    background: #fff;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
   
   .tab {
@@ -206,6 +210,39 @@
   .phase-info {
     padding: 1rem;
     text-align: center;
+  }
+  
+  .cycle-phase-card {
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+
+  .cycle-phase-card:hover {
+    transform: translateY(-2px);
+  }
+
+  .cycle-phase {
+    text-align: center;
+    padding: 1rem;
+  }
+
+  .hint {
+    font-size: 0.875rem;
+    color: #666;
+    margin-top: 0.5rem;
+  }
+
+  .last-updated {
+    font-size: 0.75rem;
+    color: #666;
+    margin-top: 0.5rem;
+  }
+
+  #currentCycleDay {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #ff6b6b;
+    margin-bottom: 0.5rem;
   }
   
   /* Form */
@@ -353,3 +390,72 @@
     height: 48px;
     margin-bottom: 1rem;
   }
+
+  .current-phase {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .cycle-summary {
+    margin-top: 15px;
+  }
+
+  .cycle-summary p {
+    margin: 8px 0;
+  }
+
+  .cycle-summary strong {
+    color: #ff6b6b;
+  }
+
+  .cycle-info-section {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.cycle-info-container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.cycle-details {
+    display: grid;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.cycle-details p {
+    margin: 0;
+    padding: 8px;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+
+.cycle-details strong {
+    color: #ff6b6b;
+    margin-right: 8px;
+}
+
+.no-data-message {
+    text-align: center;
+    padding: 20px;
+}
+
+.no-data-message .btn-primary {
+    margin-top: 15px;
+    display: inline-block;
+}
+
+.main-wrapper {
+    padding-top: 2rem;  /* Adds 32px space after the header */
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}

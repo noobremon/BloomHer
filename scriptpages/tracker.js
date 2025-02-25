@@ -143,6 +143,42 @@ function selectDate(element, date) {
     clearLogs();
 }
 
+// Add this function to save cycle day data
+function saveCycleDay(day) {
+    localStorage.setItem('currentCycleDay', day);
+    localStorage.setItem('lastUpdated', new Date().toISOString());
+}
+
+// Add this function to save cycle data
+function saveCycleData(day) {
+    const cycleData = {
+        day: day,
+        lastUpdated: new Date().toISOString()
+    };
+    localStorage.setItem('cycleData', JSON.stringify(cycleData));
+}
+
+// Modify your existing function where you set the cycle day
+function updateCycleDay(day) {
+    const cycleDayElement = document.getElementById('cycleDay');
+    cycleDayElement.textContent = day;
+    saveCycleData(day);
+}
+
+// Modify your existing day selection function
+function selectDay(date) {
+    // ...existing code...
+    
+    // Assuming this is where you set the cycle day
+    const cycleDay = document.getElementById('cycleDay');
+    cycleDay.textContent = calculateCycleDay(date);
+    
+    // Add this line to save the cycle day
+    saveCycleDay(cycleDay.textContent);
+    
+    // ...rest of existing code...
+}
+
 function resetActiveStates() {
     // Remove active class from all buttons
     document.querySelectorAll('.flow-btn, .symptom-btn, .mood-btn, .craving-btn')
@@ -171,6 +207,8 @@ function logPeriod(flow) {
     // Update period log
     document.getElementById('periodLog').textContent = flow;
     updateSummary();
+    updateTodaySummary();
+    saveToLocalStorage();
 }
 
 function logSymptom(symptom) {
@@ -186,6 +224,8 @@ function logSymptom(symptom) {
     // Update symptoms log
     document.getElementById('symptomsLog').textContent = activeSymptoms.join(', ');
     updateSummary();
+    updateTodaySummary();
+    saveToLocalStorage();
 }
 
 function logMood(mood) {
@@ -201,6 +241,8 @@ function logMood(mood) {
     // Update mood log
     document.getElementById('moodLog').textContent = activeMoods.join(', ');
     updateSummary();
+    updateTodaySummary();
+    saveToLocalStorage();
 }
 
 function logCraving(craving) {
@@ -216,6 +258,8 @@ function logCraving(craving) {
     // Update cravings log
     document.getElementById('cravingsLog').textContent = activeCravings.join(', ');
     updateSummary();
+    updateTodaySummary();
+    saveToLocalStorage();
 }
 
 function updateSummary() {
@@ -284,6 +328,19 @@ function calculateCycleDay(dateString) {
     // Calculate days difference
     const diffTime = Math.abs(new Date(dateString) - new Date(cycleStartDate));
     return Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+}
+
+function saveToLocalStorage() {
+    const cycleData = {
+        cycleDay: document.getElementById('cycleDay').textContent,
+        selectedDate: document.getElementById('selectedDate').textContent,
+        periodFlow: document.getElementById('periodLog').textContent,
+        symptoms: document.getElementById('symptomsLog').textContent,
+        mood: document.getElementById('moodLog').textContent,
+        cravings: document.getElementById('cravingsLog').textContent,
+        lastUpdated: new Date().toISOString()
+    };
+    localStorage.setItem('cycleData', JSON.stringify(cycleData));
 }
 
 // Initialize calendar
