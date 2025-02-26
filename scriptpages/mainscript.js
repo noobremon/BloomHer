@@ -148,7 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <i data-lucide="apple"></i>
                 <span>Diet</span>
             </a>
-            <a href="#" class="journey-btn">
+            <a href="/mainpages/exercises.html" class="journey-btn">
                 <i data-lucide="dumbbell"></i>
                 <span>Exercises</span>
             </a>
