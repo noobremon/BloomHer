@@ -5,98 +5,106 @@ lucide.createIcons();
 const products = [
     {
         id: 1,
-        name: "sofy anti bacteria sanitary pads (xl) 48 pads",
+        name: "Sofy anti bacteria sanitary pads (xl) 48 pads",
         price: 320, // Price in rupees
         description: "Chemical-free, eco-friendly sanitary pads for sensitive skin",
-        image: "https://images.app.goo.gl/bCvTy4oKz1k7ke3TA",
+        image: "https://rukminim2.flixcart.com/image/850/1000/xif0q/sanitary-pad-pantyliner/b/i/q/secure-cottony-regular-230-mm-18-regular-1-sanitary-pad-stayfree-original-imagw3sjbgvndau9.jpeg?q=20&crop=false  ",
         category: "Menstrual Care"
     },
     {
         id: 2,
-        name: "PCOS Supplement Bundle",
-        price: 4999, // Price in rupees
+        name: "GynoCup 10ml Ayurvedic Cramp Relief Roll-On for Period & Body Pain - Quick Relief ...Liquid",
+        price: 179, // Price in rupees
         description: "Essential supplements for managing PCOS symptoms",
-        image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&q=80&w=500",
+        image: "https://m.media-amazon.com/images/I/71S7eD-H0JL.jpg  ",
         category: "Wellness"
     },
     {
         id: 3,
-        name: "Organic Period Tea",
-        price: 1599, // Price in rupees
+        name: "Dr Trust Usa Orthopaedic Electric Heat Belt For Menstrual Cramps, Body & Knee Shoulder",
+        price: 849, // Price in rupees
         description: "Soothing herbal tea blend for menstrual comfort",
-        image: "https://images.unsplash.com/photo-1597481499750-3e6b22637e12?auto=format&fit=crop&q=80&w=500",
+        image: "https://m.media-amazon.com/images/I/81P56OASgcL.jpg ",
         category: "Wellness"
     },
     {
         id: 4,
-        name: "Heat Therapy Pad",
-        price: 2999, // Price in rupees
-        description: "Electric heating pad for cramp relief",
-        image: "https://images.unsplash.com/photo-1585435557343-3b092031a831?auto=format&fit=crop&q=80&w=500",
+        name: "Eco Femme Vibrant Organic Full Cycle Kit",
+        price: 1799, // Price in rupees
+        description: "Eco Friendly Cycle Kit",
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSvAdcoCDrqhprdcKbsGrNPqzIb2noBBMOosw&s",
         category: "Personal Care"
     },
     {
         id: 5,
-        name: "Bamboo Period Underwear",
-        price: 2499, // Price in rupees
+        name: "The Chill Kit | Period Comfort Kit | Menstrual Care for Women | Menstrual Pain Relief",
+        price: 879, // Price in rupees
         description: "Comfortable, absorbent period underwear made from sustainable bamboo",
-        image: "https://images.unsplash.com/photo-1566207474742-de921626ad0c?auto=format&fit=crop&q=80&w=500",
+        image: "https://periodbuddy.care/cdn/shop/files/ChillKit.jpg?v=1702649794&width=416",
         category: "Clothing"
     },
     {
         id: 6,
-        name: "Natural Face Serum",
-        price: 3499, // Price in rupees
-        description: "Hormone-balancing face serum for acne-prone skin",
-        image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&q=80&w=500",
+        name: "Himalaya V- Gel",
+        price: 120, // Price in rupees
+        description: "Hormone-balancing feminine hygiene gel",
+        image: "https://himalayawellness.in/cdn/shop/products/v-gel.jpg?v=1622097551",
         category: "Skincare"
     },
     {
         id: 7,
-        name: "Menstrual Cup",
-        price: 2999, // Price in rupees
-        description: "Medical-grade silicone menstrual cup for eco-friendly period care",
-        image: "https://images.unsplash.com/photo-1631549913936-500fabf10c06?auto=format&fit=crop&q=80&w=500",
+        name: "Whisper choice ultra sanitary pads (xl) 6 pads With Wings ",
+        price: 440, // Price in rupees
+        description: "Chemical-free, eco-friendly sanitary pads for sensitive skin",
+        image: "https://m.media-amazon.com/images/I/71r-i1EtMtL.jpg",
         category: "Menstrual Care"
     },
     {
         id: 8,
-        name: "Organic Cotton Tampons",
-        price: 899, // Price in rupees
+        name: "Bella Tampo Mini Easy Twist 16'S",
+        price: 149 , // Price in rupees
         description: "100% organic cotton tampons without harmful chemicals",
-        image: "https://images.unsplash.com/photo-1631549913912-1c13a6c56c9c?auto=format&fit=crop&q=80&w=500",
+        image: "https://m.media-amazon.com/images/I/71vsEgu5qPL.jpg",
         category: "Menstrual Care"
     },
     {
         id: 9,
-        name: "Hormone Balance Tea",
-        price: 1999, // Price in rupees
+        name: "Steadfast Nutrition Steadlytes Instant Electrolytes & Vitamins By nutrabay.com",
+        price: 199, // Price in rupees
         description: "Herbal tea blend to support hormonal balance",
-        image: "https://images.unsplash.com/photo-1597481499711-b7e10b9f3f10?auto=format&fit=crop&q=80&w=500",
+        image: "https://cdn2.nutrabay.com/uploads/product/featured_image/product-4078-featured_image-Steadfast_Nutrition_Steadlytes_Instant_Electrolytes__Vitamins.jpg",
         category: "Wellness"
     },
     {
         id: 10,
-        name: "Eco-friendly Razor",
-        price: 2599, // Price in rupees
-        description: "Sustainable metal razor with replaceable blades",
-        image: "https://images.unsplash.com/photo-1621607512022-6aecc4fed814?auto=format&fit=crop&q=80&w=500",
+        name: "Rash-Free and 100% Biodegradable Sanitary Pads (9 pads)",
+        price: 249, // Price in rupees
+        description: "Eco Friendly Pads",
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtyZ4Dqi4WuLwRxnMTcsWyOEkrSoNRthRiyQ&s",
         category: "Personal Care"
     },
     {
         id: 11,
-        name: "Acne Treatment Serum",
-        price: 3999, // Price in rupees
-        description: "Targeted treatment for hormonal acne",
-        image: "https://images.unsplash.com/photo-1620916565839-1f7809db7c3e?auto=format&fit=crop&q=80&w=500",
+        name: "VWash Plus Expert Intimate Hygiene Liquid Wash (100ml)",
+        price: 199, // Price in rupees
+        description: "Targeted treatment for intimate hygiene",
+        image: "https://m.media-amazon.com/images/I/5188cGUuY8L.jpg",
+        category: "Skincare"
+    },
+    {
+        id: 13,
+        name: "Mankind Intiwash New Feminine Hygiene Wash 100 ml",
+        price: 167, // Price in rupees
+        description: "Targeted treatment for intimate hygiene",
+        image: "https://www.netmeds.com/images/product-v1/600x600/825582/intiwash_new_liquid_wash_100ml_64062_0_2.jpg",
         category: "Skincare"
     },
     {
         id: 12,
-        name: "Yoga Leggings",
-        price: 4599, // Price in rupees
+        name: "Pee Safe Aloe Vera Panty Liners (50 Liners) Panty Liner",
+        price: 199, // Price in rupees
         description: "High-waisted leggings with tummy control",
-        image: "https://images.unsplash.com/photo-1548663512-4a5a34291cf6?auto=format&fit=crop&q=80&w=500",
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVuYx3iNoT6PGWZcwGBi7OfeKl3KKw6f0lxw&s",
         category: "Clothing"
     }
 ];
