@@ -153,31 +153,32 @@ function formatPrice(price) {
 
 // Create product card
 function createProductCard(product) {
-    const card = document.createElement('div');
-    card.className = 'product-card';
-    card.innerHTML = `
-        <div class="product-image">
-            <img src="${product.image}" alt="${product.name}">
-            <button class="wishlist-button">
-                <i data-lucide="heart"></i>
-            </button>
-        </div>
-        <div class="product-info">
-            <span class="product-category">${product.category}</span>
-            <h3 class="product-name">${product.name}</h3>
-            <p class="product-description">${product.description}</p>
-            <div class="product-footer">
-                <span class="product-price">${formatPrice(product.price)}</span>
-                <button class="add-to-cart">Add to Cart</button>
+    return `
+        <div class="product-card" data-category="${product.category}">
+            <div class="product-image">
+                <img src="${product.image}" alt="${product.name}">
+            </div>
+            <div class="product-info">
+                <div class="product-category">${product.category}</div>
+                <h3 class="product-name">${product.name}</h3>
+                <p class="product-description">${product.description}</p>
+                <div class="product-footer">
+                    <div class="product-price">₹${product.price}</div>
+                    <button class="add-to-cart" onclick="addToCart('${product.id}')">
+                        <span>Add</span>
+                        <i data-lucide="shopping-cart"></i>
+                    </button>
+                </div>
             </div>
         </div>
     `;
+}
 
-    // Add to cart functionality
-    const addToCartButton = card.querySelector('.add-to-cart');
-    addToCartButton.addEventListener('click', () => addToCart(product));
-
-    return card;
+// Make sure to initialize Lucide icons after adding products
+function initializeProducts(products) {
+    const productsGrid = document.getElementById('productsGrid');
+    productsGrid.innerHTML = products.map(product => createProductCard(product)).join('');
+    lucide.createIcons();
 }
 
 // Filter products by category
@@ -207,12 +208,11 @@ filterProducts('all');
 
 // Search functionality
 function initializeSearch() {
-    const desktopSearch = document.getElementById('desktopSearch');
-    const mobileSearch = document.getElementById('mobileSearch');
+    const searchInput = document.getElementById('searchInput');
+    const searchButton = document.getElementById('searchButton');
     
-    // Function to perform search
-    function performSearch(searchTerm) {
-        searchTerm = searchTerm.toLowerCase().trim();
+    function performSearch() {
+        const searchTerm = searchInput.value.toLowerCase().trim();
         const productCards = document.querySelectorAll('.product-card');
         
         productCards.forEach(card => {
@@ -230,47 +230,19 @@ function initializeSearch() {
         });
     }
 
-    // Add event listeners for both search inputs
-    [desktopSearch, mobileSearch].forEach(searchInput => {
-        if (searchInput) {
-            // Search as user types (with debouncing)
-            let debounceTimer;
-            searchInput.addEventListener('input', (e) => {
-                clearTimeout(debounceTimer);
-                debounceTimer = setTimeout(() => {
-                    performSearch(e.target.value);
-                }, 300); // Wait 300ms after user stops typing
-            });
+    // Search only when clicking the search button
+    searchButton.addEventListener('click', performSearch);
 
-            // Search when Enter key is pressed
-            searchInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    performSearch(e.target.value);
-                }
-            });
+    // Also allow search when pressing Enter key
+    searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            performSearch();
         }
     });
-
-    // Sync search boxes
-    function syncSearchBoxes(value) {
-        if (desktopSearch) desktopSearch.value = value;
-        if (mobileSearch) mobileSearch.value = value;
-    }
-
-    if (desktopSearch) {
-        desktopSearch.addEventListener('input', (e) => {
-            syncSearchBoxes(e.target.value);
-        });
-    }
-
-    if (mobileSearch) {
-        mobileSearch.addEventListener('input', (e) => {
-            syncSearchBoxes(e.target.value);
-        });
-    }
 }
 
 // Initialize search when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     initializeSearch();
+    lucide.createIcons(); // Initialize Lucide icons
 });

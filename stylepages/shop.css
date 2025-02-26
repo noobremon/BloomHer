@@ -50,11 +50,15 @@ body {
 
 .search-container {
     position: relative;
+    display: flex;
+    align-items: center;
+    max-width: 300px;
+    margin: 0 auto;
 }
 
 .search-container input {
     width: 100%;
-    padding: 8px 32px 8px 12px;
+    padding: 8px 40px 8px 12px;
     border: 1px solid #ddd;
     border-radius: 20px;
     outline: none;
@@ -65,13 +69,29 @@ body {
     border-color: #E75480;
 }
 
-.search-container i {
+.search-button {
     position: absolute;
-    right: 12px;
+    right: 4px;
     top: 50%;
     transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-button i {
+    width: 20px;
+    height: 20px;
     color: #666;
-    pointer-events: none;
+    transition: color 0.3s ease;
+}
+
+.search-button:hover i {
+    color: #E75480;
 }
 
 .nav-actions {
@@ -192,11 +212,14 @@ body {
 }
 
 .product-card {
+    display: flex;
+    flex-direction: column;
     background: white;
     border-radius: 0.5rem;
     overflow: hidden;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     transition: box-shadow 0.3s;
+    height: 100%;
 }
 
 .product-card:hover {
@@ -236,6 +259,9 @@ body {
 
 .product-info {
     padding: 1rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .product-category {
@@ -255,13 +281,15 @@ body {
     margin-top: 0.25rem;
     font-size: 0.875rem;
     color: var(--gray-600);
+    flex-grow: 1;
 }
 
 .product-footer {
-    margin-top: 1rem;
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-top: 1px solid #eee;
 }
 
 .product-price {
@@ -278,10 +306,18 @@ body {
     border-radius: 9999px;
     cursor: pointer;
     transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .add-to-cart:hover {
     background: #db2777;
+}
+
+.add-to-cart i {
+    width: 18px;
+    height: 18px;
 }
 
 /* Responsive Design */
