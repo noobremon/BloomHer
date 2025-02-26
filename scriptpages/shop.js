@@ -100,6 +100,30 @@ const products = [
         category: "Skincare"
     },
     {
+        id: 14,
+        name: "Sirona Reusable Menstrual Cup - (Medium)",
+        price: 285, // Price in rupees
+        description: "Targeted treatment for intimate hygiene",
+        image: "https://m.media-amazon.com/images/I/71KWZwaDQvL.jpg",
+        category: "Menstrual Care"
+    },
+    {
+        id: 15,
+        name: "Plush Panty Liners",
+        price: 88, // Price in rupees
+        description: "Targeted treatment for intimate hygiene",
+        image: "https://m.media-amazon.com/images/I/51FAVrPxP0L.jpg",
+        category: "Clothing"
+    },
+    {
+        id: 16,
+        name: "Rebelle Reusable Cloth Panty Liners Pack of 4 (Mini) | Safest Panty Liners",
+        price: 397, // Price in rupees
+        description: "Eco-Friendly Panties for intimate hygiene",
+        image: "https://m.media-amazon.com/images/I/81oxgIxm7US.jpg",
+        category: "Personal Care"
+    },
+    {
         id: 12,
         name: "Pee Safe Aloe Vera Panty Liners (50 Liners) Panty Liner",
         price: 199, // Price in rupees
