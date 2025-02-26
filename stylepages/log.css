@@ -1,23 +1,15 @@
-/* Base styles */
+/* Base Styles */
 :root {
-    --color-rose: #f43f5e;
-    --color-rose-50: #fff1f2;
-    --color-rose-100: #ffe4e6;
-    --color-rose-200: #fecdd3;
-    --color-rose-300: #fda4af;
-    --color-rose-400: #fb7185;
-    --color-rose-500: #f43f5e;
-    --color-rose-600: #e11d48;
-    --color-gray-50: #f9fafb;
-    --color-gray-100: #f3f4f6;
-    --color-gray-200: #e5e7eb;
-    --color-gray-300: #d1d5db;
-    --color-gray-400: #9ca3af;
-    --color-gray-500: #6b7280;
-    --color-gray-600: #4b5563;
-    --color-gray-700: #374151;
-    --color-gray-800: #1f2937;
-    --color-gray-900: #111827;
+    --primary: #ec4899;
+    --primary-light: #fce7f3;
+    --primary-dark: #db2777;
+    --secondary: #8b5cf6;
+    --gray-900: #111827;
+    --gray-600: #4b5563;
+    --gray-400: #9ca3af;
+    --gray-300: #d1d5db;
+    --gray-200: #e5e7eb;
+    --gray-100: #f3f4f6;
 }
 
 * {
@@ -27,185 +19,208 @@
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    line-height: 1.5;
-    color: var(--color-gray-800);
+    font-family: system-ui, -apple-system, sans-serif;
+    background: linear-gradient(135deg, var(--primary-light), white);
     min-height: 100vh;
-    background: linear-gradient(135deg, var(--color-rose-50) 0%, white 50%, var(--color-rose-100) 100%);
+    color: var(--gray-900);
 }
 
-.auth-container {
+.app {
     min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-
-/* Navigation */
-nav {
-    padding: 1.5rem;
-}
-
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.brand {
-    font-size: 1.5rem;
-    font-weight: 700;
-    background: linear-gradient(45deg, var(--color-rose-500), var(--color-rose-600));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-/* Main Content */
-main {
-    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 2rem;
-}
-
-.auth-box {
-    background: white;
-    border-radius: 2rem;
-    padding: 3rem;
-    width: 100%;
-    max-width: 500px;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
-    position: relative;
-    overflow: hidden;
-}
-
-/* Typography */
-h1 {
-    font-size: 2.5rem;
-    font-weight: 800;
-    margin-bottom: 1rem;
-    background: linear-gradient(45deg, var(--color-rose-500), var(--color-rose-600));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-align: center;
-}
-
-h2 {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-    color: var(--color-gray-900);
-}
-
-p {
-    color: var(--color-gray-600);
-    margin-bottom: 2rem;
-    text-align: center;
-}
-
-/* Gender Selection */
-.gender-selection {
-    display: grid;
-    gap: 1rem;
-    margin-top: 2rem;
-}
-
-.gender-btn {
-    background: white;
-    border: 2px solid var(--color-gray-200);
-    border-radius: 1rem;
-    padding: 2rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.gender-btn:hover {
-    border-color: var(--color-rose-300);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-}
-
-.gender-btn i {
-    color: var(--color-rose-500);
-    transition: transform 0.3s ease;
-}
-
-.gender-btn:hover i {
-    transform: scale(1.1);
-}
-
-.gender-btn span {
-    font-weight: 500;
-    color: var(--color-gray-700);
+    padding: 20px;
+    padding-top: 80px;  /* Adjust this value based on your header height */
 }
 
 /* Role Selection */
 .role-selection {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
 }
 
-.role-btn {
+.role-card {
     background: white;
-    border: 2px solid var(--color-gray-200);
-    border-radius: 1rem;
-    padding: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-    cursor: pointer;
+    padding: 2.5rem;
+    border-radius: 1.5rem;
+    box-shadow: 0 10px 25px -5px rgba(236, 72, 153, 0.1), 0 8px 10px -6px rgba(236, 72, 153, 0.1);
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
     transition: all 0.3s ease;
 }
 
+.role-card h1 {
+    color: var(--primary);
+    margin-bottom: 0.75rem;
+    font-size: 2.25rem;
+    font-weight: 700;
+}
+
+.role-card p {
+    color: var(--gray-600);
+    margin-bottom: 2.5rem;
+    font-size: 1.1rem;
+}
+
+.role-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.role-btn {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1.5rem;
+    background: var(--gray-100);
+    border: 2px solid transparent;
+    border-radius: 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 1.1rem;
+    color: var(--gray-900);
+    font-weight: 500;
+}
+
 .role-btn:hover {
-    border-color: var(--color-rose-300);
+    background: var(--primary-light);
+    border-color: var(--primary);
+    color: var(--primary);
     transform: translateY(-2px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
 .role-btn i {
-    color: var(--color-rose-500);
+    width: 24px;
+    height: 24px;
+    margin-bottom: 8px;
+    color: #ff69b4;  /* Pink color for icons */
 }
 
-.role-btn span {
-    font-weight: 500;
-    color: var(--color-gray-700);
+.role-btn[data-role="primary"] i {
+    color: #ff69b4;  /* Pink for primary user (tracking cycle) */
+}
+
+.role-btn[data-role="partner"] i {
+    color: #4169e1;  /* Royal blue for care partner */
 }
 
 /* Form Styles */
+.registration-form, .login-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.form-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 800px;
+    transition: all 0.3s ease;
+}
+
+.form-header {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    margin-bottom: 2.5rem;
+}
+
+.form-header h2 {
+    color: var(--primary);
+    font-size: 1.75rem;
+    font-weight: 700;
+}
+
+.back-btn {
+    background: none;
+    border: none;
+    color: var(--gray-600);
+    cursor: pointer;
+    padding: 0.75rem;
+    border-radius: 0.75rem;
+    transition: all 0.3s;
+}
+
+.back-btn:hover {
+    background: var(--gray-100);
+    color: var(--primary);
+    transform: translateX(-3px);
+}
+
+.form-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.form-section {
+    border: 1px solid var(--gray-200);
+    border-radius: 1rem;
+    padding: 2rem;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.form-section:hover {
+    box-shadow: 0 4px 12px rgba(236, 72, 153, 0.08);
+}
+
+.form-section h3 {
+    color: var(--gray-900);
+    margin-bottom: 1.75rem;
+    font-size: 1.35rem;
+    font-weight: 600;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
 .form-group {
     margin-bottom: 1.5rem;
 }
 
-label {
+.form-group label {
     display: block;
+    margin-bottom: 0.75rem;
+    color: var(--gray-600);
     font-weight: 500;
-    margin-bottom: 0.5rem;
-    color: var(--color-gray-700);
+    font-size: 0.95rem;
 }
 
-input[type="text"],
-input[type="email"],
-input[type="password"] {
+.form-group input,
+.form-group select {
     width: 100%;
-    padding: 0.75rem;
-    border: 2px solid var(--color-gray-200);
-    border-radius: 0.5rem;
+    padding: 0.875rem 1rem;
+    border: 1px solid var(--gray-300);
+    border-radius: 0.75rem;
+    outline: none;
+    transition: all 0.3s;
     font-size: 1rem;
-    transition: all 0.3s ease;
+    background-color: var(--gray-100);
 }
 
-input:focus {
-    outline: none;
-    border-color: var(--color-rose-300);
-    box-shadow: 0 0 0 3px var(--color-rose-100);
+.form-group input:focus,
+.form-group select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-light);
+    background-color: white;
 }
 
 .password-input {
@@ -219,157 +234,206 @@ input:focus {
     transform: translateY(-50%);
     background: none;
     border: none;
-    color: var(--color-gray-400);
+    color: var(--gray-400);
     cursor: pointer;
     padding: 0.25rem;
+    transition: all 0.3s;
 }
 
 .toggle-password:hover {
-    color: var(--color-gray-600);
+    color: var(--primary);
 }
 
-.checkbox-label {
+.checkbox-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.75rem;
+}
+
+.checkbox {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    font-size: 0.875rem;
-}
-
-.checkbox-label input[type="checkbox"] {
-    width: 1rem;
-    height: 1rem;
-    border-radius: 0.25rem;
-}
-
-.checkbox-label a {
-    color: var(--color-rose-500);
-    text-decoration: none;
-}
-
-.checkbox-label a:hover {
-    text-decoration: underline;
-}
-
-/* Buttons */
-.btn-primary {
-    width: 100%;
-    background: linear-gradient(45deg, var(--color-rose-500), var(--color-rose-600));
-    color: white;
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.5rem;
-    border: none;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(244, 63, 94, 0.25);
-}
-
-.back-btn {
-    position: absolute;
-    top: 1rem;
-    left: 1rem;
-    background: none;
-    border: none;
-    color: var(--color-gray-400);
+    gap: 0.75rem;
     cursor: pointer;
     padding: 0.5rem;
-    border-radius: 50%;
+    border-radius: 0.5rem;
+    transition: all 0.3s;
+}
+
+.checkbox:hover {
+    background-color: var(--gray-100);
+}
+
+.checkbox input[type="checkbox"] {
+    width: 1.25rem;
+    height: 1.25rem;
+    cursor: pointer;
+    accent-color: var(--primary);
+}
+
+.form-footer {
+    margin-top: 2.5rem;
+    text-align: center;
+}
+
+.primary-button {
+    width: 100%;
+    padding: 1rem;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 6px -1px rgba(236, 72, 153, 0.2);
+}
+
+.primary-button:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(236, 72, 153, 0.3);
+}
+
+.primary-button:active {
+    transform: translateY(0);
+}
+
+.login-link,
+.forgot-password {
+    margin-top: 1.5rem;
+    color: var(--gray-600);
+    font-size: 0.95rem;
+}
+
+.login-link a,
+.forgot-password a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.login-link a:hover,
+.forgot-password a:hover {
+    text-decoration: underline;
+    color: var(--primary-dark);
+}
+
+/* Relationship Buttons */
+.relationship-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.relationship-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
     transition: all 0.3s ease;
 }
 
-.back-btn:hover {
-    background: var(--color-gray-100);
-    color: var(--color-gray-600);
+.relationship-btn:hover {
+    border-color: #ff69b4;
+    background: #fff5f9;
 }
 
-/* Auth Switch */
-.auth-switch {
-    text-align: center;
-    margin-top: 2rem;
-    font-size: 0.875rem;
+.relationship-btn.selected {
+    border-color: #ff69b4;
+    background: #fff5f9;
 }
 
-.auth-switch a {
-    color: var(--color-rose-500);
-    text-decoration: none;
-    font-weight: 500;
+.relationship-btn i {
+    margin-bottom: 0.5rem;
+    color: #ff69b4;
+    width: 24px;
+    height: 24px;
 }
 
-.auth-switch a:hover {
-    text-decoration: underline;
-}
-
-.forgot-password {
-    color: var(--color-rose-500);
-    text-decoration: none;
-    font-size: 0.875rem;
-    display: inline-block;
-    margin-top: -0.5rem;
-}
-
-.forgot-password:hover {
-    text-decoration: underline;
-}
-
-/* Utility Classes */
-.hidden {
-    display: none;
-}
-
-.icon-rose {
-    color: var(--color-rose-500);
-}
-
-.icon-large {
-    width: 3rem;
-    height: 3rem;
-}
-
-.icon-medium {
-    width: 2rem;
-    height: 2rem;
-}
-
-/* Animations */
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.auth-step {
-    animation: slideIn 0.3s ease-out;
+.relationship-btn span {
+    font-size: 0.9rem;
+    color: #333;
 }
 
 /* Responsive Design */
-@media (max-width: 640px) {
-    .auth-box {
-        padding: 2rem;
-        border-radius: 1.5rem;
+@media (max-width: 768px) {
+    .app {
+        padding: 10px;
+        padding-top: 80px;  /* Adjust this value based on your header height */
     }
 
-    h1 {
-        font-size: 2rem;
+    .form-card {
+        padding: 1.5rem;
     }
 
-    h2 {
-        font-size: 1.5rem;
-    }
-
-    .role-selection {
+    .form-grid {
         grid-template-columns: 1fr;
     }
 
-    .gender-btn {
+    .checkbox-group {
+        grid-template-columns: 1fr;
+    }
+    
+    .role-card h1 {
+        font-size: 1.75rem;
+    }
+    
+    .form-section {
         padding: 1.5rem;
     }
+}
+
+/* Site Header */
+.site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 1rem 2rem;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.logo i {
+    width: 28px;
+    height: 28px;
+    color: #E75480;  /* Pink color for both icons */
+}
+
+.logo span {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #E75480;  /* Same pink color as icons */
+    margin-left: 4px;
+}
+
+/* Adjust main content to account for fixed header */
+.app {
+    padding-top: 80px;
+}
+
+/* Add this to ensure the icons are initialized with the correct color */
+.lucide {
+    stroke-width: 2;
+    color: #E75480;
 }

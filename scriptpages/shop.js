@@ -5,10 +5,10 @@ lucide.createIcons();
 const products = [
     {
         id: 1,
-        name: "Organic Cotton Sanitary Pads",
-        price: 1299, // Price in rupees
+        name: "sofy anti bacteria sanitary pads (xl) 48 pads",
+        price: 320, // Price in rupees
         description: "Chemical-free, eco-friendly sanitary pads for sensitive skin",
-        image: "https://images.unsplash.com/photo-1631549916768-b5d6988a1f07?auto=format&fit=crop&q=80&w=500",
+        image: "https://images.app.goo.gl/bCvTy4oKz1k7ke3TA",
         category: "Menstrual Care"
     },
     {
