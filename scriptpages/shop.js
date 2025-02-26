@@ -153,32 +153,31 @@ function formatPrice(price) {
 
 // Create product card
 function createProductCard(product) {
-    return `
-        <div class="product-card" data-category="${product.category}">
-            <div class="product-image">
-                <img src="${product.image}" alt="${product.name}">
-            </div>
-            <div class="product-info">
-                <div class="product-category">${product.category}</div>
-                <h3 class="product-name">${product.name}</h3>
-                <p class="product-description">${product.description}</p>
-                <div class="product-footer">
-                    <div class="product-price">₹${product.price}</div>
-                    <button class="add-to-cart" onclick="addToCart('${product.id}')">
-                        <span>Add</span>
-                        <i data-lucide="shopping-cart"></i>
-                    </button>
-                </div>
+    const card = document.createElement('div');
+    card.className = 'product-card';
+    card.innerHTML = `
+        <div class="product-image">
+            <img src="${product.image}" alt="${product.name}">
+            <button class="wishlist-button">
+                <i data-lucide="heart"></i>
+            </button>
+        </div>
+        <div class="product-info">
+            <span class="product-category">${product.category}</span>
+            <h3 class="product-name">${product.name}</h3>
+            <p class="product-description">${product.description}</p>
+            <div class="product-footer">
+                <span class="product-price">${formatPrice(product.price)}</span>
+                <button class="add-to-cart">Add to Cart</button>
             </div>
         </div>
     `;
-}
 
-// Make sure to initialize Lucide icons after adding products
-function initializeProducts(products) {
-    const productsGrid = document.getElementById('productsGrid');
-    productsGrid.innerHTML = products.map(product => createProductCard(product)).join('');
-    lucide.createIcons();
+    // Add to cart functionality
+    const addToCartButton = card.querySelector('.add-to-cart');
+    addToCartButton.addEventListener('click', () => addToCart(product));
+
+    return card;
 }
 
 // Filter products by category
