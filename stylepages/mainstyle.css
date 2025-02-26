@@ -620,3 +620,96 @@ footer {
         justify-content: space-between;
     }
 }
+
+/* Add these styles to your existing CSS */
+.journey-menu {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    background: rgba(236, 195, 195, 0.85); /* Light green with transparency */
+    padding: 3rem; /* Increased padding */
+    border-radius: 25px; /* Slightly larger border radius */
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    width: 85%; /* Larger width */
+    max-width: 1200px; /* Slightly larger max-width */
+}
+
+.journey-menu.hidden {
+    opacity: 0;
+    visibility: hidden;
+    transform: translate(-50%, -60%);
+}
+
+.journey-buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2.5rem; /* Increased gap further */
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+.journey-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2.5rem; /* Slightly more padding */
+    background: #ffe6e6; /* Light pink */
+    border-radius: 20px;
+    text-decoration: none;
+    color: #333;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    min-height: 200px; /* Ensure consistent height */
+    justify-content: center;
+}
+
+.journey-btn:hover {
+    transform: translateY(-5px);
+    border-color: #ff6b6b;
+    background: #ffd6d6; /* Slightly darker pink on hover */
+    box-shadow: 0 5px 15px rgba(255, 107, 107, 0.2);
+}
+
+.journey-btn i {
+    width: 4rem; /* Larger icons */
+    height: 4rem; /* Larger icons */
+    margin-bottom: 1.5rem;
+    color: #ff6b6b;
+}
+
+.journey-btn span {
+    font-size: 1.2rem; /* Increased font size */
+    font-weight: 500;
+}
+
+@media (max-width: 992px) {
+    .journey-buttons {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .journey-buttons {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .journey-menu {
+        width: 90%;
+        padding: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .journey-buttons {
+        grid-template-columns: 1fr;
+    }
+    
+    .journey-btn i {
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+}

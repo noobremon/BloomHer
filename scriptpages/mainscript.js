@@ -124,4 +124,60 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     });
+
+    // Start Journey Button functionality
+    const startJourneyBtn = document.querySelector('.hero-content .btn-primary');
+    const journeyMenu = document.createElement('div');
+    journeyMenu.className = 'journey-menu hidden';
+    
+    journeyMenu.innerHTML = `
+        <div class="journey-buttons">
+            <a href="shop.html" class="journey-btn">
+                <i data-lucide="shopping-bag"></i>
+                <span>Shop</span>
+            </a>
+            <a href="blog.html" class="journey-btn">
+                <i data-lucide="book"></i>
+                <span>Blog</span>
+            </a>
+            <a href="/mainpages/tracker.html" class="journey-btn">
+                <i data-lucide="calendar"></i>
+                <span>Tracker</span>
+            </a>
+            <a href="diet.html" class="journey-btn">
+                <i data-lucide="apple"></i>
+                <span>Diet</span>
+            </a>
+            <a href="#" class="journey-btn">
+                <i data-lucide="dumbbell"></i>
+                <span>Exercises</span>
+            </a>
+            <a href="/mainpages/expert.html" class="journey-btn">
+                <i data-lucide="stethoscope"></i>
+                <span>Expert</span>
+            </a>
+            <a href="/mainpages/community.html" class="journey-btn">
+                <i data-lucide="users"></i>
+                <span>Community</span>
+            </a>
+            <a href="/mainpages/contactus.html" class="journey-btn">
+                <i data-lucide="message-circle"></i>
+                <span>Contact Us</span>
+            </a>
+        </div>
+    `;
+
+    document.body.appendChild(journeyMenu);
+
+    startJourneyBtn.addEventListener('click', function() {
+        journeyMenu.classList.toggle('hidden');
+        lucide.createIcons();
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!journeyMenu.contains(e.target) && !startJourneyBtn.contains(e.target)) {
+            journeyMenu.classList.add('hidden');
+        }
+    });
 });
