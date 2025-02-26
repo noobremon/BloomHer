@@ -132,11 +132,11 @@ document.addEventListener('DOMContentLoaded', () => {
     
     journeyMenu.innerHTML = `
         <div class="journey-buttons">
-            <a href="shop.html" class="journey-btn">
+            <a href="/mainpages/shop.html" class="journey-btn">
                 <i data-lucide="shopping-bag"></i>
                 <span>Shop</span>
             </a>
-            <a href="blog.html" class="journey-btn">
+            <a href="/mainpages/blog.html" class="journey-btn">
                 <i data-lucide="book"></i>
                 <span>Blog</span>
             </a>
@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <i data-lucide="calendar"></i>
                 <span>Tracker</span>
             </a>
-            <a href="diet.html" class="journey-btn">
+            <a href="/mainpages/diet.html" class="journey-btn">
                 <i data-lucide="apple"></i>
                 <span>Diet</span>
             </a>
