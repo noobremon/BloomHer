@@ -53,24 +53,25 @@ body {
 }
 
 .search-container input {
-    padding: 0.5rem 2.5rem 0.5rem 1rem;
-    border: 1px solid var(--gray-300);
-    border-radius: 9999px;
+    width: 100%;
+    padding: 8px 32px 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
     outline: none;
-    width: 300px;
+    transition: border-color 0.3s ease;
 }
 
 .search-container input:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 2px var(--primary-light);
+    border-color: #E75480;
 }
 
 .search-container i {
     position: absolute;
-    right: 1rem;
+    right: 12px;
     top: 50%;
     transform: translateY(-50%);
-    color: var(--gray-400);
+    color: #666;
+    pointer-events: none;
 }
 
 .nav-actions {

@@ -204,3 +204,73 @@ categoryButtons.forEach(button => {
 
 // Initial render
 filterProducts('all');
+
+// Search functionality
+function initializeSearch() {
+    const desktopSearch = document.getElementById('desktopSearch');
+    const mobileSearch = document.getElementById('mobileSearch');
+    
+    // Function to perform search
+    function performSearch(searchTerm) {
+        searchTerm = searchTerm.toLowerCase().trim();
+        const productCards = document.querySelectorAll('.product-card');
+        
+        productCards.forEach(card => {
+            const productName = card.querySelector('.product-name').textContent.toLowerCase();
+            const productCategory = card.querySelector('.product-category').textContent.toLowerCase();
+            const productDescription = card.querySelector('.product-description')?.textContent.toLowerCase() || '';
+            
+            if (productName.includes(searchTerm) || 
+                productCategory.includes(searchTerm) || 
+                productDescription.includes(searchTerm)) {
+                card.style.display = 'flex';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+
+    // Add event listeners for both search inputs
+    [desktopSearch, mobileSearch].forEach(searchInput => {
+        if (searchInput) {
+            // Search as user types (with debouncing)
+            let debounceTimer;
+            searchInput.addEventListener('input', (e) => {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    performSearch(e.target.value);
+                }, 300); // Wait 300ms after user stops typing
+            });
+
+            // Search when Enter key is pressed
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    performSearch(e.target.value);
+                }
+            });
+        }
+    });
+
+    // Sync search boxes
+    function syncSearchBoxes(value) {
+        if (desktopSearch) desktopSearch.value = value;
+        if (mobileSearch) mobileSearch.value = value;
+    }
+
+    if (desktopSearch) {
+        desktopSearch.addEventListener('input', (e) => {
+            syncSearchBoxes(e.target.value);
+        });
+    }
+
+    if (mobileSearch) {
+        mobileSearch.addEventListener('input', (e) => {
+            syncSearchBoxes(e.target.value);
+        });
+    }
+}
+
+// Initialize search when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    initializeSearch();
+});
