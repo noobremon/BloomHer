@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BloomHer</title>
+    <link rel="stylesheet" href="/stylepages/sleep.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="app">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-brand">
+                    <h1>DreamEase</h1>
+                </div>
+                <div class="nav-links">
+                    <a href="/mainpages/tracker.html">Cycle Tracker</a>
+                    <a href="/scriptpages/diet.js">Diet Plan</a>
+                    <a href="#" class="active">Sleep Tracker</a>
+                    <a href="#" class="profile-link">
+                        <i data-lucide="user"></i>
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Sleep Summary -->
+            <div class="sleep-summary">
+                <div class="summary-card">
+                    <div class="summary-header">
+                        <h2>Sleep Summary</h2>
+                        <div class="date-selector">
+                            <button id="prevDate" class="icon-button">
+                                <i data-lucide="chevron-left"></i>
+                            </button>
+                            <span id="currentDate">Today, May 15</span>
+                            <button id="nextDate" class="icon-button">
+                                <i data-lucide="chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="summary-stats">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i data-lucide="moon"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Sleep Duration</h3>
+                                <p id="sleepDuration">7h 20m</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i data-lucide="bar-chart"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Sleep Quality</h3>
+                                <p id="sleepQuality">85%</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i data-lucide="bed"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Bedtime</h3>
+                                <p id="bedtime">11:30 PM</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i data-lucide="sunrise"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Wake Time</h3>
+                                <p id="wakeTime">6:50 AM</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sleep Tracking -->
+            <div class="tracking-section">
+                <div class="section-header">
+                    <h2>Track Your Sleep</h2>
+                    <button id="logSleepBtn" class="primary-button">
+                        <i data-lucide="plus-circle"></i>
+                        Log Sleep
+                    </button>
+                </div>
+                
+                <div class="tracking-cards">
+                    <div class="tracking-card">
+                        <h3>Sleep Schedule</h3>
+                        <div class="schedule-display">
+                            <div class="time-range">
+                                <div class="time-point">
+                                    <span class="time-label">Bedtime</span>
+                                    <span class="time-value" id="scheduledBedtime">10:30 PM</span>
+                                </div>
+                                <div class="time-line"></div>
+                                <div class="time-point">
+                                    <span class="time-label">Wake Up</span>
+                                    <span class="time-value" id="scheduledWakeup">6:30 AM</span>
+                                </div>
+                            </div>
+                            <button id="editScheduleBtn" class="secondary-button">
+                                <i data-lucide="edit"></i>
+                                Edit Schedule
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="tracking-card">
+                        <h3>Sleep Quality Factors</h3>
+                        <div class="factors-grid">
+                            <div class="factor-item">
+                                <label class="factor-checkbox">
+                                    <input type="checkbox" id="stressCheck">
+                                    <span>Stress</span>
+                                </label>
+                            </div>
+                            <div class="factor-item">
+                                <label class="factor-checkbox">
+                                    <input type="checkbox" id="caffeineCheck">
+                                    <span>Caffeine</span>
+                                </label>
+                            </div>
+                            <div class="factor-item">
+                                <label class="factor-checkbox">
+                                    <input type="checkbox" id="exerciseCheck">
+                                    <span>Exercise</span>
+                                </label>
+                            </div>
+                            <div class="factor-item">
+                                <label class="factor-checkbox">
+                                    <input type="checkbox" id="screenTimeCheck">
+                                    <span>Screen Time</span>
+                                </label>
+                            </div>
+                            <div class="factor-item">
+                                <label class="factor-checkbox">
+                                    <input type="checkbox" id="hormoneCheck">
+                                    <span>Hormonal Changes</span>
+                                </label>
+                            </div>
+                            <div class="factor-item">
+                                <label class="factor-checkbox">
+                                    <input type="checkbox" id="mealCheck">
+                                    <span>Late Meal</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sleep Insights -->
+            <div class="insights-section">
+                <h2>Sleep Insights</h2>
+                <div class="insights-cards">
+                    <div class="insight-card">
+                        <div class="insight-header">
+                            <i data-lucide="trending-up"></i>
+                            <h3>Weekly Trends</h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="sleepChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="insight-card">
+                        <div class="insight-header">
+                            <i data-lucide="zap"></i>
+                            <h3>Cycle Impact</h3>
+                        </div>
+                        <div class="cycle-impact">
+                            <p>Your sleep quality tends to decrease during the <span class="highlight">luteal phase</span> of your cycle.</p>
+                            <div class="recommendation">
+                                <h4>Recommendations:</h4>
+                                <ul>
+                                    <li>Try going to bed 30 minutes earlier</li>
+                                    <li>Limit caffeine after 2 PM</li>
+                                    <li>Consider magnesium supplements</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sleep Hygiene -->
+            <div class="hygiene-section">
+                <h2>Sleep Hygiene Tips</h2>
+                <div class="tips-cards">
+                    <div class="tip-card">
+                        <div class="tip-icon">
+                            <i data-lucide="clock"></i>
+                        </div>
+                        <h3>Consistent Schedule</h3>
+                        <p>Go to bed and wake up at the same time every day, even on weekends.</p>
+                    </div>
+                    
+                    <div class="tip-card">
+                        <div class="tip-icon">
+                            <i data-lucide="smartphone-x"></i>
+                        </div>
+                        <h3>Limit Screen Time</h3>
+                        <p>Avoid screens at least 1 hour before bedtime to reduce blue light exposure.</p>
+                    </div>
+                    
+                    <div class="tip-card">
+                        <div class="tip-icon">
+                            <i data-lucide="coffee"></i>
+                        </div>
+                        <h3>Watch Caffeine</h3>
+                        <p>Avoid caffeine after 2 PM, especially during your luteal phase.</p>
+                    </div>
+                    
+                    <div class="tip-card">
+                        <div class="tip-icon">
+                            <i data-lucide="wind"></i>
+                        </div>
+                        <h3>Cool Environment</h3>
+                        <p>Keep your bedroom between 65-68°F (18-20°C) for optimal sleep.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Sleep Log Modal -->
+        <div class="modal" id="sleepLogModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Log Your Sleep</h3>
+                    <button class="close-btn" id="closeSleepModal">
+                        <i data-lucide="x"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="sleepLogForm">
+                        <div class="form-group">
+                            <label for="sleepDate">Date</label>
+                            <input type="date" id="sleepDate" required>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="bedtimeHour">Bedtime</label>
+                                <div class="time-input">
+                                    <select id="bedtimeHour" required>
+                                        <option value="">Hour</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                    </select>
+                                    <select id="bedtimeMinute" required>
+                                        <option value="">Min</option>
+                                        <option value="00">00</option>
+                                        <option value="15">15</option>
+                                        <option value="30">30</option>
+                                        <option value="45">45</option>
+                                    </select>
+                                    <select id="bedtimeAmPm" required>
+                                        <option value="PM">PM</option>
+                                        <option value="AM">AM</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="wakeupHour">Wake Up Time</label>
+                                <div class="time-input">
+                                    <select id="wakeupHour" required>
+                                        <option value="">Hour</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                    </select>
+                                    <select id="wakeupMinute" required>
+                                        <option value="">Min</option>
+                                        <option value="00">00</option>
+                                        <option value="15">15</option>
+                                        <option value="30">30</option>
+                                        <option value="45">45</option>
+                                    </select>
+                                    <select id="wakeupAmPm" required>
+                                        <option value="AM">AM</option>
+                                        <option value="PM">PM</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="sleepQualityRating">Sleep Quality</label>
+                            <div class="rating-input">
+                                <input type="range" id="sleepQualityRating" min="1" max="10" value="7">
+                                <span id="qualityValue">7/10</span>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Disruptions</label>
+                            <div class="checkbox-grid">
+                                <label class="checkbox">
+                                    <input type="checkbox" value="wakeups">
+                                    Woke up during night
+                                </label>
+                                <label class="checkbox">
+                                    <input type="checkbox" value="bathroom">
+                                    Bathroom trips
+                                </label>
+                                <label class="checkbox">
+                                    <input type="checkbox" value="noise">
+                                    Noise disturbances
+                                </label>
+                                <label class="checkbox">
+                                    <input type="checkbox" value="temperature">
+                                    Too hot/cold
+                                </label>
+                                <label class="checkbox">
+                                    <input type="checkbox" value="pain">
+                                    Pain or discomfort
+                                </label>
+                                <label class="checkbox">
+                                    <input type="checkbox" value="anxiety">
+                                    Anxiety/racing thoughts
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="sleepNotes">Notes</label>
+                            <textarea id="sleepNotes" rows="3" placeholder="Any additional notes about your sleep..."></textarea>
+                        </div>
+                        
+                        <button type="submit" class="primary-button">Save Sleep Log</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Schedule Modal -->
+        <div class="modal" id="scheduleModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Set Sleep Schedule</h3>
+                    <button class="close-btn" id="closeScheduleModal">
+                        <i data-lucide="x"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="scheduleForm">
+                        <div class="form-group">
+                            <label for="targetBedtimeHour">Target Bedtime</label>
+                            <div class="time-input">
+                                <select id="targetBedtimeHour" required>
+                                    <option value="">Hour</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                    <option value="11">11</option>
+                                    <option value="12">12</option>
+                                </select>
+                                <select id="targetBedtimeMinute" required>
+                                    <option value="">Min</option>
+                                    <option value="00">00</option>
+                                    <option value="15">15</option>
+                                    <option value="30">30</option>
+                                    <option value="45">45</option>
+                                </select>
+                                <select id="targetBedtimeAmPm" required>
+                                    <option value="PM">PM</option>
+                                    <option value="AM">AM</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="targetWakeupHour">Target Wake Up Time</label>
+                            <div class="time-input">
+                                <select id="targetWakeupHour" required>
+                                    <option value="">Hour</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                    <option value="11">11</option>
+                                    <option value="12">12</option>
+                                </select>
+                                <select id="targetWakeupMinute" required>
+                                    <option value="">Min</option>
+                                    <option value="00">00</option>
+                                    <option value="15">15</option>
+                                    <option value="30">30</option>
+                                    <option value="45">45</option>
+                                </select>
+                                <select id="targetWakeupAmPm" required>
+                                    <option value="AM">AM</option>
+                                    <option value="PM">PM</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Reminder Settings</label>
+                            <div class="checkbox-group">
+                                <label class="checkbox">
+                                    <input type="checkbox" id="bedtimeReminder" checked>
+                                    Bedtime reminder (30 min before)
+                                </label>
+                                <label class="checkbox">
+                                    <input type="checkbox" id="wakeupReminder" checked>
+                                    Wake up alarm
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Apply Schedule To</label>
+                            <div class="day-selector">
+                                <label class="day-btn">
+                                    <input type="checkbox" value="mon" checked>
+                                    <span>M</span>
+                                </label>
+                                <label class="day-btn">
+                                    <input type="checkbox" value="tue" checked>
+                                    <span>T</span>
+                                </label>
+                                <label class="day-btn">
+                                    <input type="checkbox" value="wed" checked>
+                                    <span>W</span>
+                                </label>
+                                <label class="day-btn">
+                                    <input type="checkbox" value="thu" checked>
+                                    <span>T</span>
+                                </label>
+                                <label class="day-btn">
+                                    <input type="checkbox" value="fri" checked>
+                                    <span>F</span>
+                                </label>
+                                <label class="day-btn">
+                                    <input type="checkbox" value="sat">
+                                    <span>S</span>
+                                </label>
+                                <label class="day-btn">
+                                    <input type="checkbox" value="sun">
+                                    <span>S</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="primary-button">Save Schedule</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/scriptpages/sleep.js"></script>
+</body>
+</html>
