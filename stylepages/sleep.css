@@ -19,6 +19,9 @@
     --pink: #E75480;
     --white: #FFFFFF;
     --pinkish-red: #FF6F61;
+    --light-pink: #FFC0CB;
+    --dark-pink: #C2185B; /* Darker pink for emphasis */
+    --highlight-pink: #FFB6C1; /* Lighter pink for highlights */
 }
 
 * {
@@ -37,7 +40,7 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    color: var(--pinkish-red);
+    color: var(--pink);
 }
 
 a {
@@ -46,7 +49,7 @@ a {
 }
 
 a:hover {
-    color: var(--pinkish-red);
+    color: var(--light-pink);
 }
 
 /* Navigation */
@@ -67,9 +70,20 @@ a:hover {
     align-items: center;
     justify-content: space-between;
 }
+.nav-brand {
+    display: flex;
+    align-items: center; /* Aligns items in the same line */
+    gap: 8px; /* Adds space between icon and text */
+}
+
+.brand-icon {
+    color: #d72b81; /* Sets the heart icon color to pink */
+    font-size: 24px; /* Adjusts size if needed */
+}
+
 
 .nav-brand h1 {
-    color: var(--primary);
+    color: #d72b81; /* Pinkish color */
     font-size: 1.5rem;
     font-weight: bold;
 }
@@ -92,8 +106,15 @@ a:hover {
 
 .nav-links a:hover,
 .nav-links a.active {
-    color: var(--pinkish-red);
+    color: var(--light-pink);
     background: var(--primary-light);
+}
+
+.nav-links a.active {
+    color: var(--dark-pink); /* Darker pink for active link */
+    background-color: var(--highlight-pink); /* Lighter pink for highlight */
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
 }
 
 .profile-link {
@@ -137,7 +158,7 @@ a:hover {
 }
 
 .summary-header h2 {
-    color: var(--pinkish-red);
+    color: var(--pink);
 }
 
 .date-selector {
@@ -166,7 +187,7 @@ a:hover {
 }
 
 .icon-button:hover i {
-    color: var(--pinkish-red);
+    color: var(--light-pink);
 }
 
 .summary-stats {
@@ -203,7 +224,7 @@ a:hover {
 
 .stat-info h3 {
     font-size: 0.875rem;
-    color: var(--pinkish-red);
+    color: var(--pink);
     margin-bottom: 0.25rem;
 }
 
@@ -239,7 +260,7 @@ a:hover {
 }
 
 .tracking-card h3 {
-    color: var(--pinkish-red);
+    color: var(--pink);
     margin-bottom: 1.25rem;
 }
 
@@ -285,7 +306,7 @@ a:hover {
 .time-value {
     font-size: 1.125rem;
     font-weight: 600;
-    color: var(--pinkish-red);
+    color: var(--pink);
     background: white;
     padding: 0.5rem 1rem;
     border-radius: 9999px;
@@ -329,7 +350,7 @@ a:hover {
 }
 
 .insights-section h2 {
-    color: var(--pinkish-red);
+    color: var(--pink);
     margin-bottom: 1.5rem;
 }
 
@@ -362,7 +383,7 @@ a:hover {
 }
 
 .insight-card h3 {
-    color: var(--pinkish-red);
+    color: var(--pink);
 }
 
 .insight-card p {
@@ -389,7 +410,7 @@ a:hover {
 
 .recommendation h4 {
     margin-bottom: 0.5rem;
-    color: var(--pinkish-red);
+    color: var(--pink);
 }
 
 .recommendation ul {
@@ -407,7 +428,7 @@ a:hover {
 }
 
 .hygiene-section h2 {
-    color: var(--pinkish-red);
+    color: var(--pink);
     margin-bottom: 1.5rem;
 }
 
@@ -445,7 +466,7 @@ a:hover {
 
 .tip-card h3 {
     margin-bottom: 0.75rem;
-    color: var(--pinkish-red);
+    color: var(--pink);
 }
 
 .tip-card p {
@@ -488,7 +509,7 @@ a:hover {
 }
 
 .modal-header h3 {
-    color: var(--pinkish-red);
+    color: var(--pink);
 }
 
 .close-btn {
@@ -507,7 +528,7 @@ a:hover {
 }
 
 .close-btn:hover i {
-    color: var(--pinkish-red);
+    color: var(--light-pink);
 }
 
 /* Form Styles */
@@ -641,7 +662,7 @@ a:hover {
 }
 
 .primary-button:hover {
-    background-color: var(--pinkish-red);
+    background-color: var(--light-pink);
     transform: translateY(-2px);
 }
 
