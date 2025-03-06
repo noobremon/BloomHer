@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyclecare - Stress Management</title>
+    <link rel="stylesheet" href="stress-style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Navigation -->
+        <nav>
+            <div class="container">
+                <div class="nav-content">
+                    <div class="logo">
+                        <i data-lucide="heart" class="icon-rose"></i>
+                        <span class="brand">Cyclecare</span>
+                    </div>
+                    <div class="nav-links">
+                        <a href="index.html">Home</a>
+                        <a href="tracker.html">Tracker</a>
+                        <a href="stress.html" class="active">Stress Relief</a>
+                        <a href="doctors.html">Doctors</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <header class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h1>Find Your Inner Peace</h1>
+                    <p>Take a moment to breathe, reflect, and restore your balance</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Quick Actions -->
+        <section class="quick-actions">
+            <div class="container">
+                <div class="actions-grid">
+                    <button class="action-card" onclick="startBreathing()">
+                        <i data-lucide="wind" class="icon-large"></i>
+                        <h3>Breathing Exercise</h3>
+                        <p>Guided breathing for instant calm</p>
+                    </button>
+                    <button class="action-card" onclick="startMeditation()">
+                        <i data-lucide="lotus" class="icon-large"></i>
+                        <h3>Meditation</h3>
+                        <p>Find peace in the present moment</p>
+                    </button>
+                    <button class="action-card" onclick="openJournal()">
+                        <i data-lucide="book" class="icon-large"></i>
+                        <h3>Journal</h3>
+                        <p>Express your thoughts and feelings</p>
+                    </button>
+                    <button class="action-card" onclick="showMoodTracker()">
+                        <i data-lucide="smile" class="icon-large"></i>
+                        <h3>Mood Tracker</h3>
+                        <p>Track your emotional journey</p>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Breathing Exercise Modal -->
+        <div class="modal" id="breathingModal">
+            <div class="modal-content">
+                <button class="modal-close" onclick="closeModal('breathingModal')">
+                    <i data-lucide="x"></i>
+                </button>
+                <div class="breathing-exercise">
+                    <div class="breathing-circle">
+                        <div class="circle-text">Breathe</div>
+                    </div>
+                    <div class="breathing-instruction">Inhale</div>
+                    <div class="breathing-timer">5:00</div>
+                    <div class="breathing-controls">
+                        <button class="btn-secondary" onclick="resetBreathing()">Reset</button>
+                        <button class="btn-primary" onclick="toggleBreathing()">Start</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Meditation Modal -->
+        <div class="modal" id="meditationModal">
+            <div class="modal-content">
+                <button class="modal-close" onclick="closeModal('meditationModal')">
+                    <i data-lucide="x"></i>
+                </button>
+                <div class="meditation-session">
+                    <h2>Guided Meditation</h2>
+                    <div class="meditation-options">
+                        <button class="meditation-option" onclick="startMeditationSession(5)">
+                            <span>5 minutes</span>
+                            <p>Quick relaxation</p>
+                        </button>
+                        <button class="meditation-option" onclick="startMeditationSession(10)">
+                            <span>10 minutes</span>
+                            <p>Deep breathing</p>
+                        </button>
+                        <button class="meditation-option" onclick="startMeditationSession(15)">
+                            <span>15 minutes</span>
+                            <p>Stress relief</p>
+                        </button>
+                        <button class="meditation-option" onclick="startMeditationSession(20)">
+                            <span>20 minutes</span>
+                            <p>Inner peace</p>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Journal Modal -->
+        <div class="modal" id="journalModal">
+            <div class="modal-content">
+                <button class="modal-close" onclick="closeModal('journalModal')">
+                    <i data-lucide="x"></i>
+                </button>
+                <div class="journal-section">
+                    <h2>Daily Journal</h2>
+                    <div class="journal-date">
+                        <input type="date" id="journalDate">
+                    </div>
+                    <div class="journal-prompts">
+                        <div class="form-group">
+                            <label>How are you feeling today?</label>
+                            <textarea id="feelingsEntry" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>What's causing you stress?</label>
+                            <textarea id="stressorsEntry" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>What are you grateful for?</label>
+                            <textarea id="gratitudeEntry" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <button class="btn-primary" onclick="saveJournalEntry()">Save Entry</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mood Tracker Modal -->
+        <div class="modal" id="moodModal">
+            <div class="modal-content">
+                <button class="modal-close" onclick="closeModal('moodModal')">
+                    <i data-lucide="x"></i>
+                </button>
+                <div class="mood-tracker">
+                    <h2>Track Your Mood</h2>
+                    <div class="mood-grid">
+                        <button class="mood-btn" data-mood="happy">
+                            <i data-lucide="smile"></i>
+                            <span>Happy</span>
+                        </button>
+                        <button class="mood-btn" data-mood="calm">
+                            <i data-lucide="lotus"></i>
+                            <span>Calm</span>
+                        </button>
+                        <button class="mood-btn" data-mood="anxious">
+                            <i data-lucide="alert-circle"></i>
+                            <span>Anxious</span>
+                        </button>
+                        <button class="mood-btn" data-mood="stressed">
+                            <i data-lucide="frown"></i>
+                            <span>Stressed</span>
+                        </button>
+                    </div>
+                    <div class="form-group">
+                        <label>What's influencing your mood?</label>
+                        <textarea id="moodNotes" rows="3"></textarea>
+                    </div>
+                    <button class="btn-primary" onclick="saveMoodEntry()">Save Mood</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stress Tips Section -->
+        <section class="stress-tips">
+            <div class="container">
+                <h2>Quick Stress Relief Tips</h2>
+                <div class="tips-grid">
+                    <div class="tip-card">
+                        <i data-lucide="walk" class="icon-medium"></i>
+                        <h3>Take a Walk</h3>
+                        <p>A short walk can help clear your mind and reduce stress levels</p>
+                    </div>
+                    <div class="tip-card">
+                        <i data-lucide="music" class="icon-medium"></i>
+                        <h3>Listen to Music</h3>
+                        <p>Calming music can help reduce anxiety and improve mood</p>
+                    </div>
+                    <div class="tip-card">
+                        <i data-lucide="coffee" class="icon-medium"></i>
+                        <h3>Take a Break</h3>
+                        <p>Step away from work for a few minutes to reset</p>
+                    </div>
+                    <div class="tip-card">
+                        <i data-lucide="heart-handshake" class="icon-medium"></i>
+                        <h3>Talk to Someone</h3>
+                        <p>Share your feelings with a friend or family member</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Progress Section -->
+        <section class="progress-section">
+            <div class="container">
+                <h2>Your Progress</h2>
+                <div class="progress-grid">
+                    <div class="progress-card">
+                        <div class="progress-header">
+                            <i data-lucide="timer" class="icon-medium"></i>
+                            <h3>Meditation Minutes</h3>
+                        </div>
+                        <div class="progress-stats">
+                            <span class="progress-number" id="meditationMinutes">0</span>
+                            <span class="progress-label">minutes this week</span>
+                        </div>
+                    </div>
+                    <div class="progress-card">
+                        <div class="progress-header">
+                            <i data-lucide="book" class="icon-medium"></i>
+                            <h3>Journal Entries</h3>
+                        </div>
+                        <div class="progress-stats">
+                            <span class="progress-number" id="journalEntries">0</span>
+                            <span class="progress-label">entries this week</span>
+                        </div>
+                    </div>
+                    <div class="progress-card">
+                        <div class="progress-header">
+                            <i data-lucide="trending-up" class="icon-medium"></i>
+                            <h3>Mood Trend</h3>
+                        </div>
+                        <div class="progress-stats">
+                            <span class="progress-text" id="moodTrend">Improving</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-logo">
+                        <i data-lucide="heart" class="icon-rose"></i>
+                        <span class="brand">Cyclecare</span>
+                    </div>
+                    <div class="footer-links">
+                        <a href="#">About</a>
+                        <a href="#">Privacy</a>
+                        <a href="#">Terms</a>
+                        <a href="#">Contact</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="stress-script.js"></script>
+</body>
+</html>
