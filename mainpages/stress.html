@@ -9,7 +9,7 @@
 </head>
 <body>
     <div class="app-container">
-       
+        <!-- Navigation -->
         <nav>
             <div class="container">
                 <div class="nav-content">
@@ -20,14 +20,14 @@
                     <div class="nav-links">
                         <a href="/index.html">Home</a>
                         <a href="/mainpages/tracker.html">Tracker</a>
-                        <a href="/mainpages/stress.html" class="active">Stress Relief</a>
+                        <a href="stress.html" class="active">Stress Relief</a>
                         <a href="/mainpages/expert.html">Doctors</a>
                     </div>
                 </div>
             </div>
         </nav>
 
-        
+        <!-- Hero Section -->
         <header class="hero">
             <div class="container">
                 <div class="hero-content">
@@ -37,7 +37,7 @@
             </div>
         </header>
 
-        
+        <!-- Quick Actions -->
         <section class="quick-actions">
             <div class="container">
                 <div class="actions-grid">
@@ -65,7 +65,7 @@
             </div>
         </section>
 
-       
+        <!-- Breathing Exercise Modal -->
         <div class="modal" id="breathingModal">
             <div class="modal-content">
                 <button class="modal-close" onclick="closeModal('breathingModal')">
@@ -85,7 +85,7 @@
             </div>
         </div>
 
-        
+        <!-- Meditation Modal -->
         <div class="modal" id="meditationModal">
             <div class="modal-content">
                 <button class="modal-close" onclick="closeModal('meditationModal')">
@@ -115,7 +115,7 @@
             </div>
         </div>
 
-        
+       
         <div class="modal" id="journalModal">
             <div class="modal-content">
                 <button class="modal-close" onclick="closeModal('journalModal')">
@@ -145,7 +145,7 @@
             </div>
         </div>
 
-        
+        <!-- Mood Tracker Modal -->
         <div class="modal" id="moodModal">
             <div class="modal-content">
                 <button class="modal-close" onclick="closeModal('moodModal')">
@@ -180,7 +180,7 @@
             </div>
         </div>
 
-        
+        <!-- Stress Tips Section -->
         <section class="stress-tips">
             <div class="container">
                 <h2>Quick Stress Relief Tips</h2>
@@ -209,10 +209,16 @@
             </div>
         </section>
 
-        
+        <!-- Progress Section -->
         <section class="progress-section">
             <div class="container">
-                <h2>Your Progress</h2>
+                <div class="section-header">
+                    <h2>Your Progress</h2>
+                    <button class="btn-reset" onclick="resetProgress()">
+                        <i data-lucide="refresh-ccw" class="icon-small"></i>
+                        <span>Reset Progress</span>
+                    </button>
+                </div>
                 <div class="progress-grid">
                     <div class="progress-card">
                         <div class="progress-header">
@@ -247,23 +253,35 @@
             </div>
         </section>
 
-        
+        <!-- Footer -->
         <footer>
             <div class="container">
                 <div class="footer-content">
                     <div class="footer-logo">
                         <i data-lucide="heart" class="icon-rose"></i>
-                        <span class="brand">BloomHer</span>
+                        <span class="brand">Cyclecare</span>
                     </div>
                     <div class="footer-links">
                         <a href="#">About</a>
                         <a href="#">Privacy</a>
                         <a href="#">Terms</a>
-                        <a href="/mainpages/contactus.html">Contact</a>
+                        <a href="#">Contact</a>
                     </div>
                 </div>
             </div>
         </footer>
+    </div>
+
+    <!-- Reset Confirmation Modal -->
+    <div class="modal" id="resetConfirmModal">
+        <div class="modal-content">
+            <h2>Reset Progress</h2>
+            <p>Are you sure you want to reset all your progress? This action cannot be undone.</p>
+            <div class="modal-actions">
+                <button class="btn-secondary" onclick="closeModal('resetConfirmModal')">Cancel</button>
+                <button class="btn-danger" onclick="confirmReset()">Reset All Progress</button>
+            </div>
+        </div>
     </div>
 
     <script src="/scriptpages/stress.js"></script>

@@ -32,6 +32,36 @@ function saveUserData() {
     updateProgress();
 }
 
+// Reset progress
+function resetProgress() {
+    document.getElementById('resetConfirmModal').style.display = 'block';
+}
+
+function confirmReset() {
+    // Reset all user data
+    userData = {
+        meditation: {
+            totalMinutes: 0,
+            sessions: []
+        },
+        journal: {
+            entries: []
+        },
+        moods: [],
+        breathingExercises: {
+            completed: 0,
+            totalMinutes: 0
+        }
+    };
+    
+    // Save reset data
+    saveUserData();
+    
+    // Close modal and show success message
+    closeModal('resetConfirmModal');
+    alert('Your progress has been reset successfully.');
+}
+
 // Breathing Exercise
 let breathingInterval;
 let breathingTime = 300; // 5 minutes in seconds
