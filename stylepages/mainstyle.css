@@ -664,6 +664,7 @@ footer {
     transition: all 0.3s ease;
     border: 2px solid transparent;
     min-height: 100px; 
+    
     justify-content: center;
 }
 
@@ -675,8 +676,8 @@ footer {
 }
 
 .journey-btn i {
-    width: 2rem; /* Larger icons */
-    height: 2rem; /* Larger icons */
+    width: 2.5rem; /* Larger icons */
+    height: 2.5rem; /* Larger icons */
     margin-bottom: 1.5rem;
     color: #ff6b6b;
 }
