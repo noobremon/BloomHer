@@ -44,6 +44,7 @@ function startBreathing() {
 function toggleBreathing() {
     const button = document.querySelector('.breathing-controls .btn-primary');
     const instruction = document.querySelector('.breathing-instruction');
+    const circle = document.querySelector('.breathing-circle');
     
     if (!isBreathingActive) {
         button.textContent = 'Pause';
@@ -62,10 +63,10 @@ function toggleBreathing() {
             const cycle = Math.floor((300 - breathingTime) % 8);
             if (cycle < 4) {
                 instruction.textContent = 'Inhale';
-                document.querySelector('.breathing-circle').style.transform = 'scale(1.1)';
+                circle.style.transform = 'scale(1.1)';
             } else {
                 instruction.textContent = 'Exhale';
-                document.querySelector('.breathing-circle').style.transform = 'scale(1)';
+                circle.style.transform = 'scale(1)';
             }
             
             if (breathingTime <= 0) {
@@ -85,6 +86,8 @@ function resetBreathing() {
     isBreathingActive = false;
     document.querySelector('.breathing-timer').textContent = '5:00';
     document.querySelector('.breathing-controls .btn-primary').textContent = 'Start';
+    document.querySelector('.breathing-circle').style.transform = 'scale(1)';
+    document.querySelector('.breathing-instruction').textContent = 'Ready';
 }
 
 function completeBreathing() {
@@ -95,6 +98,7 @@ function completeBreathing() {
     
     alert('Great job! You\'ve completed the breathing exercise.');
     resetBreathing();
+    closeModal('breathingModal');
 }
 
 // Meditation
@@ -112,8 +116,6 @@ function startMeditationSession(minutes) {
     userData.meditation.totalMinutes += minutes;
     saveUserData();
     
-    // Here you would typically start the actual meditation session
-    // For now, we'll just show a completion message
     alert(`${minutes} minute meditation session completed!`);
     closeModal('meditationModal');
 }
@@ -130,7 +132,7 @@ function saveJournalEntry() {
     const stressors = document.getElementById('stressorsEntry').value;
     const gratitude = document.getElementById('gratitudeEntry').value;
     
-    if (!feelings && !stressors && !gratitude) { ```javascript
+    if (!feelings && !stressors && !gratitude) {
         alert('Please fill in at least one field before saving.');
         return;
     }
@@ -181,12 +183,14 @@ function saveMoodEntry() {
 }
 
 // Mood button selection
-document.querySelectorAll('.mood-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
-        btn.classList.add('selected');
+function initializeMoodButtons() {
+    document.querySelectorAll('.mood-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+        });
     });
-});
+}
 
 // Progress Updates
 function updateProgress() {
@@ -253,11 +257,42 @@ window.onclick = function(event) {
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
     loadUserData();
+    initializeMoodButtons();
     
     // Set current date for journal
     const journalDate = document.getElementById('journalDate');
     if (journalDate) {
         journalDate.valueAsDate = new Date();
     }
+
+    // Initialize close buttons
+    document.querySelectorAll('.modal-close').forEach(button => {
+        button.addEventListener('click', () => {
+            const modal = button.closest('.modal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        });
+    });
+
+    // Initialize action buttons
+    document.querySelectorAll('.action-btn').forEach(button => {
+        button.addEventListener('click', () => {
+            const action = button.dataset.action;
+            switch (action) {
+                case 'period':
+                    document.getElementById('periodModal').style.display = 'block';
+                    break;
+                case 'symptoms':
+                    document.getElementById('symptomsModal').style.display = 'block';
+                    break;
+                case 'mood':
+                    document.getElementById('moodModal').style.display = 'block';
+                    break;
+                case 'cravings':
+                    document.getElementById('cravingsModal').style.display = 'block';
+                    break;
+            }
+        });
+    });
 });
-    }
