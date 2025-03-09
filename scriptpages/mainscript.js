@@ -152,6 +152,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 <i data-lucide="dumbbell"></i>
                 <span>Exercises</span>
             </a>
+             <a href="/mainpages/sleep.html" class="journey-btn">
+                <i data-lucide="bed"></i>
+                <span>Sleep</span>
+            </a>
+             <a href="/mainpages/stress.html" class="journey-btn">
+                <i data-lucide="feather"></i>
+                <span>stress</span>
+            </a>
             <a href="/mainpages/expert.html" class="journey-btn">
                 <i data-lucide="stethoscope"></i>
                 <span>Expert</span>
@@ -164,6 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <i data-lucide="message-circle"></i>
                 <span>Contact Us</span>
             </a>
+
         </div>
     `;
 

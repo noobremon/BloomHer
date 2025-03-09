@@ -663,7 +663,7 @@ footer {
     color: #333;
     transition: all 0.3s ease;
     border: 2px solid transparent;
-    min-height: 200px; /* Ensure consistent height */
+    min-height: 100px; 
     justify-content: center;
 }
 
@@ -675,8 +675,8 @@ footer {
 }
 
 .journey-btn i {
-    width: 4rem; /* Larger icons */
-    height: 4rem; /* Larger icons */
+    width: 2rem; /* Larger icons */
+    height: 2rem; /* Larger icons */
     margin-bottom: 1.5rem;
     color: #ff6b6b;
 }
