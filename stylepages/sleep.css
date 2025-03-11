@@ -372,6 +372,7 @@ nav {
     background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(4px);
     z-index: 1000;
+    overflow: auto; /* Enable scroll if content overflows */
 }
 
 .modal-content {
@@ -381,6 +382,7 @@ nav {
     padding: 2rem;
     border-radius: 1rem;
     position: relative;
+    margin-bottom: 4rem; /* Added bottom margin */
 }
 
 .modal-close {

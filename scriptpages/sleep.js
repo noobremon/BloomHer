@@ -32,6 +32,13 @@ document.addEventListener('DOMContentLoaded', () => {
     setCurrentDate();
     loadSleepLogs();
     updateStatistics();
+
+    // Initialize sleep quality buttons
+    document.querySelectorAll('.quality-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            selectQuality(this.dataset.quality);
+        });
+    });
 });
 
 // Set current date in the sleep log form
@@ -151,7 +158,7 @@ function selectQuality(quality) {
     document.querySelectorAll('.quality-btn').forEach(btn => {
         btn.classList.remove('selected');
     });
-    document.querySelector(`[data-quality="${quality}"]`).classList.add('selected');
+    document.querySelector(`.quality-btn[data-quality="${quality}"]`).classList.add('selected');
 }
 
 // Handle sleep log submission
