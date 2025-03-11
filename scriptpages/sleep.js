@@ -533,3 +533,46 @@ setInterval(checkReminders, 60000);
 if ('Notification' in window) {
     Notification.requestPermission();
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    const editScheduleBtn = document.getElementById('editScheduleBtn');
+    const editScheduleModal = document.getElementById('editScheduleModal');
+    const closeEditScheduleModal = document.getElementById('closeEditScheduleModal');
+    const editScheduleForm = document.getElementById('editScheduleForm');
+    const scheduledBedtime = document.getElementById('scheduledBedtime');
+    const scheduledWakeup = document.getElementById('scheduledWakeup');
+
+    // Open the modal when the "Edit Schedule" button is clicked
+    editScheduleBtn.addEventListener('click', () => {
+        editScheduleModal.style.display = 'block';
+    });
+
+    // Close the modal when the close button is clicked
+    closeEditScheduleModal.addEventListener('click', () => {
+        editScheduleModal.style.display = 'none';
+    });
+
+    // Close the modal when clicking outside of the modal content
+    window.addEventListener('click', (event) => {
+        if (event.target === editScheduleModal) {
+            editScheduleModal.style.display = 'none';
+        }
+    });
+
+    // Handle form submission to update the schedule
+    editScheduleForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const bedtimeHour = document.getElementById('editBedtimeHour').value;
+        const bedtimeMinute = document.getElementById('editBedtimeMinute').value;
+        const bedtimeAmPm = document.getElementById('editBedtimeAmPm').value;
+        const wakeupHour = document.getElementById('editWakeupHour').value;
+        const wakeupMinute = document.getElementById('editWakeupMinute').value;
+        const wakeupAmPm = document.getElementById('editWakeupAmPm').value;
+
+        scheduledBedtime.textContent = `${bedtimeHour}:${bedtimeMinute} ${bedtimeAmPm}`;
+        scheduledWakeup.textContent = `${wakeupHour}:${wakeupMinute} ${wakeupAmPm}`;
+
+        editScheduleModal.style.display = 'none';
+    });
+});
