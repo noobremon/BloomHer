@@ -1,578 +1,405 @@
 // Initialize Lucide icons
 lucide.createIcons();
 
-// Sleep data structure
-let sleepData = {
-    logs: [],
-    schedule: {
-        bedtime: { hour: 10, minute: 30, ampm: 'PM' },
-        wakeup: { hour: 6, minute: 30, ampm: 'AM' },
-        days: ['mon', 'tue', 'wed', 'thu', 'fri'],
-        reminders: { bedtime: true, wakeup: true }
-    },
-    selectedDate: new Date()
+// User data structure
+let userData = {
+    sleepLogs: [],
+    bedtimeReminder: null,
+    wakeupAlarm: null,
+    settings: {
+        soundVolumes: {
+            ocean: 50,
+            rain: 50,
+            'white-noise': 50,
+            music: 50
+        }
+    }
 };
 
-// Check if sleep data exists in localStorage
-const savedSleepData = localStorage.getItem('cyclecare_sleep_data');
-if (savedSleepData) {
-    sleepData = JSON.parse(savedSleepData);
-}
-
-// Get user cycle data if available
-const userData = JSON.parse(localStorage.getItem('cyclecare_user_data') || '{}');
+// Audio elements
+const sounds = {
+    ocean: new Audio('https://assets.mixkit.co/sfx/preview/mixkit-ocean-waves-loop-1196.mp3'),
+    rain: new Audio('https://assets.mixkit.co/sfx/preview/mixkit-rain-and-thunder-storm-2390.mp3'),
+    'white-noise': new Audio('https://assets.mixkit.co/sfx/preview/mixkit-white-noise-ambience-loop-1195.mp3'),
+    music: new Audio('https://assets.mixkit.co/sfx/preview/mixkit-meditation-bell-sound-2291.mp3')
+};
 
 // Initialize page
-updateDateDisplay();
-updateSleepSummary();
-updateScheduleDisplay();
-initializeChart();
-
-// Date navigation
-document.getElementById('prevDate').addEventListener('click', () => {
-    const date = new Date(sleepData.selectedDate);
-    date.setDate(date.getDate() - 1);
-    sleepData.selectedDate = date.toISOString();
-    updateDateDisplay();
-    updateSleepSummary();
-});
-
-document.getElementById('nextDate').addEventListener('click', () => {
-    const date = new Date(sleepData.selectedDate);
-    date.setDate(date.getDate() + 1);
-    sleepData.selectedDate = date.toISOString();
-    updateDateDisplay();
-    updateSleepSummary();
-});
-
-function updateDateDisplay() {
-    const date = new Date(sleepData.selectedDate);
-    const today = new Date();
-    
-    let dateText = '';
-    if (isSameDay(date, today)) {
-        dateText = 'Today, ';
-    } else if (isSameDay(date, new Date(today.setDate(today.getDate() - 1)))) {
-        dateText = 'Yesterday, ';
-    } else if (isSameDay(date, new Date(today.setDate(today.getDate() + 2)))) {
-        dateText = 'Tomorrow, ';
-    }
-    
-    dateText += date.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
-    document.getElementById('currentDate').textContent = dateText;
-}
-
-function isSameDay(date1, date2) {
-    return date1.getDate() === date2.getDate() &&
-           date1.getMonth() === date2.getMonth() &&
-           date1.getFullYear() === date2.getFullYear();
-}
-
-// Sleep Log Modal
-const sleepLogModal = document.getElementById('sleepLogModal');
-const closeSleepModal = document.getElementById('closeSleepModal');
-const logSleepBtn = document.getElementById('logSleepBtn');
-const sleepLogForm = document.getElementById('sleepLogForm');
-
-logSleepBtn.addEventListener('click', () => {
-    // Set default date to selected date
-    const date = new Date(sleepData.selectedDate);
-    document.getElementById('sleepDate').value = formatDateForInput(date);
-    
-    // Show modal
-    sleepLogModal.classList.add('active');
-});
-
-closeSleepModal.addEventListener('click', () => {
-    sleepLogModal.classList.remove('active');
-});
-
-// Format date for input field (YYYY-MM-DD)
-function formatDateForInput(date) {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-}
-
-// Sleep quality rating display
-const sleepQualityRating = document.getElementById('sleepQualityRating');
-const qualityValue = document.getElementById('qualityValue');
-
-sleepQualityRating.addEventListener('input', () => {
-    qualityValue.textContent = `${sleepQualityRating.value}/10`;
-});
-
-// Sleep log form submission
-sleepLogForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    
-    const sleepDate = document.getElementById('sleepDate').value;
-    const bedtimeHour = document.getElementById('bedtimeHour').value;
-    const bedtimeMinute = document.getElementById('bedtimeMinute').value;
-    const bedtimeAmPm = document.getElementById('bedtimeAmPm').value;
-    const wakeupHour = document.getElementById('wakeupHour').value;
-    const wakeupMinute = document.getElementById('wakeupMinute').value;
-    const wakeupAmPm = document.getElementById('wakeupAmPm').value;
-    const quality = parseInt(sleepQualityRating.value);
-    
-    const disruptions = Array.from(document.querySelectorAll('#sleepLogForm input[type="checkbox"]:checked'))
-        .map(checkbox => checkbox.value);
-    
-    const notes = document.getElementById('sleepNotes').value;
-    
-    // Calculate sleep duration
-    const sleepDuration = calculateSleepDuration(
-        parseInt(bedtimeHour), 
-        parseInt(bedtimeMinute), 
-        bedtimeAmPm,
-        parseInt(wakeupHour),
-        parseInt(wakeupMinute),
-        wakeupAmPm
-    );
-    
-    // Create sleep log entry
-    const sleepLog = {
-        date: sleepDate,
-        bedtime: {
-            hour: parseInt(bedtimeHour),
-            minute: parseInt(bedtimeMinute),
-            ampm: bedtimeAmPm
-        },
-        wakeup: {
-            hour: parseInt(wakeupHour),
-            minute: parseInt(wakeupMinute),
-            ampm: wakeupAmPm
-        },
-        duration: sleepDuration,
-        quality: quality,
-        disruptions: disruptions,
-        notes: notes
-    };
-    
-    // Add to sleep logs or update existing
-    const existingLogIndex = sleepData.logs.findIndex(log => log.date === sleepDate);
-    if (existingLogIndex !== -1) {
-        sleepData.logs[existingLogIndex] = sleepLog;
-    } else {
-        sleepData.logs.push(sleepLog);
-    }
-    
-    // Save to localStorage
-    saveSleepData();
-    
-    // Update UI
-    sleepLogModal.classList.remove('active');
-    updateSleepSummary();
-    updateChart();
-});
-
-// Calculate sleep duration in minutes
-function calculateSleepDuration(bedHour, bedMinute, bedAmPm, wakeHour, wakeMinute, wakeAmPm) {
-    // Convert to 24-hour format
-    let bedHour24 = bedHour;
-    if (bedAmPm === 'PM' && bedHour !== 12) bedHour24 += 12;
-    if (bedAmPm === 'AM' && bedHour === 12) bedHour24 = 0;
-    
-    let wakeHour24 = wakeHour;
-    if (wakeAmPm === 'PM' && wakeHour !== 12) wakeHour24 += 12;
-    if (wakeAmPm === 'AM' && wakeHour === 12) wakeHour24 = 0;
-    
-    // Calculate minutes since midnight
-    const bedMinutesSinceMidnight = bedHour24 * 60 + bedMinute;
-    let wakeMinutesSinceMidnight = wakeHour24 * 60 + wakeMinute;
-    
-    // If wake time is earlier than bedtime, add a day
-    if (wakeMinutesSinceMidnight < bedMinutesSinceMidnight) {
-        wakeMinutesSinceMidnight += 24 * 60;
-    }
-    
-    // Return duration in minutes
-    return wakeMinutesSinceMidnight - bedMinutesSinceMidnight;
-}
-
-// Format time (e.g., "10:30 PM")
-function formatTime(hour, minute, ampm) {
-    return `${hour}:${String(minute).padStart(2, '0')} ${ampm}`;
-}
-
-// Format duration (e.g., "7h 30m")
-function formatDuration(minutes) {
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-    return `${hours}h ${mins}m`;
-}
-
-// Update sleep summary based on selected date
-function updateSleepSummary() {
-    const date = new Date(sleepData.selectedDate);
-    const dateString = formatDateForInput(date);
-    
-    // Find sleep log for selected date
-    const sleepLog = sleepData.logs.find(log => log => log.date === dateString);
-    
-    if (sleepLog) {
-        // Update summary with actual sleep data
-        document.getElementById('sleepDuration').textContent = formatDuration(sleepLog.duration);
-        document.getElementById('sleepQuality').textContent = `${sleepLog.quality}/10`;
-        document.getElementById('bedtime').textContent = formatTime(sleepLog.bedtime.hour, sleepLog.bedtime.minute, sleepLog.bedtime.ampm);
-        document.getElementById('wakeTime').textContent = formatTime(sleepLog.wakeup.hour, sleepLog.wakeup.minute, sleepLog.wakeup.ampm);
-    } else {
-        // Show placeholder or estimated data
-        document.getElementById('sleepDuration').textContent = "Not logged";
-        document.getElementById('sleepQuality').textContent = "Not logged";
-        document.getElementById('bedtime').textContent = "Not logged";
-        document.getElementById('wakeTime').textContent = "Not logged";
-    }
-}
-
-// Schedule Modal
-const scheduleModal = document.getElementById('scheduleModal');
-const closeScheduleModal = document.getElementById('closeScheduleModal');
-const editScheduleBtn = document.getElementById('editScheduleBtn');
-const scheduleForm = document.getElementById('scheduleForm');
-
-editScheduleBtn.addEventListener('click', () => {
-    // Set current schedule values
-    document.getElementById('targetBedtimeHour').value = sleepData.schedule.bedtime.hour;
-    document.getElementById('targetBedtimeMinute').value = sleepData.schedule.bedtime.minute;
-    document.getElementById('targetBedtimeAmPm').value = sleepData.schedule.bedtime.ampm;
-    
-    document.getElementById('targetWakeupHour').value = sleepData.schedule.wakeup.hour;
-    document.getElementById('targetWakeupMinute').value = sleepData.schedule.wakeup.minute;
-    document.getElementById('targetWakeupAmPm').value = sleepData.schedule.wakeup.ampm;
-    
-    document.getElementById('bedtimeReminder').checked = sleepData.schedule.reminders.bedtime;
-    document.getElementById('wakeupReminder').checked = sleepData.schedule.reminders.wakeup;
-    
-    // Set selected days
-    document.querySelectorAll('.day-btn input').forEach(checkbox => {
-        checkbox.checked = sleepData.schedule.days.includes(checkbox.value);
-    });
-    
-    // Show modal
-    scheduleModal.classList.add('active');
-});
-
-closeScheduleModal.addEventListener('click', () => {
-    scheduleModal.classList.remove('active');
-});
-
-// Schedule form submission
-scheduleForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    
-    const bedtimeHour = document.getElementById('targetBedtimeHour').value;
-    const bedtimeMinute = document.getElementById('targetBedtimeMinute').value;
-    const bedtimeAmPm = document.getElementById('targetBedtimeAmPm').value;
-    
-    const wakeupHour = document.getElementById('targetWakeupHour').value;
-    const wakeupMinute = document.getElementById('targetWakeupMinute').value;
-    const wakeupAmPm = document.getElementById('targetWakeupAmPm').value;
-    
-    const bedtimeReminder = document.getElementById('bedtimeReminder').checked;
-    const wakeupReminder = document.getElementById('wakeupReminder').checked;
-    
-    const selectedDays = Array.from(document.querySelectorAll('.day-btn input:checked'))
-        .map(checkbox => checkbox.value);
-    
-    // Update schedule
-    sleepData.schedule = {
-        bedtime: {
-            hour: parseInt(bedtimeHour),
-            minute: parseInt(bedtimeMinute),
-            ampm: bedtimeAmPm
-        },
-        wakeup: {
-            hour: parseInt(wakeupHour),
-            minute: parseInt(wakeupMinute),
-            ampm: wakeupAmPm
-        },
-        days: selectedDays,
-        reminders: {
-            bedtime: bedtimeReminder,
-            wakeup: wakeupReminder
-        }
-    };
-    
-    // Save to localStorage
-    saveSleepData();
-    
-    // Update UI
-    scheduleModal.classList.remove('active');
-    updateScheduleDisplay();
-});
-
-// Update schedule display
-function updateScheduleDisplay() {
-    document.getElementById('scheduledBedtime').textContent = formatTime(
-        sleepData.schedule.bedtime.hour,
-        sleepData.schedule.bedtime.minute,
-        sleepData.schedule.bedtime.ampm
-    );
-    
-    document.getElementById('scheduledWakeup').textContent = formatTime(
-        sleepData.schedule.wakeup.hour,
-        sleepData.schedule.wakeup.minute,
-        sleepData.schedule.wakeup.ampm
-    );
-}
-
-// Save sleep data to localStorage
-function saveSleepData() {
-    localStorage.setItem('cyclecare_sleep_data', JSON.stringify(sleepData));
-}
-
-// Sleep quality factors tracking
-document.querySelectorAll('.factor-checkbox input').forEach(checkbox => {
-    checkbox.addEventListener('change', () => {
-        const factorId = checkbox.id;
-        const isChecked = checkbox.checked;
-        
-        // Get current date
-        const today = formatDateForInput(new Date());
-        
-        // Find or create log for today
-        let todayLog = sleepData.logs.find(log => log.date === today);
-        if (!todayLog) {
-            todayLog = {
-                date: today,
-                factors: []
-            };
-            sleepData.logs.push(todayLog);
-        }
-        
-        // Add or remove factor
-        if (!todayLog.factors) todayLog.factors = [];
-        
-        if (isChecked) {
-            if (!todayLog.factors.includes(factorId)) {
-                todayLog.factors.push(factorId);
-            }
-        } else {
-            todayLog.factors = todayLog.factors.filter(f => f !== factorId);
-        }
-        
-        // Save to localStorage
-        saveSleepData();
-    });
-});
-
-// Initialize chart
-let sleepChart;
-
-function initializeChart() {
-    const ctx = document.getElementById('sleepChart').getContext('2d');
-    
-    sleepChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: getLast7Days(),
-            datasets: [
-                {
-                    label: 'Sleep Duration (hours)',
-                    data: getSleepDurationData(),
-                    backgroundColor: 'rgba(139, 92, 246, 0.5)',
-                    borderColor: 'rgba(139, 92, 246, 1)',
-                    borderWidth: 1
-                },
-                {
-                    label: 'Sleep Quality',
-                    data: getSleepQualityData(),
-                    backgroundColor: 'rgba(236, 72, 153, 0.5)',
-                    borderColor: 'rgba(236, 72, 153, 1)',
-                    borderWidth: 1,
-                    type: 'line',
-                    yAxisID: 'y1'
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: 'Hours'
-                    },
-                    max: 12
-                },
-                y1: {
-                    beginAtZero: true,
-                    position: 'right',
-                    title: {
-                        display: true,
-                        text: 'Quality (1-10)'
-                    },
-                    max: 10,
-                    grid: {
-                        drawOnChartArea: false
-                    }
-                }
-            }
-        }
-    });
-}
-
-// Update chart with new data
-function updateChart() {
-    sleepChart.data.labels = getLast7Days();
-    sleepChart.data.datasets[0].data = getSleepDurationData();
-    sleepChart.data.datasets[1].data = getSleepQualityData();
-    sleepChart.update();
-}
-
-// Get last 7 days for chart labels
-function getLast7Days() {
-    const dates = [];
-    const today = new Date();
-    
-    for (let i = 6; i >= 0; i--) {
-        const date = new Date(today);
-        date.setDate(date.getDate() - i);
-        dates.push(date.toLocaleDateString('en-US', { weekday: 'short' }));
-    }
-    
-    return dates;
-}
-
-// Get sleep duration data for last 7 days
-function getSleepDurationData() {
-    const data = [];
-    const today = new Date();
-    
-    for (let i = 6; i >= 0; i--) {
-        const date = new Date(today);
-        date.setDate(date.getDate() - i);
-        const dateString = formatDateForInput(date);
-        
-        const log = sleepData.logs.find(log => log.date === dateString);
-        if (log && log.duration) {
-            data.push((log.duration / 60).toFixed(1)); // Convert minutes to hours
-        } else {
-            data.push(null);
-        }
-    }
-    
-    return data;
-}
-
-// Get sleep quality data for last 7 days
-function getSleepQualityData() {
-    const data = [];
-    const today = new Date();
-    
-    for (let i = 6; i >= 0; i--) {
-        const date = new Date(today);
-        date.setDate(date.getDate() - i);
-        const dateString = formatDateForInput(date);
-        
-        const log = sleepData.logs.find(log => log.date === dateString);
-        if (log && log.quality) {
-            data.push(log.quality);
-        } else {
-            data.push(null);
-        }
-    }
-    
-    return data;
-}
-
-// Check if we need to show sleep reminders
-function checkReminders() {
-    const now = new Date();
-    const currentHour = now.getHours();
-    const currentMinute = now.getMinutes();
-    
-    // Check if today is a scheduled day
-    const dayOfWeek = now.toLocaleDateString('en-US', { weekday: 'short' }).toLowerCase();
-    if (!sleepData.schedule.days.includes(dayOfWeek)) return;
-    
-    // Check for bedtime reminder (30 min before)
-    if (sleepData.schedule.reminders.bedtime) {
-        let bedtimeHour = sleepData.schedule.bedtime.hour;
-        if (sleepData.schedule.bedtime.ampm === 'PM' && bedtimeHour !== 12) bedtimeHour += 12;
-        if (sleepData.schedule.bedtime.ampm === 'AM' && bedtimeHour === 12) bedtimeHour = 0;
-        
-        let reminderHour = bedtimeHour;
-        let reminderMinute = sleepData.schedule.bedtime.minute - 30;
-        
-        if (reminderMinute < 0) {
-            reminderMinute += 60;
-            reminderHour -= 1;
-            if (reminderHour < 0) reminderHour += 24;
-        }
-        
-        if (currentHour === reminderHour && currentMinute === reminderMinute) {
-            showNotification('Bedtime Soon', 'Your scheduled bedtime is in 30 minutes.');
-        }
-    }
-}
-
-// Show browser notification
-function showNotification(title, message) {
-    if ('Notification' in window) {
-        if (Notification.permission === 'granted') {
-            new Notification(title, { body: message });
-        } else if (Notification.permission !== 'denied') {
-            Notification.requestPermission().then(permission => {
-                if (permission === 'granted') {
-                    new Notification(title, { body: message });
-                }
-            });
-        }
-    }
-}
-
-// Check for reminders every minute
-setInterval(checkReminders, 60000);
-
-// Request notification permission on page load
-if ('Notification' in window) {
-    Notification.requestPermission();
-}
-
 document.addEventListener('DOMContentLoaded', () => {
-    const editScheduleBtn = document.getElementById('editScheduleBtn');
-    const editScheduleModal = document.getElementById('editScheduleModal');
-    const closeEditScheduleModal = document.getElementById('closeEditScheduleModal');
-    const editScheduleForm = document.getElementById('editScheduleForm');
-    const scheduledBedtime = document.getElementById('scheduledBedtime');
-    const scheduledWakeup = document.getElementById('scheduledWakeup');
-
-    // Open the modal when the "Edit Schedule" button is clicked
-    editScheduleBtn.addEventListener('click', () => {
-        editScheduleModal.style.display = 'block';
-    });
-
-    // Close the modal when the close button is clicked
-    closeEditScheduleModal.addEventListener('click', () => {
-        editScheduleModal.style.display = 'none';
-    });
-
-    // Close the modal when clicking outside of the modal content
-    window.addEventListener('click', (event) => {
-        if (event.target === editScheduleModal) {
-            editScheduleModal.style.display = 'none';
-        }
-    });
-
-    // Handle form submission to update the schedule
-    editScheduleForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-
-        const bedtimeHour = document.getElementById('editBedtimeHour').value;
-        const bedtimeMinute = document.getElementById('editBedtimeMinute').value;
-        const bedtimeAmPm = document.getElementById('editBedtimeAmPm').value;
-        const wakeupHour = document.getElementById('editWakeupHour').value;
-        const wakeupMinute = document.getElementById('editWakeupMinute').value;
-        const wakeupAmPm = document.getElementById('editWakeupAmPm').value;
-
-        scheduledBedtime.textContent = `${bedtimeHour}:${bedtimeMinute} ${bedtimeAmPm}`;
-        scheduledWakeup.textContent = `${wakeupHour}:${wakeupMinute} ${wakeupAmPm}`;
-
-        editScheduleModal.style.display = 'none';
-    });
+    loadUserData();
+    initializeSounds();
+    updateUI();
+    setCurrentDate();
+    loadSleepLogs();
+    updateStatistics();
 });
+
+// Set current date in the sleep log form
+function setCurrentDate() {
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('sleepDate').value = today;
+}
+
+// Initialize sound elements
+function initializeSounds() {
+    Object.values(sounds).forEach(sound => {
+        sound.loop = true;
+    });
+
+    // Update volume sliders
+    document.querySelectorAll('.volume-slider').forEach(slider => {
+        slider.addEventListener('input', (e) => {
+            const soundCard = e.target.closest('.sound-card');
+            const soundName = soundCard.querySelector('h3').textContent.toLowerCase().replace(' ', '-');
+            const volume = e.target.value / 100;
+            
+            if (sounds[soundName]) {
+                sounds[soundName].volume = volume;
+                userData.settings.soundVolumes[soundName] = e.target.value;
+                saveUserData();
+            }
+        });
+    });
+}
+
+// Toggle sound playback
+function toggleSound(soundName) {
+    const sound = sounds[soundName];
+    const button = document.querySelector(`[onclick="toggleSound('${soundName}')"]`);
+    const icon = button.querySelector('i');
+
+    if (sound.paused) {
+        // Stop all other sounds
+        Object.values(sounds).forEach(s => s.pause());
+        document.querySelectorAll('.btn-play i').forEach(i => {
+            i.setAttribute('data-lucide', 'play');
+        });
+        lucide.createIcons();
+
+        // Play selected sound
+        sound.play();
+        icon.setAttribute('data-lucide', 'pause');
+    } else {
+        sound.pause();
+        icon.setAttribute('data-lucide', 'play');
+    }
+    lucide.createIcons();
+}
+
+// Set bedtime reminder
+function setBedtimeReminder() {
+    const bedtime = document.getElementById('bedtime').value;
+    if (!bedtime) return;
+
+    userData.bedtimeReminder = bedtime;
+    saveUserData();
+    
+    // Schedule notification
+    const [hours, minutes] = bedtime.split(':');
+    const now = new Date();
+    const reminderTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
+    
+    if (reminderTime < now) {
+        reminderTime.setDate(reminderTime.getDate() + 1);
+    }
+
+    const timeUntilReminder = reminderTime - now;
+    setTimeout(() => {
+        showNotification('Bedtime Reminder', 'Time to prepare for bed!');
+    }, timeUntilReminder);
+
+    showNotification('Reminder Set', 'Bedtime reminder has been set successfully!');
+}
+
+// Set wakeup alarm
+function setWakeupReminder() {
+    const wakeTime = document.getElementById('wakeTime').value;
+    if (!wakeTime) return;
+
+    userData.wakeupAlarm = wakeTime;
+    saveUserData();
+    
+    // Schedule notification
+    const [hours, minutes] = wakeTime.split(':');
+    const now = new Date();
+    const alarmTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
+    
+    if (alarmTime < now) {
+        alarmTime.setDate(alarmTime.getDate() + 1);
+    }
+
+    const timeUntilAlarm = alarmTime - now;
+    setTimeout(() => {
+        showNotification('Wake Up!', 'Time to start your day!');
+    }, timeUntilAlarm);
+
+    showNotification('Alarm Set', 'Wake up alarm has been set successfully!');
+}
+
+// Show sleep log modal
+function showLogModal() {
+    document.getElementById('logSleepModal').style.display = 'block';
+}
+
+// Close modal
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+}
+
+// Select sleep quality
+function selectQuality(quality) {
+    document.querySelectorAll('.quality-btn').forEach(btn => {
+        btn.classList.remove('selected');
+    });
+    document.querySelector(`[data-quality="${quality}"]`).classList.add('selected');
+}
+
+// Handle sleep log submission
+function handleSleepLog(event) {
+    event.preventDefault();
+    const sleepDate = document.getElementById('sleepDate').value;
+    const sleepTime = document.getElementById('sleepTime').value;
+    const wakeUpTime = document.getElementById('wakeupTime').value;
+    const quality = document.querySelector('.quality-btn.selected').dataset.quality;
+    const notes = document.getElementById('sleepNotes').value;
+
+    const sleepLogs = JSON.parse(localStorage.getItem('sleepLogs')) || [];
+    sleepLogs.push({ date: sleepDate, sleepTime, wakeUpTime, quality, notes });
+    localStorage.setItem('sleepLogs', JSON.stringify(sleepLogs));
+
+    loadSleepLogs();
+    updateStatistics();
+    closeModal('logSleepModal');
+}
+
+// Calculate sleep duration
+function calculateSleepDuration(sleepTime, wakeupTime) {
+    const sleep = new Date(`2000-01-01T${sleepTime}`);
+    const wake = new Date(`2000-01-01T${wakeupTime}`);
+    
+    if (wake < sleep) {
+        wake.setDate(wake.getDate() + 1);
+    }
+    
+    const diff = wake - sleep;
+    const hours = Math.floor(diff / 3600000);
+    const minutes = Math.floor((diff % 3600000) / 60000);
+    
+    return `${hours}h ${minutes}m`;
+}
+
+// Update UI with sleep logs
+function updateUI() {
+    const logGrid = document.getElementById('sleepLogGrid');
+    logGrid.innerHTML = '';
+
+    userData.sleepLogs.slice(0, 6).forEach(log => {
+        const duration = calculateSleepDuration(log.sleepTime, log.wakeupTime);
+        const card = document.createElement('div');
+        card.className = 'log-card';
+        card.innerHTML = `
+            <h3>${new Date(log.date).toLocaleDateString('en-US', { 
+                month: 'long',
+                day: 'numeric'
+            })}</h3>
+            <div class="log-details">
+                <p>Sleep: ${log.sleepTime}</p>
+                <p>Wake: ${log.wakeupTime}</p>
+                <p>Duration: ${duration}</p>
+                <p>Quality: ${log.quality}</p>
+                ${log.notes ? `<p>Notes: ${log.notes}</p>` : ''}
+            </div>
+        `;
+        logGrid.appendChild(card);
+    });
+
+    updateStats();
+}
+
+// Update sleep statistics
+function updateStats() {
+    if (userData.sleepLogs.length === 0) return;
+
+    // Calculate average sleep duration
+    const durations = userData.sleepLogs.map(log => {
+        const sleep = new Date(`2000-01-01T${log.sleepTime}`);
+        const wake = new Date(`2000-01-01T${log.wakeupTime}`);
+        if (wake < sleep) wake.setDate(wake.getDate() + 1);
+        return (wake - sleep) / 3600000; // Convert to hours
+    });
+    
+    const avgDuration = durations.reduce((a, b) => a + b, 0) / durations.length;
+    document.getElementById('avgSleepDuration').textContent = 
+        `${Math.floor(avgDuration)}h ${Math.round((avgDuration % 1) * 60)}m`;
+
+    // Calculate sleep quality
+    const qualities = {
+        'poor': 1,
+        'fair': 2,
+        'good': 3,
+        'excellent': 4
+    };
+    
+    const avgQuality = userData.sleepLogs
+        .map(log => qualities[log.quality])
+        .reduce((a, b) => a + b, 0) / userData.sleepLogs.length;
+    
+    document.getElementById('avgSleepQuality').textContent = 
+        avgQuality >= 3.5 ? 'Excellent' :
+        avgQuality >= 2.5 ? 'Good' :
+        avgQuality >= 1.5 ? 'Fair' : 'Poor';
+
+    // Calculate bedtime consistency
+    const bedtimes = userData.sleepLogs.map(log => log.sleepTime);
+    const consistency = calculateConsistency(bedtimes);
+    document.getElementById('bedtimeConsistency').textContent = `${Math.round(consistency)}%`;
+
+    // Calculate sleep score
+    const score = Math.round(
+        (avgDuration / 8 * 40) + // Duration contributes 40%
+        (avgQuality / 4 * 40) + // Quality contributes 40%
+        (consistency / 100 * 20) // Consistency contributes 20%
+    );
+    document.getElementById('sleepScore').textContent = score;
+}
+
+// Calculate time consistency
+function calculateConsistency(times) {
+    if (times.length < 2) return 100;
+
+    const timeInMinutes = times.map(time => {
+        const [hours, minutes] = time.split(':');
+        return parseInt(hours) * 60 + parseInt(minutes);
+    });
+
+    const variations = timeInMinutes.slice(1).map((time, i) => 
+        Math.abs(time - timeInMinutes[i])
+    );
+
+    const avgVariation = variations.reduce((a, b) => a + b, 0) / variations.length;
+    return Math.max(0, 100 - (avgVariation / 30) * 100);
+}
+
+// Show notification
+function showNotification(title, message) {
+    if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification(title, { body: message });
+    } else if ('Notification' in window && Notification.permission !== 'denied') {
+        Notification.requestPermission().then(permission => {
+            if (permission === 'granted') {
+                new Notification(title, { body: message });
+            }
+        });
+    } else {
+        alert(`${title}: ${message}`);
+    }
+}
+
+// Save and load user data
+function saveUserData() {
+    localStorage.setItem('cyclecare_sleep_data', JSON.stringify(userData));
+}
+
+function loadUserData() {
+    const savedData = localStorage.getItem('cyclecare_sleep_data');
+    if (savedData) {
+        userData = JSON.parse(savedData);
+        
+        // Restore saved volumes
+        Object.entries(userData.settings.soundVolumes).forEach(([sound, volume]) => {
+            if (sounds[sound]) {
+                sounds[sound].volume = volume / 100;
+                const slider = document.querySelector(`.sound-card:has(h3:contains('${sound}')) .volume-slider`);
+                if (slider) slider.value = volume;
+            }
+        });
+    }
+}
+
+// Close modals when clicking outside
+window.onclick = function(event) {
+    if (event.target.classList.contains('modal')) {
+        event.target.style.display = 'none';
+    }
+};
+
+function deleteAllLogs() {
+    localStorage.removeItem('sleepLogs');
+    loadSleepLogs();
+    updateStatistics();
+}
+
+function loadSleepLogs() {
+    const sleepLogs = JSON.parse(localStorage.getItem('sleepLogs')) || [];
+    const sleepLogGrid = document.getElementById('sleepLogGrid');
+    sleepLogGrid.innerHTML = '';
+
+    sleepLogs.forEach((log, index) => { // Include index for deletion
+        const logCard = document.createElement('div');
+        logCard.className = 'log-card';
+        logCard.innerHTML = `
+            <h3>${log.date}</h3>
+            <p>Sleep Time: ${log.sleepTime}</p>
+            <p>Wake Up Time: ${log.wakeUpTime}</p>
+            <p>Quality: ${log.quality}</p>
+            <p>Notes: ${log.notes}</p>
+            <button class="btn-remove" onclick="deleteSleepLog(${index})">Delete</button>
+        `;
+        sleepLogGrid.appendChild(logCard);
+    });
+}
+
+function deleteSleepLog(index) {
+    let sleepLogs = JSON.parse(localStorage.getItem('sleepLogs')) || [];
+    sleepLogs.splice(index, 1); // Remove the log at the specified index
+    localStorage.setItem('sleepLogs', JSON.stringify(sleepLogs));
+    loadSleepLogs();
+    updateStatistics();
+}
+
+function updateStatistics() {
+    const sleepLogs = JSON.parse(localStorage.getItem('sleepLogs')) || [];
+    const avgSleepDuration = document.getElementById('avgSleepDuration');
+    const avgSleepQuality = document.getElementById('avgSleepQuality');
+    const bedtimeConsistency = document.getElementById('bedtimeConsistency');
+    const sleepScore = document.getElementById('sleepScore');
+
+    if (sleepLogs.length === 0) {
+        avgSleepDuration.textContent = '0 hours';
+        avgSleepQuality.textContent = 'N/A';
+        bedtimeConsistency.textContent = '0%';
+        sleepScore.textContent = '0';
+        return;
+    }
+
+    // Calculate statistics
+    let totalSleepDuration = 0;
+    let qualityCount = { poor: 0, fair: 0, good: 0, excellent: 0 };
+    sleepLogs.forEach(log => {
+        const sleepDuration = calculateSleepDuration(log.sleepTime, log.wakeUpTime);
+        totalSleepDuration += sleepDuration;
+        qualityCount[log.quality]++;
+    });
+
+    const avgDuration = (totalSleepDuration / sleepLogs.length).toFixed(1);
+    avgSleepDuration.textContent = `${avgDuration} hours`;
+
+    const mostCommonQuality = Object.keys(qualityCount).reduce((a, b) => qualityCount[a] > qualityCount[b] ? a : b);
+    avgSleepQuality.textContent = mostCommonQuality.charAt(0).toUpperCase() + mostCommonQuality.slice(1);
+
+    // Assuming bedtime consistency and sleep score are calculated based on some logic
+    bedtimeConsistency.textContent = '80%'; // Placeholder value
+    sleepScore.textContent = '85'; // Placeholder value
+}
+
+function calculateSleepDuration(sleepTime, wakeUpTime) {
+    const [sleepHour, sleepMinute] = sleepTime.split(':').map(Number);
+    const [wakeHour, wakeMinute] = wakeUpTime.split(':').map(Number);
+    const sleepDate = new Date(0, 0, 0, sleepHour, sleepMinute);
+    const wakeDate = new Date(0, 0, 0, wakeHour, wakeMinute);
+    if (wakeDate < sleepDate) {
+        wakeDate.setDate(wakeDate.getDate() + 1);
+    }
+    const duration = (wakeDate - sleepDate) / (1000 * 60 * 60); // Convert milliseconds to hours
+    return duration;
+}
