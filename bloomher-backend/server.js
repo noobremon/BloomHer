@@ -123,3 +123,20 @@ router.route('/').get((req, res) => {
 });
 
 module.exports = router;
+
+// filepath: backend/routes/expert.js
+const router = require('express').Router();
+
+router.route('/').get((req, res) => {
+    res.json('Expert route');
+});
+
+module.exports = router;
+
+const router = require('express').Router();
+
+router.route('/').get((req, res) => {
+    res.json('Community route');
+});
+
+module.exports = router;
