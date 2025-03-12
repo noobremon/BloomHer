@@ -78,3 +78,48 @@ const userSchema = new Schema({
 
 const User = mongoose.model('User', userSchema);
 module.exports = User;
+
+// filepath: backend/routes/tracker.js
+const router = require('express').Router();
+
+router.route('/').get((req, res) => {
+    res.json('Tracker route');
+});
+
+module.exports = router;
+
+// filepath: backend/routes/diet.js
+const router = require('express').Router();
+
+router.route('/').get((req, res) => {
+    res.json('Diet route');
+});
+
+module.exports = router;
+
+// filepath: backend/routes/exercises.js
+const router = require('express').Router();
+
+router.route('/').get((req, res) => {
+    res.json('Exercises route');
+});
+
+module.exports = router;
+
+// filepath: backend/routes/sleep.js
+const router = require('express').Router();
+
+router.route('/').get((req, res) => {
+    res.json('Sleep route');
+});
+
+module.exports = router;
+
+// filepath: backend/routes/stress.js
+const router = require('express').Router();
+
+router.route('/').get((req, res) => {
+    res.json('Stress route');
+});
+
+module.exports = router;
