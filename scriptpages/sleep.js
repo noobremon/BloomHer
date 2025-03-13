@@ -24,6 +24,10 @@ const sounds = {
     music: new Audio('/sounds/madhubala.mp3')
 };
 
+sounds['white-noise'].id = 'white-noise';
+
+let currentSound = null;
+
 // Initialize page
 document.addEventListener('DOMContentLoaded', () => {
     loadUserData();
@@ -70,27 +74,38 @@ function initializeSounds() {
 }
 
 // Toggle sound playback
-function toggleSound(soundName) {
-    const sound = sounds[soundName];
-    const button = document.querySelector(`[onclick="toggleSound('${soundName}')"]`);
-    const icon = button.querySelector('i');
+async function toggleSound(soundName, button) {
+    if (sounds[soundName]) {
+        if (currentSound === sounds[soundName]) {
+            // If the current sound is the same as the button's sound, toggle play/pause
+            if (!sounds[soundName].paused) {
+                sounds[soundName].pause();
+                button.innerHTML = '<i data-lucide="play" class="icon-small"></i>';
+                lucide.createIcons(); // Re-render icons after changing the button content
+            } else {
+                sounds[soundName].play();
+                button.innerHTML = '<i data-lucide="pause" class="icon-small"></i>';
+                lucide.createIcons(); // Re-render icons after changing the button content
+            }
+        } else {
+            // If it's a different sound or no sound is playing, stop the current sound and play the new one
+            if (currentSound) {
+                currentSound.pause();
+                // Reset the previous button to play icon
+                const previousButton = document.querySelector(`.btn-play[onclick="toggleSound('${currentSound.id}', this)"]`);
+                if (previousButton) {
+                    previousButton.innerHTML = '<i data-lucide="play" class="icon-small"></i>';
+                    lucide.createIcons(); // Re-render icons
+                }
+            }
 
-    if (sound.paused) {
-        // Stop all other sounds
-        Object.values(sounds).forEach(s => s.pause());
-        document.querySelectorAll('.btn-play i').forEach(i => {
-            i.setAttribute('data-lucide', 'play');
-        });
-        lucide.createIcons();
-
-        // Play selected sound
-        sound.play();
-        icon.setAttribute('data-lucide', 'pause');
-    } else {
-        sound.pause();
-        icon.setAttribute('data-lucide', 'play');
+            // Play the new sound
+            sounds[soundName].play();
+            button.innerHTML = '<i data-lucide="pause" class="icon-small"></i>';
+            lucide.createIcons(); // Ensure icons are rendered after changing the button content
+            currentSound = sounds[soundName];
+        }
     }
-    lucide.createIcons();
 }
 
 // Set bedtime reminder
