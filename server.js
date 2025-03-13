@@ -80,7 +80,7 @@ const User = mongoose.model('User', userSchema);
 module.exports = User;
 
 // filepath: backend/routes/tracker.js
-const router = require('express').Router();
+const trackerRouter = require('express').Router();
 
 router.route('/').get((req, res) => {
     res.json('Tracker route');
@@ -89,7 +89,7 @@ router.route('/').get((req, res) => {
 module.exports = router;
 
 // filepath: backend/routes/diet.js
-const router = require('express').Router();
+const dietRouter = require('express').Router();
 
 router.route('/').get((req, res) => {
     res.json('Diet route');
@@ -98,7 +98,7 @@ router.route('/').get((req, res) => {
 module.exports = router;
 
 // filepath: backend/routes/exercises.js
-const router = require('express').Router();
+const exercisesRouter = require('express').Router();
 
 router.route('/').get((req, res) => {
     res.json('Exercises route');
@@ -107,7 +107,7 @@ router.route('/').get((req, res) => {
 module.exports = router;
 
 // filepath: backend/routes/sleep.js
-const router = require('express').Router();
+const sleepRouter = require('express').Router();
 
 router.route('/').get((req, res) => {
     res.json('Sleep route');
@@ -116,27 +116,27 @@ router.route('/').get((req, res) => {
 module.exports = router;
 
 // filepath: backend/routes/stress.js
-const router = require('express').Router();
+const stressRouter = require('express').Router();
 
-router.route('/').get((req, res) => {
+stressRouter.route('/').get((req, res) => {
     res.json('Stress route');
 });
 
-module.exports = router;
+module.exports = stressRouter;
 
 // filepath: backend/routes/expert.js
-const router = require('express').Router();
+const expertRouter = require('express').Router();
 
-router.route('/').get((req, res) => {
+expertRouter.route('/').get((req, res) => {
     res.json('Expert route');
 });
 
-module.exports = router;
+module.exports = expertRouter;
 
-const router = require('express').Router();
+const communityRouter = require('express').Router();
 
-router.route('/').get((req, res) => {
+communityRouter.route('/').get((req, res) => {
     res.json('Community route');
 });
 
-module.exports = router;
+module.exports = communityRouter;
