@@ -18,10 +18,10 @@ let userData = {
 
 // Audio elements
 const sounds = {
-    ocean: new Audio('https://assets.mixkit.co/sfx/preview/mixkit-ocean-waves-loop-1196.mp3'),
-    rain: new Audio('https://assets.mixkit.co/sfx/preview/mixkit-rain-and-thunder-storm-2390.mp3'),
-    'white-noise': new Audio('https://assets.mixkit.co/sfx/preview/mixkit-white-noise-ambience-loop-1195.mp3'),
-    music: new Audio('https://assets.mixkit.co/sfx/preview/mixkit-meditation-bell-sound-2291.mp3')
+    ocean: new Audio('/sounds/ocean.mp3'),
+    rain: new Audio('/sounds/rain.mp3'),
+    'white-noise': new Audio('/sounds/piano.mp3'),
+    music: new Audio('/sounds/madhubala.mp3')
 };
 
 // Initialize page
