@@ -1,8 +1,8 @@
-// Initialize Lucide icons
+
 lucide.createIcons();
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Mobile menu functionality
+    
     const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
     const navLinks = document.querySelector('.nav-links');
 
@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Sticky header with background change
+    
     const nav = document.querySelector('nav');
     let lastScroll = 0;
 
@@ -28,7 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
         lastScroll = currentScroll;
     });
 
-    // Smooth scrolling for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
@@ -44,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Initialize elements with full opacity
+    
     document.querySelectorAll('.feature-card, .benefit-item, .hero-content, .hero-image').forEach(element => {
         element.style.opacity = '1';
         element.style.transform = 'translateY(0)';
@@ -65,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }, observerOptions);
 
-    // Observe elements for animation with initial state
+    
     document.querySelectorAll('.feature-card, .benefit-item').forEach(element => {
         element.style.opacity = '0';
         element.style.transform = 'translateY(20px)';
@@ -73,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
         observer.observe(element);
     });
 
-    // Parallax effect for community section
+    
     window.addEventListener('scroll', () => {
         const communitySection = document.querySelector('.community');
         if (communitySection) {
@@ -83,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Dynamic gradient background on scroll
+   
     window.addEventListener('scroll', () => {
         const scrolled = window.pageYOffset;
         const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
@@ -97,25 +96,25 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
     });
 
-    // Dropdown Menu Toggle - Replace the existing dropdown code with this
+    
     document.querySelectorAll('.dropdown-toggle').forEach(item => {
         item.addEventListener('click', (event) => {
             event.preventDefault();
             const dropdownMenu = item.nextElementSibling;
             
-            // Close all other dropdowns
+            
             document.querySelectorAll('.dropdown-menu').forEach(menu => {
                 if (menu !== dropdownMenu) {
                     menu.classList.remove('show');
                 }
             });
             
-            // Toggle current dropdown
+           
             dropdownMenu.classList.toggle('show');
         });
     });
 
-    // Close dropdown when clicking outside
+   
     document.addEventListener('click', (event) => {
         const isClickInside = event.target.closest('.dropdown-toggle') || event.target.closest('.dropdown-menu');
         if (!isClickInside) {
@@ -125,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Start Journey Button functionality
+    
     const startJourneyBtn = document.querySelector('.hero-content .btn-primary');
     const journeyMenu = document.createElement('div');
     journeyMenu.className = 'journey-menu hidden';
@@ -183,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
         lucide.createIcons();
     });
 
-    // Close menu when clicking outside
+    
     document.addEventListener('click', function(e) {
         if (!journeyMenu.contains(e.target) && !startJourneyBtn.contains(e.target)) {
             journeyMenu.classList.add('hidden');
