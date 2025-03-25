@@ -291,7 +291,7 @@ nav.scrolled {
     display: block;
 }
 
-/* Hero Section */
+
 .hero {
     display: flex;
     flex-direction: column;
@@ -600,7 +600,7 @@ footer {
     }
 }
 
-/* Add these styles to your existing CSS */
+
 .journey-menu {
     position: fixed;
     top: 50%;
