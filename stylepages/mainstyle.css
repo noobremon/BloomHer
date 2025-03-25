@@ -247,27 +247,6 @@ nav.scrolled {
     background-color: rgba(0, 0, 0, 0.1);
 }
 
-/* .nav-links:hover .dropdown-menu,
-.dropdown-menu:hover {
-    display: block;
-}
-
-.nav-links .dropdown-menu.show {
-    display: block;
-}
-
-.dropdown-menu.active {
-    display: block;
-}
-
-.nav-links:hover .dropdown-menu,
-.dropdown-menu:hover {
-    display: none;
-} */
-
-/* .dropdown-menu.show {
-    display: block;
-} */
 
 .dropdown {
     position: relative;
