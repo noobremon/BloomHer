@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BloomHer</title>
+    <title>BloomHer - Community</title>
     <link rel="stylesheet" href="/stylepages/community.css">
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
@@ -11,16 +11,139 @@
         </script>
 </head>
 <body>
-    <div class="container">
-        <h2>🌸 Community Portal 🌸</h2>
-        <input type="text" id="username" placeholder="Enter your name">
-        <textarea id="postContent" placeholder="Write something..."></textarea>
-        <input type="file" id="postImage" accept="image/*">
-        <button onclick="addPost()">Post</button>
-        <div id="posts"></div>
+    <div class="app-container">
+        <!-- Navigation -->
+        <nav>
+            <div class="container">
+                <div class="nav-content">
+                    <div class="logo">
+                        <i data-lucide="heart" class="icon-rose"></i>
+                        <span class="brand">BloomHer</span>
+                    </div>
+                    <div class="nav-links">
+                        <a href="/index.html">Home</a>
+                        <a href="community.html" class="active">Community</a>
+                        <a href="blog.html">Blog</a>
+                        <button class="btn-primary">Sign In</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <header class="community-hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h1>Share Your Story</h1>
+                    <p>A safe space to share experiences, ask questions, and support each other.</p>
+                    <button class="btn-primary" onclick="showCreatePostModal()">
+                        <i data-lucide="edit-3" class="icon-small"></i>
+                        <span>Create Post</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Posts Section -->
+        <section class="posts-section">
+            <div class="container">
+                <div class="posts-header">
+                    <h2>Community Posts</h2>
+                    <div class="posts-filter">
+                        <button class="filter-btn active" onclick="filterPosts('all')">All Posts</button>
+                        <button class="filter-btn" onclick="filterPosts('trending')">Trending</button>
+                        <button class="filter-btn" onclick="filterPosts('recent')">Recent</button>
+                    </div>
+                </div>
+                <div class="posts-grid" id="postsGrid">
+                    <!-- Posts will be dynamically added here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Create Post Modal -->
+        <div class="modal" id="createPostModal">
+            <div class="modal-content">
+                <button class="modal-close" onclick="closeModal('createPostModal')">
+                    <i data-lucide="x"></i>
+                </button>
+                <h2>Create Post</h2>
+                <form id="createPostForm" onsubmit="handlePostSubmit(event)">
+                    <div class="form-group">
+                        <label for="displayName">Display Name (Optional)</label>
+                        <input type="text" id="displayName" placeholder="Anonymous">
+                    </div>
+                    <div class="form-group">
+                        <label for="postTitle">Title</label>
+                        <input type="text" id="postTitle" required placeholder="Give your post a title">
+                    </div>
+                    <div class="form-group">
+                        <label for="postContent">Your Story</label>
+                        <textarea id="postContent" rows="6" required placeholder="Share your experience, question, or thoughts..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="postImage">Image URL (Optional)</label>
+                        <input type="url" id="postImage" placeholder="Enter image URL">
+                        <p class="form-hint">Tip: You can use images from Unsplash by right-clicking an image and selecting 'Copy image address'</p>
+                    </div>
+                    <div class="image-preview" style="display: none;">
+                        <img id="imagePreview" src="" alt="Preview">
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="isAnonymous" checked>
+                            Post anonymously
+                        </label>
+                    </div>
+                    <button type="submit" class="btn-primary">Publish Post</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Comments Modal -->
+        <div class="modal" id="commentsModal">
+            <div class="modal-content">
+                <button class="modal-close" onclick="closeModal('commentsModal')">
+                    <i data-lucide="x"></i>
+                </button>
+                <div class="post-details" id="modalPostDetails">
+                    <!-- Post details will be dynamically added here -->
+                </div>
+                <div class="comments-section">
+                    <h3>Comments</h3>
+                    <form id="commentForm" class="comment-form">
+                        <textarea id="commentText" placeholder="Write a comment..." required></textarea>
+                        <button type="submit" class="btn-primary">
+                            <i data-lucide="send" class="icon-small"></i>
+                            <span>Post Comment</span>
+                        </button>
+                    </form>
+                    <div class="comments-list" id="commentsList">
+                        <!-- Comments will be dynamically added here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-logo">
+                        <i data-lucide="heart" class="icon-rose"></i>
+                        <span class="brand">BloomHer</span>
+                    </div>
+                    <div class="footer-links">
+                        <a href="#">Guidelines</a>
+                        <a href="#">Privacy</a>
+                        <a href="#">Terms</a>
+                        <a href="#">Support</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
     </div>
-    <script src="/scriptpages/community.js"></script>>
-        
-    
+
+    <script src="/scriptpages/community.js"></script>
 </body>
 </html>
