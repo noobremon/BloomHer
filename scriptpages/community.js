@@ -41,8 +41,13 @@ function setupImagePreview() {
 
 // Set up event listeners
 function setupEventListeners() {
-    // Create post form
-    document.getElementById('createPostForm').addEventListener('submit', handlePostSubmit);
+    const createPostForm = document.getElementById('createPostForm');
+
+    // Remove existing event listener (if any)
+    createPostForm.removeEventListener('submit', handlePostSubmit);
+
+    // Add the event listener
+    createPostForm.addEventListener('submit', handlePostSubmit);
 
     // Comment form
     document.getElementById('commentForm').addEventListener('submit', handleCommentSubmit);
@@ -65,10 +70,29 @@ function closeModal(modalId) {
     document.getElementById(modalId).style.display = 'none';
 }
 
+// Delete post
+function deletePost(postId) {
+    if (confirm('Are you sure you want to delete this post?')) {
+        // Remove post
+        communityData.posts = communityData.posts.filter(post => post.id !== postId);
+        
+        // Remove associated comments
+        communityData.comments = communityData.comments.filter(comment => comment.postId !== postId);
+        
+        // Remove associated reactions
+        communityData.reactions = communityData.reactions.filter(reaction => 
+            !(reaction.targetId === postId && reaction.targetType === 'post')
+        );
+
+        saveCommunityData();
+        renderPosts();
+    }
+}
+
 // Handle post submission
 function handlePostSubmit(event) {
     event.preventDefault();
-    
+
     const displayName = document.getElementById('displayName').value || 'Anonymous';
     const title = document.getElementById('postTitle').value;
     const content = document.getElementById('postContent').value;
@@ -277,6 +301,9 @@ function renderPosts(posts = communityData.posts) {
         article.className = 'post-card';
         article.innerHTML = `
             ${post.imageUrl ? `<img src="${post.imageUrl}" alt="Post image" class="post-image">` : ''}
+            <button class="delete-blog" onclick="deletePost(${post.id})">
+                <i data-lucide="trash-2"></i>
+            </button>
             <div class="post-content">
                 <div class="post-meta">
                     <span>${post.author}</span>
@@ -395,5 +422,65 @@ function loadCommunityData() {
     const savedData = localStorage.getItem('cyclecare_community_data');
     if (savedData) {
         communityData = JSON.parse(savedData);
+    }
+    function deletePost(postId) {
+        const postElement = document.querySelector(`.post[data-post-id="${postId}"]`);
+        if (postElement) {
+            postElement.remove();
+        }
+    }
+    
+    function handlePostSubmit(event) {
+        event.preventDefault(); // Prevent the default form submission
+    
+        // Get form values
+        const displayName = document.getElementById('displayName').value;
+        const postTitle = document.getElementById('postTitle').value;
+        const postContent = document.getElementById('postContent').value;
+        const postImage = document.getElementById('postImage').value;
+        const isAnonymous = document.getElementById('isAnonymous').checked;
+    
+        // Basic validation
+        if (!postTitle || !postContent) {
+            alert('Please enter both title and content.');
+            return;
+        }
+    
+        // Create post object
+        const post = {
+            displayName: isAnonymous ? 'Anonymous' : displayName || 'Anonymous',
+            title: postTitle,
+            content: postContent,
+            image: postImage
+        };
+    
+        // Add the post to the grid
+        addPostToGrid(post);
+    
+        // Close the modal
+        closeModal('createPostModal');
+    
+        // Reset the form
+        document.getElementById('createPostForm').reset();
+    }
+    
+    function addPostToGrid(post) {
+        const postsGrid = document.getElementById('postsGrid');
+    
+        const postDiv = document.createElement('div');
+        postDiv.classList.add('post');
+    
+        let postContentHTML = `
+            <h3>${post.title}</h3>
+            <p class="post-meta">By ${post.displayName}</p>
+            <p>${post.content}</p>
+        `;
+    
+        if (post.image) {
+            postContentHTML += `<img src="${post.image}" alt="Post Image">`;
+        }
+    
+        postDiv.innerHTML = postContentHTML;
+        postsGrid.appendChild(postDiv);
     }
 }

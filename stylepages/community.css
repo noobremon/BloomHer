@@ -111,10 +111,8 @@ nav {
 .hero-content p {
     font-size: 1.25rem;
     color: var(--color-gray-600);
-    margin-bottom: 2rem;
     max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 0 auto;
 }
 
 /* Posts Section */
@@ -167,6 +165,7 @@ nav {
     overflow: hidden;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s ease;
+    position: relative;
 }
 
 .post-card:hover {
@@ -229,6 +228,29 @@ nav {
 }
 
 .action-btn.liked {
+    color: var(--color-rose-500);
+}
+
+.delete-blog {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: var(--color-gray-400);
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    opacity: 0;
+}
+
+.post-card:hover .delete-blog {
+    opacity: 1;
+}
+
+.delete-blog:hover {
+    background: var(--color-rose-50);
     color: var(--color-rose-500);
 }
 
