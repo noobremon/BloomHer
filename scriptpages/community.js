@@ -43,14 +43,16 @@ function setupImagePreview() {
 function setupEventListeners() {
     const createPostForm = document.getElementById('createPostForm');
 
-    // Remove existing event listener (if any)
+    // Remove any existing event listener to prevent duplicates
     createPostForm.removeEventListener('submit', handlePostSubmit);
 
-    // Add the event listener
+    // Add the event listener for form submission
     createPostForm.addEventListener('submit', handlePostSubmit);
 
     // Comment form
-    document.getElementById('commentForm').addEventListener('submit', handleCommentSubmit);
+    const commentForm = document.getElementById('commentForm');
+    commentForm.removeEventListener('submit', handleCommentSubmit);
+    commentForm.addEventListener('submit', handleCommentSubmit);
 
     // Close modals when clicking outside
     window.onclick = function(event) {
@@ -91,30 +93,49 @@ function deletePost(postId) {
 
 // Handle post submission
 function handlePostSubmit(event) {
-    event.preventDefault();
+    event.preventDefault(); // Prevent the default form submission behavior
 
+    // Get form values
     const displayName = document.getElementById('displayName').value || 'Anonymous';
-    const title = document.getElementById('postTitle').value;
-    const content = document.getElementById('postContent').value;
-    const imageUrl = document.getElementById('postImage').value;
+    const postTitle = document.getElementById('postTitle').value.trim();
+    const postContent = document.getElementById('postContent').value.trim();
+    const postImage = document.getElementById('postImage').value.trim();
     const isAnonymous = document.getElementById('isAnonymous').checked;
 
+    // Validate required fields
+    if (!postTitle || !postContent) {
+        alert('Please fill in both the title and content fields.');
+        return;
+    }
+
+    // Create a new post object
     const post = {
         id: Date.now(),
         author: isAnonymous ? 'Anonymous' : displayName,
-        title,
-        content,
-        imageUrl,
+        title: postTitle,
+        content: postContent,
+        imageUrl: postImage || null,
         date: new Date().toISOString(),
         likes: 0,
         comments: 0
     };
 
+    // Add the post to the community data
     communityData.posts.unshift(post);
+
+    // Save the updated community data
     saveCommunityData();
+
+    // Render the updated posts
     renderPosts();
+
+    // Close the modal
     closeModal('createPostModal');
+
+    // Reset the form
     event.target.reset();
+
+    // Hide the image preview
     document.querySelector('.image-preview').style.display = 'none';
 }
 
@@ -153,7 +174,7 @@ function handleCommentSubmit(event) {
 // Handle reply submission
 function handleReplySubmit(event, commentId) {
     event.preventDefault();
-    
+        
     const replyText = event.target.querySelector('textarea').value;
     if (!replyText.trim()) return;
 
@@ -422,65 +443,5 @@ function loadCommunityData() {
     const savedData = localStorage.getItem('cyclecare_community_data');
     if (savedData) {
         communityData = JSON.parse(savedData);
-    }
-    function deletePost(postId) {
-        const postElement = document.querySelector(`.post[data-post-id="${postId}"]`);
-        if (postElement) {
-            postElement.remove();
-        }
-    }
-    
-    function handlePostSubmit(event) {
-        event.preventDefault(); // Prevent the default form submission
-    
-        // Get form values
-        const displayName = document.getElementById('displayName').value;
-        const postTitle = document.getElementById('postTitle').value;
-        const postContent = document.getElementById('postContent').value;
-        const postImage = document.getElementById('postImage').value;
-        const isAnonymous = document.getElementById('isAnonymous').checked;
-    
-        // Basic validation
-        if (!postTitle || !postContent) {
-            alert('Please enter both title and content.');
-            return;
-        }
-    
-        // Create post object
-        const post = {
-            displayName: isAnonymous ? 'Anonymous' : displayName || 'Anonymous',
-            title: postTitle,
-            content: postContent,
-            image: postImage
-        };
-    
-        // Add the post to the grid
-        addPostToGrid(post);
-    
-        // Close the modal
-        closeModal('createPostModal');
-    
-        // Reset the form
-        document.getElementById('createPostForm').reset();
-    }
-    
-    function addPostToGrid(post) {
-        const postsGrid = document.getElementById('postsGrid');
-    
-        const postDiv = document.createElement('div');
-        postDiv.classList.add('post');
-    
-        let postContentHTML = `
-            <h3>${post.title}</h3>
-            <p class="post-meta">By ${post.displayName}</p>
-            <p>${post.content}</p>
-        `;
-    
-        if (post.image) {
-            postContentHTML += `<img src="${post.image}" alt="Post Image">`;
-        }
-    
-        postDiv.innerHTML = postContentHTML;
-        postsGrid.appendChild(postDiv);
     }
 }
