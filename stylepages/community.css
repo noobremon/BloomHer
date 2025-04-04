@@ -94,9 +94,13 @@ nav {
 
 /* Hero Section */
 .community-hero {
-    padding: 4rem 0;
+    background-image: url('/images/yo.jpg'); /* Replace with the actual path to your image */
+    background-size: cover;
+    background-position: center 20%; /* Adjust the percentage to shift the image downward */
+    background-repeat: no-repeat;
+    color: #fff; /* Ensure text is readable on the background */
+    padding: 50px 0; /* Adjust padding as needed */
     text-align: center;
-    background: linear-gradient(135deg, var(--color-rose-50), white);
 }
 
 .hero-content h1 {
@@ -110,7 +114,7 @@ nav {
 
 .hero-content p {
     font-size: 1.25rem;
-    color: var(--color-gray-600);
+    color: #000000;
     max-width: 600px;
     margin: 0 auto;
 }
@@ -118,6 +122,8 @@ nav {
 /* Posts Section */
 .posts-section {
     padding: 4rem 0;
+    background: rgba(0, 0, 0, 0.05); /* Darker background color */
+    border-top: 1px solid rgba(0, 0, 0, 0.1); /* Optional: Add a subtle border for separation */
 }
 
 .posts-header {
