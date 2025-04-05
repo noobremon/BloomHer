@@ -142,10 +142,10 @@ function handlePostSubmit(event) {
 // Handle comment submission
 function handleCommentSubmit(event) {
     event.preventDefault();
-    
-    const postId = event.target.dataset.postId;
+
+    const postId = event.target.dataset.postId; // Get the post ID from the form's dataset
     const commentText = document.getElementById('commentText').value;
-    
+
     if (!commentText.trim()) return;
 
     const comment = {
@@ -158,16 +158,38 @@ function handleCommentSubmit(event) {
         replies: []
     };
 
+    // Add the comment to the community data
     communityData.comments.push(comment);
-    
-    // Update post's comment count
+
+    // Update the post's comment count
     const post = communityData.posts.find(p => p.id === parseInt(postId));
     if (post) {
         post.comments++;
+
+        // Update the comment count below the post
+        const postCommentCountElement = document.querySelector(
+            `[data-post-id="${postId}"] .post-actions .action-btn:nth-child(2) span`
+        );
+        if (postCommentCountElement) {
+            postCommentCountElement.textContent = post.comments;
+        }
+
+        // Update the comment count in the modal
+        const modalCommentCountElement = document.querySelector(
+            `#commentsModal .post-meta .comment-count`
+        );
+        if (modalCommentCountElement) {
+            modalCommentCountElement.textContent = post.comments;
+        }
     }
 
+    // Save the updated community data
     saveCommunityData();
+
+    // Re-render the comments in the modal
     renderComments(postId);
+
+    // Reset the comment form
     event.target.reset();
 }
 
