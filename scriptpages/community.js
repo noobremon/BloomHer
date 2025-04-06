@@ -41,18 +41,11 @@ function setupImagePreview() {
 
 // Set up event listeners
 function setupEventListeners() {
-    const createPostForm = document.getElementById('createPostForm');
-
-    // Remove any existing event listener to prevent duplicates
-    createPostForm.removeEventListener('submit', handlePostSubmit);
-
-    // Add the event listener for form submission
-    createPostForm.addEventListener('submit', handlePostSubmit);
+    // Create post form
+    document.getElementById('createPostForm').addEventListener('submit', handlePostSubmit);
 
     // Comment form
-    const commentForm = document.getElementById('commentForm');
-    commentForm.removeEventListener('submit', handleCommentSubmit);
-    commentForm.addEventListener('submit', handleCommentSubmit);
+    document.getElementById('commentForm').addEventListener('submit', handleCommentSubmit);
 
     // Close modals when clicking outside
     window.onclick = function(event) {
@@ -93,64 +86,45 @@ function deletePost(postId) {
 
 // Handle post submission
 function handlePostSubmit(event) {
-    event.preventDefault(); // Prevent the default form submission behavior
-
-    // Get form values
-    const displayName = document.getElementById('displayName').value || 'Anonymous';
-    const postTitle = document.getElementById('postTitle').value.trim();
-    const postContent = document.getElementById('postContent').value.trim();
-    const postImage = document.getElementById('postImage').value.trim();
+    event.preventDefault();
+    
+    const title = document.getElementById('postTitle').value;
+    const content = document.getElementById('postContent').value;
+    const imageUrl = document.getElementById('postImage').value;
     const isAnonymous = document.getElementById('isAnonymous').checked;
+    const displayName = isAnonymous ? 'Anonymous' : (document.getElementById('displayName').value || 'Anonymous');
 
-    // Validate required fields
-    if (!postTitle || !postContent) {
-        alert('Please fill in both the title and content fields.');
-        return;
-    }
-
-    // Create a new post object
     const post = {
         id: Date.now(),
-        author: isAnonymous ? 'Anonymous' : displayName,
-        title: postTitle,
-        content: postContent,
-        imageUrl: postImage || null,
+        author: displayName,
+        title,
+        content,
+        imageUrl,
         date: new Date().toISOString(),
         likes: 0,
         comments: 0
     };
 
-    // Add the post to the community data
     communityData.posts.unshift(post);
-
-    // Save the updated community data
     saveCommunityData();
-
-    // Render the updated posts
     renderPosts();
-
-    // Close the modal
     closeModal('createPostModal');
-
-    // Reset the form
     event.target.reset();
-
-    // Hide the image preview
     document.querySelector('.image-preview').style.display = 'none';
 }
 
 // Handle comment submission
 function handleCommentSubmit(event) {
     event.preventDefault();
-
-    const postId = event.target.dataset.postId; // Get the post ID from the form's dataset
+    
+    const postId = parseInt(event.target.dataset.postId);
     const commentText = document.getElementById('commentText').value;
-
+    
     if (!commentText.trim()) return;
 
     const comment = {
         id: Date.now(),
-        postId: parseInt(postId),
+        postId: postId,
         author: 'Anonymous',
         text: commentText,
         date: new Date().toISOString(),
@@ -158,45 +132,25 @@ function handleCommentSubmit(event) {
         replies: []
     };
 
-    // Add the comment to the community data
     communityData.comments.push(comment);
-
-    // Update the post's comment count
-    const post = communityData.posts.find(p => p.id === parseInt(postId));
+    
+    // Update post's comment count
+    const post = communityData.posts.find(p => p.id === postId);
     if (post) {
         post.comments++;
-
-        // Update the comment count below the post
-        const postCommentCountElement = document.querySelector(
-            `[data-post-id="${postId}"] .post-actions .action-btn:nth-child(2) span`
-        );
-        if (postCommentCountElement) {
-            postCommentCountElement.textContent = post.comments;
-        }
-
-        // Update the comment count in the modal
-        const modalCommentCountElement = document.querySelector(
-            `#commentsModal .post-meta .comment-count`
-        );
-        if (modalCommentCountElement) {
-            modalCommentCountElement.textContent = post.comments;
-        }
     }
 
-    // Save the updated community data
     saveCommunityData();
-
-    // Re-render the comments in the modal
     renderComments(postId);
-
-    // Reset the comment form
+    // Update the posts grid to reflect new comment count
+    renderPosts();
     event.target.reset();
 }
 
 // Handle reply submission
 function handleReplySubmit(event, commentId) {
     event.preventDefault();
-        
+    
     const replyText = event.target.querySelector('textarea').value;
     if (!replyText.trim()) return;
 
@@ -214,6 +168,8 @@ function handleReplySubmit(event, commentId) {
     comment.replies.push(reply);
     saveCommunityData();
     renderComments(comment.postId);
+    // Update the posts grid to reflect new reply
+    renderPosts();
 }
 
 // Toggle like on post
