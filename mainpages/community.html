@@ -55,6 +55,16 @@
                 </div>
                 <div class="posts-grid" id="postsGrid">
                     <!-- Posts will be dynamically added here -->
+                    <!-- Example post element -->
+                    <div class="post" data-post-id="${post.id}">
+                        {...}
+                        <div class="post-actions">
+                            <button onclick="openCommentsModal('${post.id}')">
+                                <i data-lucide="message-square" class="icon-small"></i>
+                                <span class="comment-count">${commentCount} Comments</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
