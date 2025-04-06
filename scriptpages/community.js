@@ -86,13 +86,19 @@ function deletePost(postId) {
 
 // Handle post submission
 function handlePostSubmit(event) {
-    event.preventDefault();
-    
+    event.preventDefault(); // Prevent default form submission behavior
+
     const title = document.getElementById('postTitle').value;
     const content = document.getElementById('postContent').value;
     const imageUrl = document.getElementById('postImage').value;
     const isAnonymous = document.getElementById('isAnonymous').checked;
     const displayName = isAnonymous ? 'Anonymous' : (document.getElementById('displayName').value || 'Anonymous');
+
+    // Ensure title and content are not empty
+    if (!title.trim() || !content.trim()) {
+        alert('Title and content are required.');
+        return;
+    }
 
     const post = {
         id: Date.now(),
