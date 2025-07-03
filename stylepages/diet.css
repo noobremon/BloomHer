@@ -16,27 +16,30 @@
     padding: 0;
     box-sizing: border-box;
   }
+  .nav-actions {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
   
-  body {
+  body, .app {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    background-color: var(--color-pink-50);
-    color: var(--color-gray-800);
+    background: #fff0f6; /* light pinkish white */
+    color: #3d003d;      /* deep plum for contrast */
     line-height: 1.5;
   }
   
   /* Navigation */
   .nav {
-    background-color: white;
-    box-shadow: var(--shadow-md);
+    background: #ffe4ef; /* slightly deeper pinkish white */
+    box-shadow: 0 2px 8px rgba(255, 192, 203, 0.08);
   }
   
   .nav-container {
-    max-width: 80rem;
-    margin: 0 auto;
-    padding: 1rem;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+    padding: 1rem 2rem;
   }
   
   .nav-brand {
@@ -52,9 +55,10 @@
   }
   
   .brand-name {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: var(--color-pink-700);
+    color: #e75480;
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin-left: 0.5rem;
   }
   
   .nav-actions {
@@ -62,6 +66,23 @@
     gap: 1rem;
     align-items: center;
   }
+  
+  .icon-button,
+.cart-button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  margin-left: 1rem;
+}
+
+.cart-count {
+  background: #e75480;
+  color: #fff;
+  border-radius: 50%;
+  padding: 0.15em 0.5em;
+  font-size: 0.85em;
+  margin-left: 0.2em;
+}
   
   /* Buttons */
   .btn-primary {
@@ -157,7 +178,8 @@
   
   /* Cards */
   .card {
-    background-color: white;
+    background: #fff0f6;
+    border: 1px solid #ffe4ef;
     border-radius: 0.75rem;
     padding: 1.5rem;
     box-shadow: var(--shadow-sm);
