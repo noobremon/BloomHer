@@ -4,7 +4,7 @@
 
 BloomHer is a comprehensive digital health platform designed to help women understand, track, and manage their menstrual cycles and PCOS symptoms. With AI-powered predictions, personalized insights, and a supportive community, BloomHer makes women's health management simple, intuitive, and empowering.
 
-![BloomHer Platform](images/img1.webp)
+
 
 ---
 
