@@ -416,7 +416,7 @@
                 border-radius: 1.25rem;
                 background: rgba(255, 255, 255, 0.96);
                 backdrop-filter: blur(18px);
-                box-shadow: 0 22px 60px rgba(17, 24, 39, 0.18);
+                box-shadow: none;
                 border: 0;
                 display: none;
                 overflow: hidden;
