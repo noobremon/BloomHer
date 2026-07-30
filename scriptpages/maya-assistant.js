@@ -397,7 +397,7 @@
                 background: linear-gradient(135deg, #f43f5e, #be185d);
                 color: #fff;
                 font-weight: 700;
-                box-shadow: 0 18px 40px rgba(244, 63, 94, 0.3);
+                box-shadow: none;
                 cursor: pointer;
             }
 
