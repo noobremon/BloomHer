@@ -440,6 +440,7 @@
             }
 
             .maya-eyebrow {
+                display: none;
                 margin: 0 0 0.25rem;
                 font-size: 0.76rem;
                 letter-spacing: 0.12em;
