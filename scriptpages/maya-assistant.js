@@ -385,13 +385,16 @@
                 bottom: 1rem;
                 z-index: 9999;
                 font-family: inherit;
+                outline: none;
+                border: none;
             }
 
             .maya-launcher {
                 display: inline-flex;
                 align-items: center;
                 gap: 0.55rem;
-                border: 0;
+                border: none;
+                outline: none;
                 border-radius: 999px;
                 padding: 0.9rem 1.15rem;
                 background: linear-gradient(135deg, #f43f5e, #be185d);
@@ -406,7 +409,7 @@
                 height: 0.65rem;
                 border-radius: 999px;
                 background: #fff;
-                box-shadow: 0 0 0 0.45rem rgba(255, 255, 255, 0.18);
+                box-shadow: none;
             }
 
             .maya-panel {
@@ -417,7 +420,8 @@
                 background: rgba(255, 255, 255, 0.96);
                 backdrop-filter: blur(18px);
                 box-shadow: none;
-                border: 0;
+                border: none;
+                outline: none;
                 display: none;
                 overflow: hidden;
             }
@@ -454,7 +458,8 @@
             .maya-close {
                 width: 2.25rem;
                 height: 2.25rem;
-                border: 0;
+                border: none;
+                outline: none;
                 border-radius: 999px;
                 background: rgba(244, 63, 94, 0.1);
                 color: #be185d;
@@ -534,11 +539,12 @@
 
             .maya-input-row input:focus {
                 border-color: #f43f5e;
-                box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.16);
+                box-shadow: none;
             }
 
             .maya-input-row button {
-                border: 0;
+                border: none;
+                outline: none;
                 border-radius: 999px;
                 padding: 0.8rem 1rem;
                 background: #111827;
