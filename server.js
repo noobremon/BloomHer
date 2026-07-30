@@ -1,142 +1,131 @@
-// filepath: backend/server.js
 const express = require('express');
 const cors = require('cors');
-const mongoose = require('mongoose');
+const path = require('path');
+const https = require('https');
 require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 5000;
+const rootDir = __dirname;
+const geminiApiKey = process.env.GEMINI_API_KEY;
+const geminiModel = process.env.GEMINI_MODEL || 'gemini-1.5-flash';
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '1mb' }));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(rootDir));
 
-const uri = process.env.ATLAS_URI;
-mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-const connection = mongoose.connection;
-connection.once('open', () => {
-    console.log("MongoDB database connection established successfully");
+const WOMENS_HEALTH_SYSTEM_PROMPT = `You are Maya, BloomHer's AI Women's Health Assistant.
+Only answer questions related to PCOS, PCOD, menstrual cycles and period tracking, ovulation, hormonal health, women's reproductive health, nutrition for PCOS and hormonal balance, exercise and fitness for women's health, weight management related to PCOS, acne, hair fall, and hormonal symptoms, mental health and stress related to hormonal conditions, sleep and healthy lifestyle habits, fertility awareness, and BloomHer features.
+
+If a user asks anything unrelated, refuse with:
+"I'm Maya, BloomHer's AI Women's Health Assistant. 💜\n\nI'm designed to help with questions about PCOS, PCOD, menstrual health, hormones, nutrition, women's wellness, and BloomHer features. Please ask me something related to women's health or the BloomHer app."
+
+If the user asks who you are, answer:
+"I'm Maya, your BloomHer AI Health Assistant. 💜 I'm here to support you with PCOS, PCOD, menstrual health, hormones, women's wellness, and everything related to BloomHer."
+
+Always keep the tone warm and supportive. Never diagnose medical conditions. Never prescribe medications or dosages. Never tell users to stop or start medication. Always note that the information is educational and does not replace professional medical advice. If emergency symptoms are mentioned, advise immediate emergency medical care or local emergency services.`;
+
+function sendJson(res, statusCode, payload) {
+    res.status(statusCode).json(payload);
+}
+
+function callGemini(message, history) {
+    return new Promise((resolve, reject) => {
+        const requestBody = JSON.stringify({
+            contents: [
+                {
+                    role: 'user',
+                    parts: [{ text: `${WOMENS_HEALTH_SYSTEM_PROMPT}\n\nConversation context:\n${JSON.stringify(history || [])}\n\nUser message: ${message}` }],
+                },
+            ],
+            generationConfig: {
+                temperature: 0.4,
+                maxOutputTokens: 500,
+            },
+        });
+
+        const request = https.request(
+            {
+                hostname: 'generativelanguage.googleapis.com',
+                path: `/v1beta/models/${encodeURIComponent(geminiModel)}:generateContent?key=${encodeURIComponent(geminiApiKey)}`,
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Content-Length': Buffer.byteLength(requestBody),
+                },
+            },
+            (response) => {
+                let responseBody = '';
+
+                response.on('data', (chunk) => {
+                    responseBody += chunk;
+                });
+
+                response.on('end', () => {
+                    try {
+                        const data = JSON.parse(responseBody);
+                        const reply = data?.candidates?.[0]?.content?.parts?.map((part) => part.text || '').join('').trim();
+
+                        if (!reply) {
+                            return reject(new Error('Gemini returned an empty response'));
+                        }
+
+                        resolve(reply);
+                    } catch (error) {
+                        reject(error);
+                    }
+                });
+            }
+        );
+
+        request.on('error', reject);
+        request.write(requestBody);
+        request.end();
+    });
+}
+
+app.post('/api/maya/chat', async (req, res) => {
+    const message = String(req.body?.message || '').trim();
+    const history = Array.isArray(req.body?.history) ? req.body.history : [];
+
+    if (!message) {
+        return sendJson(res, 400, { error: 'Message is required.' });
+    }
+
+    if (!geminiApiKey) {
+        return sendJson(res, 503, {
+            error: 'Gemini API key is not configured.',
+            fallback: true,
+        });
+    }
+
+    try {
+        const reply = await callGemini(message, history);
+        return sendJson(res, 200, { reply });
+    } catch (error) {
+        console.error('Gemini request failed:', error.message);
+        return sendJson(res, 502, { error: 'Gemini request failed.', fallback: true });
+    }
 });
 
-const usersRouter = require('./routes/users');
-const trackerRouter = require('./routes/tracker');
-const dietRouter = require('./routes/diet');
-const exercisesRouter = require('./routes/exercises');
-const sleepRouter = require('./routes/sleep');
-const stressRouter = require('./routes/stress');
-const expertRouter = require('./routes/expert');
-const communityRouter = require('./routes/community');
+app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api/')) {
+        return next();
+    }
 
-app.use('/users', usersRouter);
-app.use('/tracker', trackerRouter);
-app.use('/diet', dietRouter);
-app.use('/exercises', exercisesRouter);
-app.use('/sleep', sleepRouter);
-app.use('/stress', stressRouter);
-app.use('/expert', expertRouter);
-app.use('/community', communityRouter);
+    if (req.path === '/' || req.path.endsWith('.html')) {
+        const targetPath = req.path === '/' ? 'index.html' : req.path.replace(/^\//, '');
+        return res.sendFile(path.join(rootDir, targetPath));
+    }
+
+    return next();
+});
+
+app.use((req, res) => {
+    res.status(404).json({ error: 'Not found' });
+});
 
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
 });
-
-// filepath: backend/routes/users.js
-const router = require('express').Router();
-let User = require('../models/user.model');
-
-router.route('/').get((req, res) => {
-    User.find()
-        .then(users => res.json(users))
-        .catch(err => res.status(400).json('Error: ' + err));
-});
-
-router.route('/add').post((req, res) => {
-    const username = req.body.username;
-    const newUser = new User({ username });
-
-    newUser.save()
-        .then(() => res.json('User added!'))
-        .catch(err => res.status(400).json('Error: ' + err));
-});
-
-module.exports = router;
-
-// filepath: backend/models/user.model.js
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
-
-const userSchema = new Schema({
-    username: {
-        type: String,
-        required: true,
-        unique: true,
-        trim: true,
-        minlength: 3
-    },
-}, {
-    timestamps: true,
-});
-
-const User = mongoose.model('User', userSchema);
-module.exports = User;
-
-// filepath: backend/routes/tracker.js
-const trackerRouter = require('express').Router();
-
-router.route('/').get((req, res) => {
-    res.json('Tracker route');
-});
-
-module.exports = router;
-
-// filepath: backend/routes/diet.js
-const dietRouter = require('express').Router();
-
-router.route('/').get((req, res) => {
-    res.json('Diet route');
-});
-
-module.exports = router;
-
-// filepath: backend/routes/exercises.js
-const exercisesRouter = require('express').Router();
-
-router.route('/').get((req, res) => {
-    res.json('Exercises route');
-});
-
-module.exports = router;
-
-// filepath: backend/routes/sleep.js
-const sleepRouter = require('express').Router();
-
-router.route('/').get((req, res) => {
-    res.json('Sleep route');
-});
-
-module.exports = router;
-
-// filepath: backend/routes/stress.js
-const stressRouter = require('express').Router();
-
-stressRouter.route('/').get((req, res) => {
-    res.json('Stress route');
-});
-
-module.exports = stressRouter;
-
-// filepath: backend/routes/expert.js
-const expertRouter = require('express').Router();
-
-expertRouter.route('/').get((req, res) => {
-    res.json('Expert route');
-});
-
-module.exports = expertRouter;
-
-const communityRouter = require('express').Router();
-
-communityRouter.route('/').get((req, res) => {
-    res.json('Community route');
-});
-
-module.exports = communityRouter;

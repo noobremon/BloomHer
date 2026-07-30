@@ -21,7 +21,7 @@ BloomHer is a comprehensive digital health platform designed to help women under
 - 👥 **Community Support** - Safe space to share experiences and get support
 - 📝 **Educational Blog** - Evidence-based articles on women's health
 - 🛍️ **Wellness Shop** - Curated products for menstrual and PCOS care
-- 🤖 **AI-Powered Chatbot** - 24/7 instant support and answers integrated via Chatbase
+- 🤖 **Maya AI Assistant** - BloomHer's in-app health assistant for cycle, PCOS, and wellness guidance
 
 ---
 
@@ -32,7 +32,8 @@ BloomHer is a comprehensive digital health platform designed to help women under
 - **CSS3** - Modern responsive styling
 - **Vanilla JavaScript** - Client-side interactivity
 - **Lucide Icons** - Beautiful, consistent iconography
-- **Chatbase** - AI chatbot integration
+- **BloomHer Maya Assistant** - First-party health assistant widget
+- **Gemini API** - Optional backend-powered AI responses when `GEMINI_API_KEY` is set
 
 ### Backend
 - **Node.js** - JavaScript runtime environment
@@ -197,8 +198,10 @@ SESSION_SECRET=your_session_secret_here
 EMAIL_USER=your_email@example.com
 EMAIL_PASSWORD=your_email_password
 
-# Optional: Chatbase Configuration
-CHATBASE_ID=cp383kSx2dMM3b4VALS7G
+# Optional: Maya Assistant Configuration
+GEMINI_API_KEY=your_gemini_api_key_here
+# Optional: choose a Gemini model
+GEMINI_MODEL=gemini-1.5-flash
 ```
 
 Create a `.env` file in the **bloomher-backend** directory:
@@ -657,7 +660,7 @@ Have a suggestion? [Open a feature request](https://github.com/noobremon/BloomHe
 ## 🙏 Acknowledgments
 
 - **Lucide Icons** - Beautiful icon set
-- **Chatbase** - AI chatbot integration
+- **BloomHer Maya Assistant** - Embedded women's health assistant
 - **MongoDB** - Database solution
 - **Express.js Community** - Web framework
 - **All Contributors** - Thank you for making BloomHer better
