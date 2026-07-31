@@ -4,7 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "legacy-server": "node server.cjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -14,7 +18,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/noobremon/SBH-crazyy/issues"
   },
@@ -23,6 +27,9 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "mongoose": "^8.12.1"
+    "mongoose": "^8.12.1",
+    "next": "^16.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   }
 }
