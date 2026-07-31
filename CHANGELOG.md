@@ -114,6 +114,59 @@
   `innerHTML` template string, not JSX, so React never renders/warns
   about it — left untouched.)
 
+## Session 2 — Login / sign-up / create-account bug fixes
+
+### Fixed
+- `app/mainpages/log/page.js` was fully rewritten (still same visual
+  design/CSS classes/markup) to fix several real functional bugs
+  inherited from the original `scriptpages/log.js`:
+  - The role-selection buttons had **three separate, conflicting click
+    handlers** fighting over the registration form's `display` value
+    (`'flex'` vs `'block'`, the latter breaking the CSS's intended
+    flex-centered layout) and duplicating/contradicting each other's
+    section-visibility logic. Replaced with a single React state
+    machine (`screen`: role/register/login, `role`: primary/partner,
+    `partnerInfoSaved`) driving one consistent set of conditionally
+    rendered sections.
+  - The account-creation form had **two separate submit handlers** on
+    the same `<form>`; the "is this a care-partner submission" check in
+    one of them tested a section's visibility *after* that section had
+    already been hidden by an earlier step, so it was always false in
+    practice — meaning care-partner data (relationship, primary user's
+    email, partner's name) was **silently dropped** and never saved.
+    Fixed by capturing `relationship`/`primaryUserEmail` in React state
+    (so they survive the partner-info section unmounting) and always
+    including them, plus `partnerName`, in the saved account data when
+    `role === 'partner'`.
+  - The manually-entered "Age" field existed in the form but was never
+    read or saved anywhere — now included in the saved account object.
+  - Password-visibility "eye" toggle buttons used a Lucide icon whose
+    `data-lucide` value needed to change dynamically (eye ↔ eye-off).
+    Lucide's `createIcons()` *replaces* the `<i>` element with a raw
+    `<svg>`, detaching it from React's reference to that node — on the
+    next toggle, React would try to update a DOM node lucide had
+    already swapped out, which is unreliable. Replaced with small,
+    visually-identical inline SVG icons (matching Lucide's actual eye /
+    eye-off artwork) driven by normal React state, sidestepping the
+    conflict entirely for this one dynamic icon (all other, static
+    icons on the page still use `data-lucide` as before — no issue
+    there since they never change after first mount).
+  - Login now correctly compares against the single locally-stored
+    account (`localStorage['cyclecare_user_data']`, guarded against an
+    empty/no-account case) and redirects to `/mainpages/tracker` on
+    success, or alerts "Invalid email or password" otherwise — same
+    behavior as intended originally, now reliably reachable.
+  - "Forgot password" and the role-selection ↔ registration ↔ login
+    back-navigation all continue to work exactly as before, just driven
+    by state instead of scattered `style.display` writes.
+  - Minor UX fix: the "Already have an account? Log in" link is now
+    always visible on the registration screen (previously it lived in
+    the same footer as the submit button, whose visibility depended on
+    form-section state) so users aren't stuck if they land on the wrong
+    flow.
+- Validated with `npm run build` (clean) and `npm run dev`
+  (`/mainpages/log` returns `200`, no console/runtime errors).
+
 ### Removed
 - Deleted the now-superseded legacy static files, with user
   confirmation: root `index.html`, `mainpages/` (11 `.html` files),

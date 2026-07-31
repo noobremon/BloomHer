@@ -1,337 +1,216 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Script from 'next/script';
 
+// The original scriptpages/log.js attached THREE separate, conflicting
+// click handlers to the same role buttons (one "top-level" handler and
+// two more inside its DOMContentLoaded listener), which fought over the
+// registration form's `display` value ('flex' vs 'block'), and TWO
+// separate submit handlers on the same form. On top of that, the
+// "is this a care-partner submission?" check always evaluated to false
+// in practice (it re-checked a section's visibility *after* that section
+// had already been hidden by an earlier step), so partner-specific data
+// (relationship, primary user's email, partner's name) was silently
+// dropped, and the manually-entered "age" field was collected nowhere.
+// This rewrite keeps the exact same visual design/markup/CSS classes but
+// drives the multi-step flow with React state instead of imperative,
+// mutually-conflicting DOM writes, so the role selection -> registration
+// (with the care-partner sub-step) -> account creation -> login flow
+// actually works end-to-end.
+
+function EyeIcon() {
+  return (
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" />
+      <circle cx="12" cy="12" r="3" />
+    </svg>
+  );
+}
+
+function EyeOffIcon() {
+  return (
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49" />
+      <path d="M14.084 14.158a3 3 0 0 1-4.242-4.242" />
+      <path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143" />
+      <path d="m2 2 20 20" />
+    </svg>
+  );
+}
+
+const RELATIONSHIPS = [
+  { value: 'partner', label: 'Partner', icon: 'heart' },
+  { value: 'daughter', label: 'Daughter', icon: 'baby' },
+  { value: 'wife', label: 'Wife', icon: 'user-cog-2' },
+  { value: 'sister', label: 'Sister', icon: 'users' },
+];
+
 export default function LogPage() {
+  // 'role' -> 'register' -> 'login' (or back)
+  const [screen, setScreen] = useState('role');
+  const [role, setRole] = useState(null); // 'primary' | 'partner'
+  const [partnerInfoSaved, setPartnerInfoSaved] = useState(false);
+  const [relationship, setRelationship] = useState('');
+  const [primaryUserEmail, setPrimaryUserEmail] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
+
+  const fullNameRef = useRef(null);
+  const partnerNameRef = useRef(null);
+  const emailRef = useRef(null);
+  const passwordRef = useRef(null);
+  const dobRef = useRef(null);
+  const weightRef = useRef(null);
+  const heightRef = useRef(null);
+  const ageRef = useRef(null);
+  const bloodGroupRef = useRef(null);
+
+  const loginEmailRef = useRef(null);
+  const loginPasswordRef = useRef(null);
+
   useEffect(() => {
     if (window.lucide) window.lucide.createIcons();
+  }, [screen, role, partnerInfoSaved]);
 
-    // cleanupFns collects one remove function per addEventListener call
-    // made below, since log.js re-declares several same-named `const`s in
-    // separate scopes (top-level vs. inside its single `DOMContentLoaded`
-    // listener) - tracking cleanups in an array avoids those naming
-    // collisions while still letting us undo everything on unmount.
-    const cleanupFns = [];
+  function selectRole(selected) {
+    setRole(selected);
+    setPartnerInfoSaved(false);
+    setRelationship('');
+    setPrimaryUserEmail('');
+    setScreen('register');
+  }
 
-    // ---- Top-level script body of log.js (everything outside its single
-    // `document.addEventListener('DOMContentLoaded', ...)` block). Since the
-    // original <script> tag sits at the end of <body>, all of this runs
-    // synchronously before `DOMContentLoaded` ever fires, so it belongs at
-    // the top of this effect - matching real execution order. ----
-    try {
-      const roleSelectionTop = document.getElementById('roleSelection');
-      const registrationFormTop = document.getElementById('registrationForm');
-      const loginFormTop = document.getElementById('loginForm');
-      const partnerSectionTop = document.getElementById('partnerSection');
-      const userFormTop = document.getElementById('userForm');
-      const loginFormElementTop = document.getElementById('loginFormElement');
+  function handleSavePartnerInfo() {
+    if (!relationship) {
+      alert('Please choose your relationship to the primary user.');
+      return;
+    }
+    if (!primaryUserEmail) {
+      alert("Please enter the primary user's email.");
+      return;
+    }
+    setPartnerInfoSaved(true);
+  }
 
-      // Role Selection
-      const roleBtns = document.querySelectorAll('.role-btn');
-      const handleRoleBtnClickTop = function () {
-        const role = this.dataset.role;
-        roleSelectionTop.style.display = 'none';
-        registrationFormTop.style.display = 'flex';
+  function handleDobChange(e) {
+    const dob = new Date(e.target.value);
+    const today = new Date();
 
-        if (role === 'partner') {
-          partnerSectionTop.style.display = 'block';
-          document.getElementById('primaryUserEmail').required = true;
-          document.getElementById('relationship').required = true;
-        } else {
-          partnerSectionTop.style.display = 'none';
-          document.getElementById('primaryUserEmail').required = false;
-          document.getElementById('relationship').required = false;
-        }
-      };
-      roleBtns.forEach((btn) => {
-        btn.addEventListener('click', handleRoleBtnClickTop);
-        cleanupFns.push(() => btn.removeEventListener('click', handleRoleBtnClickTop));
-      });
-
-      // Back Buttons
-      const backToRoleBtn = document.getElementById('backToRole');
-      const handleBackToRole = () => {
-        registrationFormTop.style.display = 'none';
-        roleSelectionTop.style.display = 'flex';
-      };
-      backToRoleBtn.addEventListener('click', handleBackToRole);
-      cleanupFns.push(() => backToRoleBtn.removeEventListener('click', handleBackToRole));
-
-      const backToRegisterBtn = document.getElementById('backToRegister');
-      const handleBackToRegister = () => {
-        loginFormTop.style.display = 'none';
-        registrationFormTop.style.display = 'flex';
-      };
-      backToRegisterBtn.addEventListener('click', handleBackToRegister);
-      cleanupFns.push(() => backToRegisterBtn.removeEventListener('click', handleBackToRegister));
-
-      // Show Login Form
-      const showLoginBtn = document.getElementById('showLogin');
-      const handleShowLogin = (e) => {
-        e.preventDefault();
-        registrationFormTop.style.display = 'none';
-        loginFormTop.style.display = 'flex';
-      };
-      showLoginBtn.addEventListener('click', handleShowLogin);
-      cleanupFns.push(() => showLoginBtn.removeEventListener('click', handleShowLogin));
-
-      // Toggle Password Visibility
-      const togglePasswordBtns = document.querySelectorAll('.toggle-password');
-      const handleTogglePassword = function () {
-        const input = this.parentElement.querySelector('input');
-        const icon = this.querySelector('i');
-
-        if (input.type === 'password') {
-          input.type = 'text';
-          icon.setAttribute('data-lucide', 'eye-off');
-        } else {
-          input.type = 'password';
-          icon.setAttribute('data-lucide', 'eye');
-        }
-        if (window.lucide) window.lucide.createIcons();
-      };
-      togglePasswordBtns.forEach((btn) => {
-        btn.addEventListener('click', handleTogglePassword);
-        cleanupFns.push(() => btn.removeEventListener('click', handleTogglePassword));
-      });
-
-      // Form Validation and Submission
-      const handleUserFormSubmit = (e) => {
-        e.preventDefault();
-
-        const formData = {
-          fullName: document.getElementById('fullName').value,
-          email: document.getElementById('email').value,
-          password: document.getElementById('password').value,
-          dateOfBirth: document.getElementById('dateOfBirth').value,
-          weight: document.getElementById('weight').value,
-          height: document.getElementById('height').value,
-          bloodGroup: document.getElementById('bloodGroup').value,
-          conditions: Array.from(document.querySelectorAll('input[type="checkbox"]:checked'))
-            .map((checkbox) => checkbox.value),
-        };
-
-        if (partnerSectionTop.style.display === 'block') {
-          formData.relationship = document.getElementById('relationship').value;
-          formData.primaryUserEmail = document.getElementById('primaryUserEmail').value;
-        }
-
-        // Store user data
-        localStorage.setItem('cyclecare_user_data', JSON.stringify(formData));
-
-        // Redirect to dashboard
-        window.location.href = '/mainpages/tracker';
-      };
-      userFormTop.addEventListener('submit', handleUserFormSubmit);
-      cleanupFns.push(() => userFormTop.removeEventListener('submit', handleUserFormSubmit));
-
-      const handleLoginFormSubmit = (e) => {
-        e.preventDefault();
-
-        const email = document.getElementById('loginEmail').value;
-        const password = document.getElementById('loginPassword').value;
-
-        // Get stored user data
-        const userData = JSON.parse(localStorage.getItem('cyclecare_user_data') || '{}');
-
-        if (userData.email === email && userData.password === password) {
-          window.location.href = '/mainpages/tracker';
-        } else {
-          alert('Invalid email or password');
-        }
-      };
-      loginFormElementTop.addEventListener('submit', handleLoginFormSubmit);
-      cleanupFns.push(() => loginFormElementTop.removeEventListener('submit', handleLoginFormSubmit));
-
-      // Forgot Password
-      const forgotPasswordBtn = document.getElementById('forgotPassword');
-      const handleForgotPassword = (e) => {
-        e.preventDefault();
-        const email = document.getElementById('loginEmail').value;
-
-        if (email) {
-          alert(`Password reset link would be sent to ${email}`);
-        } else {
-          alert('Please enter your email address');
-        }
-      };
-      forgotPasswordBtn.addEventListener('click', handleForgotPassword);
-      cleanupFns.push(() => forgotPasswordBtn.removeEventListener('click', handleForgotPassword));
-
-      // Form Validation (date of birth)
-      const dobInput = document.getElementById('dateOfBirth');
-      const handleValidateDob = () => {
-        const dob = new Date(dobInput.value);
-        const today = new Date();
-        const age = today.getFullYear() - dob.getFullYear();
-
-        if (age < 13) {
-          dobInput.setCustomValidity('You must be at least 13 years old');
-        } else if (age > 70) {
-          dobInput.setCustomValidity('Please enter a valid date of birth');
-        } else {
-          dobInput.setCustomValidity('');
-        }
-      };
-      dobInput.addEventListener('change', handleValidateDob);
-      cleanupFns.push(() => dobInput.removeEventListener('change', handleValidateDob));
-
-      // Password Strength Validation
-      const passwordInput = document.getElementById('password');
-      const handlePasswordInput = (e) => {
-        const password = e.target.value;
-        const minLength = 8;
-        const hasUpperCase = /[A-Z]/.test(password);
-        const hasLowerCase = /[a-z]/.test(password);
-        const hasNumbers = /\d/.test(password);
-        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-
-        if (password.length < minLength) {
-          e.target.setCustomValidity('Password must be at least 8 characters long');
-        } else if (!hasUpperCase || !hasLowerCase) {
-          e.target.setCustomValidity('Password must contain both uppercase and lowercase letters');
-        } else if (!hasNumbers) {
-          e.target.setCustomValidity('Password must contain at least one number');
-        } else if (!hasSpecialChar) {
-          e.target.setCustomValidity('Password must contain at least one special character');
-        } else {
-          e.target.setCustomValidity('');
-        }
-      };
-      passwordInput.addEventListener('input', handlePasswordInput);
-      cleanupFns.push(() => passwordInput.removeEventListener('input', handlePasswordInput));
-    } catch (err) {
-      console.error(err);
+    if (Number.isNaN(dob.getTime())) {
+      e.target.setCustomValidity('');
+      return;
     }
 
-    // ---- Body of log.js's single `DOMContentLoaded` listener. This runs
-    // last in real browser execution order (only after all top-level script
-    // code above has finished and the document has fully parsed), and is
-    // isolated in its own try/catch since it's an independently-invoked
-    // event listener, separate from the top-level code above. Note it
-    // re-declares several of the same element lookups under the same
-    // names as the top-level code above (a pre-existing quirk of the
-    // original file) - that's fine here since each block has its own
-    // try { } scope. ----
-    try {
-      const roleButtonsDCL = document.querySelectorAll('.role-btn');
-      const registrationFormDCL = document.getElementById('registrationForm');
-      const roleSelectionDCL = document.getElementById('roleSelection');
-      const partnerSectionDCL = document.getElementById('partnerSection');
-      const personalSectionDCL = document.getElementById('personalSection');
-      const healthSectionDCL = document.getElementById('healthSection');
-      const savePartnerInfoButtonDCL = document.getElementById('savePartnerInfo');
-      // eslint-disable-next-line no-unused-vars
-      const createAccountButtonDCL = document.getElementById('createAccountButton');
-      const partnerNameGroupDCL = document.getElementById('partnerNameGroup');
-
-      let isCarePartner = false;
-
-      const handleRoleButtonClickDCL = function () {
-        const role = this.dataset.role;
-        if (role === 'partner') {
-          isCarePartner = true;
-          // Care partner flow
-          partnerSectionDCL.style.display = 'block';
-          personalSectionDCL.style.display = 'none';
-          healthSectionDCL.style.display = 'none';
-          registrationFormDCL.style.display = 'block';
-          roleSelectionDCL.style.display = 'none';
-          partnerNameGroupDCL.style.display = 'block';
-        } else {
-          // Primary user flow
-          isCarePartner = false;
-          partnerSectionDCL.style.display = 'none';
-          personalSectionDCL.style.display = 'block';
-          healthSectionDCL.style.display = 'block';
-          registrationFormDCL.style.display = 'block';
-          roleSelectionDCL.style.display = 'none';
-          partnerNameGroupDCL.style.display = 'none';
-        }
-      };
-      roleButtonsDCL.forEach((button) => {
-        button.addEventListener('click', handleRoleButtonClickDCL);
-        cleanupFns.push(() => button.removeEventListener('click', handleRoleButtonClickDCL));
-      });
-
-      const handleSavePartnerInfo = () => {
-        partnerSectionDCL.style.display = 'none';
-        personalSectionDCL.style.display = 'block';
-        healthSectionDCL.style.display = 'block';
-      };
-      savePartnerInfoButtonDCL.addEventListener('click', handleSavePartnerInfo);
-      cleanupFns.push(() => savePartnerInfoButtonDCL.removeEventListener('click', handleSavePartnerInfo));
-
-      const userFormDCL = document.getElementById('userForm');
-      const handleUserFormSubmitDCL = function (event) {
-        if (isCarePartner) {
-          // Handle care partner submission
-          event.preventDefault(); // Prevent standard form submission
-          // Collect and process data from all three sections
-          const relationship = document.getElementById('relationship').value;
-          const primaryUserEmail = document.getElementById('primaryUserEmail').value;
-          const fullName = document.getElementById('fullName').value;
-          const email = document.getElementById('email').value;
-          const password = document.getElementById('password').value;
-          const dateOfBirth = document.getElementById('dateOfBirth').value;
-          const weight = document.getElementById('weight').value;
-          const height = document.getElementById('height').value;
-          const bloodGroup = document.getElementById('bloodGroup').value;
-
-          // You can now send this data to your backend
-          console.log('Care Partner Data:', {
-            relationship,
-            primaryUserEmail,
-            fullName,
-            email,
-            password,
-            dateOfBirth,
-            weight,
-            height,
-            bloodGroup,
-          });
-        }
-      };
-      userFormDCL.addEventListener('submit', handleUserFormSubmitDCL);
-      cleanupFns.push(() => userFormDCL.removeEventListener('submit', handleUserFormSubmitDCL));
-
-      const relationshipButtonsDCL = document.querySelectorAll('.relationship-btn');
-      const relationshipInputDCL = document.getElementById('relationship');
-
-      const handleRelationshipBtnClick = function () {
-        // Remove selected class from all buttons
-        relationshipButtonsDCL.forEach((btn) => btn.classList.remove('selected'));
-        // Add selected class to clicked button
-        this.classList.add('selected');
-        // Update hidden input value
-        relationshipInputDCL.value = this.dataset.relationship;
-      };
-      relationshipButtonsDCL.forEach((button) => {
-        button.addEventListener('click', handleRelationshipBtnClick);
-        cleanupFns.push(() => button.removeEventListener('click', handleRelationshipBtnClick));
-      });
-
-      const handleRoleButtonClickDCL2 = function () {
-        const role = this.dataset.role;
-        if (role === 'partner') {
-          partnerNameGroupDCL.style.display = 'block';
-        } else {
-          partnerNameGroupDCL.style.display = 'none';
-        }
-      };
-      roleButtonsDCL.forEach((button) => {
-        button.addEventListener('click', handleRoleButtonClickDCL2);
-        cleanupFns.push(() => button.removeEventListener('click', handleRoleButtonClickDCL2));
-      });
-    } catch (err) {
-      console.error(err);
+    let age = today.getFullYear() - dob.getFullYear();
+    const monthDiff = today.getMonth() - dob.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+      age -= 1;
     }
 
-    return () => {
-      cleanupFns.forEach((fn) => fn());
+    if (age < 13) {
+      e.target.setCustomValidity('You must be at least 13 years old');
+    } else if (age > 70) {
+      e.target.setCustomValidity('Please enter a valid date of birth');
+    } else {
+      e.target.setCustomValidity('');
+    }
+  }
+
+  function handlePasswordChange(e) {
+    const password = e.target.value;
+    const minLength = 8;
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumbers = /\d/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+    if (password.length < minLength) {
+      e.target.setCustomValidity('Password must be at least 8 characters long');
+    } else if (!hasUpperCase || !hasLowerCase) {
+      e.target.setCustomValidity('Password must contain both uppercase and lowercase letters');
+    } else if (!hasNumbers) {
+      e.target.setCustomValidity('Password must contain at least one number');
+    } else if (!hasSpecialChar) {
+      e.target.setCustomValidity('Password must contain at least one special character');
+    } else {
+      e.target.setCustomValidity('');
+    }
+  }
+
+  function handleCreateAccount(e) {
+    e.preventDefault();
+
+    const formData = {
+      role,
+      fullName: fullNameRef.current?.value || '',
+      email: emailRef.current?.value || '',
+      password: passwordRef.current?.value || '',
+      dateOfBirth: dobRef.current?.value || '',
+      age: ageRef.current?.value || '',
+      weight: weightRef.current?.value || '',
+      height: heightRef.current?.value || '',
+      bloodGroup: bloodGroupRef.current?.value || '',
+      conditions: Array.from(e.target.querySelectorAll('input[type="checkbox"]:checked'))
+        .map((checkbox) => checkbox.value),
     };
-  }, []);
+
+    if (role === 'partner') {
+      formData.relationship = relationship;
+      formData.primaryUserEmail = primaryUserEmail;
+      formData.partnerName = partnerNameRef.current?.value || '';
+    }
+
+    localStorage.setItem('cyclecare_user_data', JSON.stringify(formData));
+    window.location.href = '/mainpages/tracker';
+  }
+
+  function handleLogin(e) {
+    e.preventDefault();
+
+    const email = loginEmailRef.current?.value || '';
+    const password = loginPasswordRef.current?.value || '';
+
+    const userData = JSON.parse(localStorage.getItem('cyclecare_user_data') || '{}');
+
+    if (userData.email && userData.email === email && userData.password === password) {
+      window.location.href = '/mainpages/tracker';
+    } else {
+      alert('Invalid email or password');
+    }
+  }
+
+  function handleForgotPassword(e) {
+    e.preventDefault();
+    const email = loginEmailRef.current?.value || '';
+
+    if (email) {
+      alert(`Password reset link would be sent to ${email}`);
+    } else {
+      alert('Please enter your email address');
+    }
+  }
+
+  const showPartnerSection = role === 'partner' && !partnerInfoSaved;
+  const showMainSections = role === 'primary' || (role === 'partner' && partnerInfoSaved);
 
   return (
     <>
@@ -352,221 +231,264 @@ export default function LogPage() {
         </div>
       </header>
       <div className="app">
-        {/* Role Selection */}
-        <div className="role-selection" id="roleSelection">
-          <div className="role-card">
-            <h1>Welcome to BloomHer</h1>
-            <p>Please select your role to continue</p>
+        {screen === 'role' && (
+          <div className="role-selection" id="roleSelection">
+            <div className="role-card">
+              <h1>Welcome to BloomHer</h1>
+              <p>Please select your role to continue</p>
 
-            <div className="role-buttons">
-              <button className="role-btn" data-role="primary">
-                <i data-lucide="user"></i>
-                <span>I am tracking my cycle</span>
-              </button>
-              <button className="role-btn" data-role="partner">
-                <i data-lucide="user"></i>
-                <span>I am a care partner</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Registration Form */}
-        <div className="registration-form" id="registrationForm" style={{ display: 'none' }}>
-          <div className="form-card">
-            <div className="form-header">
-              <button className="back-btn" id="backToRole">
-                <i data-lucide="arrow-left"></i>
-              </button>
-              <h2>Create Your Account</h2>
-            </div>
-
-            <form id="userForm">
-              <div className="form-sections">
-                {/* Care Partner Information (Initially Visible if Care Partner) */}
-                <div className="form-section" id="partnerSection">
-                  <h3>Care Partner Information</h3>
-                  <div className="form-grid">
-                    <div className="form-group">
-                      <label>Choose Your Relationship</label>
-                      <div className="relationship-buttons">
-                        <button type="button" className="relationship-btn" data-relationship="partner">
-                          <i data-lucide="heart"></i>
-                          <span>Partner</span>
-                        </button>
-                        <button type="button" className="relationship-btn" data-relationship="daughter">
-                          <i data-lucide="baby"></i>
-                          <span>Daughter</span>
-                        </button>
-                        <button type="button" className="relationship-btn" data-relationship="wife">
-                          <i data-lucide="user-cog-2"></i>
-                          <span>Wife</span>
-                        </button>
-                        <button type="button" className="relationship-btn" data-relationship="sister">
-                          <i data-lucide="users"></i>
-                          <span>Sister</span>
-                        </button>
-                      </div>
-                      <input type="hidden" id="relationship" name="relationship" required />
-                    </div>
-
-                    <div className="form-group">
-                      <label htmlFor="primaryUserEmail">Primary User&apos;s Email</label>
-                      <input type="email" id="primaryUserEmail" placeholder="Enter the email of the person you're supporting" />
-                    </div>
-                  </div>
-                  <button type="button" className="primary-button" id="savePartnerInfo">
-                    Save Partner Info
-                    <i data-lucide="arrow-right"></i>
-                  </button>
-                </div>
-
-                {/* Personal Information (Initially Hidden) */}
-                <div className="form-section" id="personalSection" style={{ display: 'none' }}>
-                  <h3>Personal Information</h3>
-                  <div className="form-grid">
-                    <div className="form-group">
-                      <label htmlFor="fullName">Your Full Name</label>
-                      <input type="text" id="fullName" required />
-                    </div>
-
-                    <div className="form-group" id="partnerNameGroup" style={{ display: 'none' }}>
-                      <label htmlFor="partnerName">Primary User&apos;s Name</label>
-                      <input type="text" id="partnerName" required />
-                    </div>
-
-                    <div className="form-group">
-                      <label htmlFor="email">Email</label>
-                      <input type="email" id="email" required />
-                    </div>
-
-                    <div className="form-group">
-                      <label htmlFor="password">Password</label>
-                      <div className="password-input">
-                        <input type="password" id="password" required />
-                        <button type="button" className="toggle-password">
-                          <i data-lucide="eye"></i>
-                        </button>
-                      </div>
-                    </div>
-
-                    <div className="form-group">
-                      <label htmlFor="dateOfBirth">Date of Birth</label>
-                      <input type="date" id="dateOfBirth" required />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Health Information (Initially Hidden) */}
-                <div className="form-section" id="healthSection" style={{ display: 'none' }}>
-                  <h3>Health Information</h3>
-                  <div className="form-grid">
-                    <div className="form-group">
-                      <label htmlFor="weight">Weight (kg)</label>
-                      <input type="number" id="weight" min="30" max="200" step="0.1" required />
-                    </div>
-
-                    <div className="form-group">
-                      <label htmlFor="height">Height (cm)</label>
-                      <input type="number" id="height" min="100" max="250" required />
-                    </div>
-                    <div className="form-group">
-                      <label htmlFor="age">Age</label>
-                      <input type="number" id="age" min="13" max="100" required />
-                    </div>
-
-                    <div className="form-group">
-                      <label htmlFor="bloodGroup">Blood Group</label>
-                      <select id="bloodGroup" required>
-                        <option value="">Select Blood Group</option>
-                        <option value="A+">A+</option>
-                        <option value="A-">A-</option>
-                        <option value="B+">B+</option>
-                        <option value="B-">B-</option>
-                        <option value="O+">O+</option>
-                        <option value="O-">O-</option>
-                        <option value="AB+">AB+</option>
-                        <option value="AB-">AB-</option>
-                      </select>
-                    </div>
-
-                    <div className="form-group">
-                      <label htmlFor="conditions">Medical Conditions</label>
-                      <div className="checkbox-group">
-                        <label className="checkbox">
-                          <input type="checkbox" value="pcos" />
-                          PCOS
-                        </label>
-                        <label className="checkbox">
-                          <input type="checkbox" value="endometriosis" />
-                          Endometriosis
-                        </label>
-                        <label className="checkbox">
-                          <input type="checkbox" value="thyroid" />
-                          Thyroid Issues
-                        </label>
-                        <label className="checkbox">
-                          <input type="checkbox" value="diabetes" />
-                          Diabetes
-                        </label>
-                      </div>
-                    </div>
-
-                  </div>
-                </div>
-              </div>
-
-              <div className="form-footer">
-                <button type="submit" className="primary-button" id="createAccountButton">
-                  Create Account
-                  <i data-lucide="arrow-right"></i>
+              <div className="role-buttons">
+                <button type="button" className="role-btn" data-role="primary" onClick={() => selectRole('primary')}>
+                  <i data-lucide="user"></i>
+                  <span>I am tracking my cycle</span>
                 </button>
-                <p className="login-link">
-                  Already have an account? <a href="#" id="showLogin">Log in</a>
-                </p>
-              </div>
-            </form>
-          </div>
-        </div>
-
-        {/* Login Form */}
-        <div className="login-form" id="loginForm" style={{ display: 'none' }}>
-          <div className="form-card">
-            <div className="form-header">
-              <button className="back-btn" id="backToRegister">
-                <i data-lucide="arrow-left"></i>
-              </button>
-              <h2>Welcome Back</h2>
-            </div>
-
-            <form id="loginFormElement">
-              <div className="form-group">
-                <label htmlFor="loginEmail">Email</label>
-                <input type="email" id="loginEmail" required />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="loginPassword">Password</label>
-                <div className="password-input">
-                  <input type="password" id="loginPassword" required />
-                  <button type="button" className="toggle-password">
-                    <i data-lucide="eye"></i>
-                  </button>
-                </div>
-              </div>
-
-              <div className="form-footer">
-                <button type="submit" className="primary-button">
-                  Log In
-                  <i data-lucide="log-in"></i>
+                <button type="button" className="role-btn" data-role="partner" onClick={() => selectRole('partner')}>
+                  <i data-lucide="user"></i>
+                  <span>I am a care partner</span>
                 </button>
-                <p className="forgot-password">
-                  <a href="#" id="forgotPassword">Forgot your password?</a>
-                </p>
               </div>
-            </form>
+            </div>
           </div>
-        </div>
+        )}
+
+        {screen === 'register' && (
+          <div className="registration-form" id="registrationForm">
+            <div className="form-card">
+              <div className="form-header">
+                <button type="button" className="back-btn" id="backToRole" onClick={() => setScreen('role')}>
+                  <i data-lucide="arrow-left"></i>
+                </button>
+                <h2>Create Your Account</h2>
+              </div>
+
+              <form id="userForm" onSubmit={handleCreateAccount}>
+                <div className="form-sections">
+                  {showPartnerSection && (
+                    <div className="form-section" id="partnerSection">
+                      <h3>Care Partner Information</h3>
+                      <div className="form-grid">
+                        <div className="form-group">
+                          <label>Choose Your Relationship</label>
+                          <div className="relationship-buttons">
+                            {RELATIONSHIPS.map((option) => (
+                              <button
+                                type="button"
+                                key={option.value}
+                                className={`relationship-btn${relationship === option.value ? ' selected' : ''}`}
+                                data-relationship={option.value}
+                                onClick={() => setRelationship(option.value)}
+                              >
+                                <i data-lucide={option.icon}></i>
+                                <span>{option.label}</span>
+                              </button>
+                            ))}
+                          </div>
+                          <input type="hidden" id="relationship" name="relationship" value={relationship} required readOnly />
+                        </div>
+
+                        <div className="form-group">
+                          <label htmlFor="primaryUserEmail">Primary User&apos;s Email</label>
+                          <input
+                            type="email"
+                            id="primaryUserEmail"
+                            placeholder="Enter the email of the person you're supporting"
+                            value={primaryUserEmail}
+                            onChange={(e) => setPrimaryUserEmail(e.target.value)}
+                            required
+                          />
+                        </div>
+                      </div>
+                      <button type="button" className="primary-button" id="savePartnerInfo" onClick={handleSavePartnerInfo}>
+                        Save Partner Info
+                        <i data-lucide="arrow-right"></i>
+                      </button>
+                    </div>
+                  )}
+
+                  {showMainSections && (
+                    <>
+                      <div className="form-section" id="personalSection">
+                        <h3>Personal Information</h3>
+                        <div className="form-grid">
+                          <div className="form-group">
+                            <label htmlFor="fullName">Your Full Name</label>
+                            <input type="text" id="fullName" ref={fullNameRef} required />
+                          </div>
+
+                          {role === 'partner' && (
+                            <div className="form-group" id="partnerNameGroup">
+                              <label htmlFor="partnerName">Primary User&apos;s Name</label>
+                              <input type="text" id="partnerName" ref={partnerNameRef} required />
+                            </div>
+                          )}
+
+                          <div className="form-group">
+                            <label htmlFor="email">Email</label>
+                            <input type="email" id="email" ref={emailRef} required />
+                          </div>
+
+                          <div className="form-group">
+                            <label htmlFor="password">Password</label>
+                            <div className="password-input">
+                              <input
+                                type={showPassword ? 'text' : 'password'}
+                                id="password"
+                                ref={passwordRef}
+                                onChange={handlePasswordChange}
+                                required
+                              />
+                              <button
+                                type="button"
+                                className="toggle-password"
+                                onClick={() => setShowPassword((v) => !v)}
+                                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                              >
+                                {showPassword ? <EyeOffIcon /> : <EyeIcon />}
+                              </button>
+                            </div>
+                          </div>
+
+                          <div className="form-group">
+                            <label htmlFor="dateOfBirth">Date of Birth</label>
+                            <input type="date" id="dateOfBirth" ref={dobRef} onChange={handleDobChange} required />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="form-section" id="healthSection">
+                        <h3>Health Information</h3>
+                        <div className="form-grid">
+                          <div className="form-group">
+                            <label htmlFor="weight">Weight (kg)</label>
+                            <input type="number" id="weight" ref={weightRef} min="30" max="200" step="0.1" required />
+                          </div>
+
+                          <div className="form-group">
+                            <label htmlFor="height">Height (cm)</label>
+                            <input type="number" id="height" ref={heightRef} min="100" max="250" required />
+                          </div>
+                          <div className="form-group">
+                            <label htmlFor="age">Age</label>
+                            <input type="number" id="age" ref={ageRef} min="13" max="100" required />
+                          </div>
+
+                          <div className="form-group">
+                            <label htmlFor="bloodGroup">Blood Group</label>
+                            <select id="bloodGroup" ref={bloodGroupRef} required defaultValue="">
+                              <option value="">Select Blood Group</option>
+                              <option value="A+">A+</option>
+                              <option value="A-">A-</option>
+                              <option value="B+">B+</option>
+                              <option value="B-">B-</option>
+                              <option value="O+">O+</option>
+                              <option value="O-">O-</option>
+                              <option value="AB+">AB+</option>
+                              <option value="AB-">AB-</option>
+                            </select>
+                          </div>
+
+                          <div className="form-group">
+                            <label htmlFor="conditions">Medical Conditions</label>
+                            <div className="checkbox-group">
+                              <label className="checkbox">
+                                <input type="checkbox" value="pcos" />
+                                PCOS
+                              </label>
+                              <label className="checkbox">
+                                <input type="checkbox" value="endometriosis" />
+                                Endometriosis
+                              </label>
+                              <label className="checkbox">
+                                <input type="checkbox" value="thyroid" />
+                                Thyroid Issues
+                              </label>
+                              <label className="checkbox">
+                                <input type="checkbox" value="diabetes" />
+                                Diabetes
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                <div className="form-footer">
+                  {showMainSections && (
+                    <button type="submit" className="primary-button" id="createAccountButton">
+                      Create Account
+                      <i data-lucide="arrow-right"></i>
+                    </button>
+                  )}
+                  <p className="login-link">
+                    Already have an account?{' '}
+                    <a
+                      href="#"
+                      id="showLogin"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setScreen('login');
+                      }}
+                    >
+                      Log in
+                    </a>
+                  </p>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {screen === 'login' && (
+          <div className="login-form" id="loginForm">
+            <div className="form-card">
+              <div className="form-header">
+                <button type="button" className="back-btn" id="backToRegister" onClick={() => setScreen('register')}>
+                  <i data-lucide="arrow-left"></i>
+                </button>
+                <h2>Welcome Back</h2>
+              </div>
+
+              <form id="loginFormElement" onSubmit={handleLogin}>
+                <div className="form-group">
+                  <label htmlFor="loginEmail">Email</label>
+                  <input type="email" id="loginEmail" ref={loginEmailRef} required />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="loginPassword">Password</label>
+                  <div className="password-input">
+                    <input
+                      type={showLoginPassword ? 'text' : 'password'}
+                      id="loginPassword"
+                      ref={loginPasswordRef}
+                      required
+                    />
+                    <button
+                      type="button"
+                      className="toggle-password"
+                      onClick={() => setShowLoginPassword((v) => !v)}
+                      aria-label={showLoginPassword ? 'Hide password' : 'Show password'}
+                    >
+                      {showLoginPassword ? <EyeOffIcon /> : <EyeIcon />}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="form-footer">
+                  <button type="submit" className="primary-button">
+                    Log In
+                    <i data-lucide="log-in"></i>
+                  </button>
+                  <p className="forgot-password">
+                    <a href="#" id="forgotPassword" onClick={handleForgotPassword}>Forgot your password?</a>
+                  </p>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );

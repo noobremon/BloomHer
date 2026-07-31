@@ -447,9 +447,42 @@ Re-validated after deletion:
   everything actually being served comes from `public/`, not the
   now-deleted root copies.
 
+## 🔧 Post-migration bug fix: log/sign-up/create-account (`app/mainpages/log/page.js`)
+
+The user asked to actually **fix** (not just faithfully port) the
+login/sign-up/create-account flow, since the ported original had real
+functional bugs (see `CHANGELOG.md` "Session 2" for full detail). This
+went beyond strict 1:1 migration by design, per the user's explicit
+request. Summary of what was wrong and fixed:
+
+- Three conflicting click handlers on the role buttons (inherited from
+  the original's messy top-level + `DOMContentLoaded` duplication) —
+  replaced with a single React state machine (`screen`/`role`/
+  `partnerInfoSaved`).
+- Care-partner submissions silently dropped `relationship`,
+  `primaryUserEmail`, and `partnerName` because the "is this a partner
+  submission" check tested a section's visibility *after* it had
+  already been hidden — fixed by tracking those values in React state
+  that survives the section unmounting, and always including them for
+  partner accounts.
+- The "Age" field was collected nowhere — now saved.
+- The password show/hide "eye" icon used a Lucide icon that needed to
+  change dynamically; Lucide replaces `<i data-lucide>` elements with
+  raw `<svg>` nodes, which conflicts with React's own reference to that
+  node on subsequent re-renders. Fixed by using small inline SVG icons
+  (visually matching Lucide's eye/eye-off) for just these two dynamic
+  buttons; every other (static, never-changing) icon on the page still
+  uses `data-lucide` as before.
+- Login/forgot-password/back-navigation all re-verified working.
+
+Validated: `npm run build` clean, `npm run dev` → `/mainpages/log`
+returns `200`, `diagnostics` reports no errors for the file.
+
 ## ▶️ Next task
 
-Migration and cleanup are both complete and validated. Nothing is
-outstanding. If further work is desired, it would be user-directed
-(e.g. deciding on `server.cjs` / `bloomher-backend/`, or new feature
-work), not migration cleanup.
+Migration, cleanup, and the log-page bug fixes are all complete and
+validated. Nothing is outstanding. If further work is desired, it would
+be user-directed (e.g. deciding on `server.cjs` / `bloomher-backend/`,
+fixing similarly-styled bugs on other pages such as `tracker.js`'s
+known undefined-function issues noted earlier in this file, or new
+feature work).

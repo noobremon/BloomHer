@@ -188,12 +188,26 @@ conversion work.
 
 The full-project `npm run build` and a `npm run dev` smoke test of every
 route have already been done (see `MIGRATION_PROGRESS.md`) and both
-passed cleanly. The only thing left is optional cleanup — see
-`MIGRATION_PROGRESS.md`'s "Still remaining" checklist: deciding with the
-user whether to delete the now-superseded legacy static files
-(`index.html`, `mainpages/*.html`, root `stylepages/`/`scriptpages/`,
-`server.cjs`, `bloomher-backend/`). **Do not delete anything without the
-user's explicit go-ahead.**
+passed cleanly. Legacy static files have since been deleted (user
+confirmed) — see "Cleanup performed" in `MIGRATION_PROGRESS.md`.
+
+**Since then**, `app/mainpages/log/page.js` was deliberately rewritten
+(not just ported) to fix real login/sign-up/create-account bugs the
+user reported (conflicting click handlers, dropped care-partner data,
+a Lucide-vs-React icon conflict on the password show/hide toggle — full
+detail in `MIGRATION_PROGRESS.md`'s "Post-migration bug fix" section and
+`CHANGELOG.md`'s "Session 2"). This page now uses `useState`/`useRef`
+instead of direct DOM manipulation — if you touch this file again,
+follow its existing state-machine pattern rather than reverting to
+`getElementById`/`style.display` writes, which is what caused the bugs
+in the first place.
+
+No other page has been fixed beyond the literal migration — e.g.
+`tracker.js`'s known undefined-function bugs (`createCalendar`,
+`updateTodaySummary`, documented earlier in this file and in
+`MIGRATION_PROGRESS.md`) are still present as faithfully-ported bugs,
+not yet fixed, since the user hasn't asked for that page specifically
+yet.
 
 ### Extra gotchas found so far (apply the same scrutiny to remaining pages)
 
