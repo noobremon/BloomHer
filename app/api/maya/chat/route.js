@@ -71,3 +71,10 @@ export async function POST(request) {
     return Response.json({ error: 'Gemini request failed.', fallback: true }, { status: 502 });
   }
 }
+
+export async function GET() {
+  return Response.json(
+    { status: 'ok', message: "Maya API route — POST to use the assistant." },
+    { status: 200 }
+  );
+}
