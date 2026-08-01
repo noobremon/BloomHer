@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -60,8 +60,8 @@ const pcosDataSchema = new mongoose.Schema({
     },
 });
 
-const User = mongoose.model('User', userSchema);
-const MenstrualCycle = mongoose.model('MenstrualCycle', menstrualCycleSchema);
-const PCOSData = mongoose.model('PCOSData', pcosDataSchema);
+const User = mongoose.models.User || mongoose.model('User', userSchema);
+const MenstrualCycle = mongoose.models.MenstrualCycle || mongoose.model('MenstrualCycle', menstrualCycleSchema);
+const PCOSData = mongoose.models.PCOSData || mongoose.model('PCOSData', pcosDataSchema);
 
-export { User, MenstrualCycle, PCOSData };
+module.exports = { User, MenstrualCycle, PCOSData };

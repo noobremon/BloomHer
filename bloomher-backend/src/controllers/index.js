@@ -1,11 +1,11 @@
-// src/controllers/index.js
-
-const UserController = require('./userController');
-const MenstrualController = require('./menstrualController');
-const PCOSController = require('./pcosController');
+const { registerUser, loginUser, getUserData } = require('./userController');
+const { trackMenstrualCycle } = require('./menstrualController');
+const { managePCOS } = require('./pcosController');
 
 module.exports = {
-    UserController,
-    MenstrualController,
-    PCOSController
+    registerUser,
+    loginUser,
+    getUserData,
+    trackMenstrualCycle,
+    managePCOS
 };
