@@ -447,6 +447,69 @@ Re-validated after deletion:
   everything actually being served comes from `public/`, not the
   now-deleted root copies.
 
+## 🚨 Security fixes (Dependabot alerts + a leaked `.env`)
+
+User reported a PostCSS Dependabot alert and a 404 on the live deployed
+site. While investigating, found and fixed:
+
+1. **`bloomher-backend/.env` and `bloomher-backend/node_modules/`
+   (1,594 files) were committed to git.** This is the real reason for
+   "a bunch of vulnerabilities", not just PostCSS — old, frozen
+   transitive dependencies inside that committed `node_modules` were
+   being scanned by Dependabot. More importantly, anything secret in
+   that `.env` (e.g. a MongoDB URI with credentials) has been exposed
+   in the git history and must be treated as compromised — **the user
+   needs to rotate/regenerate those credentials regardless of any code
+   fix**, since removing a file from the current tree does not remove
+   it from git history.
+   - Fixed: `git rm --cached` for both, added
+     `bloomher-backend/.gitignore` (`.env`, `.env.*`, `node_modules/`).
+   - **Staged but not committed/pushed** — the user must commit and
+     push themselves (or ask for that explicitly) for this to take
+     effect on GitHub/Vercel.
+2. **PostCSS** (`8.4.31`, pulled in transitively by `next@16.2.12`) —
+   fixed via `"overrides": { "postcss": "^8.5.18" }` in
+   `package.json` (the exact alert the user linked, GHSA re: arbitrary
+   file read via `sourceMappingURL`).
+3. **sharp** (`0.34.5`, next's optional image-optimization dependency)
+   — fixed via `"overrides": { "sharp": "^0.35.0" }` (libvips CVEs).
+4. **express / mongoose / body-parser / path-to-regexp / qs** — all of
+   these were only used by the already-superseded `server.cjs`
+   (deleted in an earlier session's cleanup discussion, but its
+   dependencies were still sitting in root `package.json`). Since
+   `server.cjs` isn't part of the deployed Next.js app at all, removed
+   `express`/`mongoose`/`cors`/`dotenv` from `package.json` entirely and
+   deleted `server.cjs` + its `legacy-server` npm script.
+
+**Result: `npm audit` went from 8 vulnerabilities down to 0.** Verified
+with `npm install` (`found 0 vulnerabilities`) and `npm run build`
+(clean).
+
+### On the 404 on the live deployed site
+
+Could not fully diagnose remotely — there's no `vercel.json` or
+`.vercel/` in this repo, so deployment configuration lives entirely in
+the Vercel dashboard, which isn't accessible from here. Most likely
+causes for a Next.js App Router project returning Vercel's styled
+`404: NOT_FOUND` (not a Next.js-rendered not-found page) after this
+migration:
+- The Vercel project's **Root Directory** setting doesn't point at the
+  repo root (where the `next`-containing `package.json` and `app/` now
+  live) — e.g. if it was ever pointed at `bloomher-backend/` or a `public/`-only static setup from before the migration.
+- The Vercel project's **Framework Preset** is still set to something
+  other than "Next.js" (e.g. "Other"/static), left over from when this
+  repo was a plain static HTML site with `index.html` at the root
+  (which has since been deleted as part of the migration cleanup).
+- The deployment shown to the user is stale (built from a commit before
+  the Next.js migration was pushed).
+- The specific 404'ing URL doesn't match any of the app's routes (see
+  the routes table below) — needs the exact URL to confirm.
+
+**Needs from the user to fully diagnose:** the exact URL that 404s, and
+a screenshot/check of the Vercel project's Settings → General →
+Root Directory + Framework Preset, and Settings → Git → which
+branch/commit is deployed.
+
 ## 🔧 Post-migration bug fix: log/sign-up/create-account (`app/mainpages/log/page.js`)
 
 The user asked to actually **fix** (not just faithfully port) the

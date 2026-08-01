@@ -209,6 +209,39 @@ No other page has been fixed beyond the literal migration — e.g.
 not yet fixed, since the user hasn't asked for that page specifically
 yet.
 
+## ⚠️ IMPORTANT: uncommitted security fix in progress
+
+The user reported Dependabot alerts + a 404 on their live deployed
+site. Investigation found `bloomher-backend/.env` and
+`bloomher-backend/node_modules/` (1,594 files) were committed to git —
+a real leaked-secret risk, and the actual source of most of the
+vulnerability alerts (not just the PostCSS one the user linked). Full
+detail in `MIGRATION_PROGRESS.md`'s "Security fixes" section and
+`CHANGELOG.md`'s "Session 3".
+
+**Current git state: the fix is staged (`git rm --cached` +
+`package.json`/`.gitignore` edits) but NOT committed or pushed.** If
+you're picking this up:
+1. Check `git --no-pager status` — there should be ~1,600 staged
+   deletions under `bloomher-backend/node_modules/` plus
+   `bloomher-backend/.env`, and modified `package.json`/`package-lock.json`, plus a new `bloomher-backend/.gitignore`.
+2. Do NOT commit/push without the user's explicit go-ahead (per the
+   standing rule in this project), but DO flag this as urgent every
+   time you talk to the user until it's resolved — an exposed `.env`
+   in git history is a live security risk regardless of local fixes.
+3. Remind the user that deleting the file from the current tree does
+   NOT remove it from git history — anyone who cloned the repo or can
+   browse old commits on GitHub can still see the old `.env` contents.
+   Rotating/regenerating any credentials that were in that file (e.g. a
+   MongoDB URI) is the only real fix for the exposure itself; if they
+   want the secret scrubbed from history too, that needs `git
+   filter-repo`/BFG + a force-push (coordinate carefully, rewrites all
+   commit hashes).
+4. The live-site 404 is still undiagnosed — needs the exact URL that
+   404s and the user's Vercel project settings (Root Directory,
+   Framework Preset, which branch is deployed) since there's no
+   `vercel.json`/`.vercel/` in this repo to inspect locally.
+
 ### Extra gotchas found so far (apply the same scrutiny to remaining pages)
 
 - Some original scripts register **multiple separate**

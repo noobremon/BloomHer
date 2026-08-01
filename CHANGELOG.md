@@ -114,6 +114,41 @@
   `innerHTML` template string, not JSX, so React never renders/warns
   about it — left untouched.)
 
+## Session 3 — Security fixes (Dependabot alerts + leaked secrets)
+
+### Fixed — critical
+- **`bloomher-backend/.env` and `bloomher-backend/node_modules/` (1,594
+  files) were committed to git**, discovered while investigating the
+  Dependabot vulnerability flood. This is a real secret-exposure risk
+  — anything in that `.env` (e.g. a MongoDB connection string) must be
+  treated as compromised. Removed both from git tracking (`git rm
+  --cached`) and added `bloomher-backend/.gitignore` (`.env`,
+  `.env.*`, `node_modules/`) so they can't be re-added accidentally.
+  **These changes are staged but not committed/pushed** — the user
+  needs to commit, push, and rotate any credentials in that file (see
+  chat response for details); simply removing the file from the current
+  tree does not erase it from git history.
+- The stale, years-old dependency versions frozen inside that committed
+  `bloomher-backend/node_modules/` were the source of the large number
+  of Dependabot alerts, not just the one PostCSS alert the user linked.
+
+### Fixed — dependencies
+- Added `overrides` to root `package.json` to force patched transitive
+  versions pulled in by `next@16.2.12`:
+  - `postcss`: `8.4.31` → `^8.5.18` (fixes the linked GHSA-*
+    arbitrary-file-read-via-sourceMappingURL advisory; needs >= 8.5.12).
+  - `sharp`: `0.34.5` → `^0.35.0` (fixes a libvips-inherited advisory
+    bundled with `next`'s optional image-optimization dependency).
+- Removed `express`, `mongoose`, `cors`, `dotenv` from root
+  `package.json` — these were only ever used by the now-deleted legacy
+  `server.cjs`, which is not part of the deployed Next.js app at all.
+  Deleted `server.cjs` and its `legacy-server` npm script, since it was
+  non-functional/superseded and was the sole reason those vulnerable
+  packages were still being installed.
+- Result: `npm audit` went from 8 vulnerabilities (2 moderate, 6 high)
+  down to **0 vulnerabilities**.
+- Re-validated with `npm install` + `npm run build`: clean.
+
 ## Session 2 — Login / sign-up / create-account bug fixes
 
 ### Fixed
