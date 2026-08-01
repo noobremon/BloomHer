@@ -40,7 +40,11 @@ app.get('/', (req, res) => {
     res.json({ status: 'ok', message: 'BloomHer backend running' });
 });
 
-// Start the server
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+// Start the server (for local execution)
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`);
+    });
+}
+
+module.exports = app;
